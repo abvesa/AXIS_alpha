@@ -1,0 +1,26 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+#game {
+  z-index: 0;
+  position: absolute;
+}
+
+#login {
+  z-index: -1;
+  position: absolute;
+  top: 50%;
+  left: 44%;
+}
+
+input {
+  margin: auto;
+  background-color: #ffffff;
+}
+
+button {
+  margin: auto;
+}
+
