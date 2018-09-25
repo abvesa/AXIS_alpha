@@ -108,7 +108,7 @@ const Game = function () {
 
       // block dmg
       block: {type: 'button', x: this.default.game.width - 121 + 44 + 12, y: this.default.game.height/2 + 66/this.default.scale + 21, img: 'block', func: this.player.personal.block, ext: {req: true} },
-      receive: {type: 'button', x: this.default.game.width - 220 + 44 + 12 + 9, y: this.default.game.height/2 + 66/this.default.scale + 21, img: 'receive', func: this.player.personal.receive, ext: {req: true} }
+      receive: {type: 'button', x: this.default.game.width - 121 + 44 + 12 + 9, y: this.default.game.height/2 + 66/this.default.scale + 21, img: 'receive', func: this.player.personal.receive, ext: {req: true} }
     }
   }
   this.phaser = null
@@ -270,7 +270,7 @@ Game.prototype.blockPanel = function (action) {
   if (action.damage) {
     //block_btn.reset(block_btn.x, block_btn.y)
     //receive_btn.reset(receive_btn.x, receive_btn.y)
-    receive_btn.reset(block_btn.x, block_btn.y)
+    receive_btn.reset(receive_btn.x, receive_btn.y)
   }
   else {
     //block_btn.kill()
@@ -1096,6 +1096,27 @@ socket.on('gameStart', it => {
   game.page.game.end_turn.alpha = (it.start)? 1 : 0.3 
   game.page.game.attack.alpha = (it.start)? 1 : 0.3
   
+  if (it.start) {
+    game.tween = game.phaser.add.tween(up).to(
+      {alpha: 1}, 500, Phaser.Easing.Sinusoidal.InOut, true
+    )
+    game.tween.onComplete.add(function () {
+      game.tween = game.phaser.add.tween(dn).to(
+        {alpha: 0}, 500, Phaser.Easing.Sinusoidal.InOut, true
+      )
+    }, game.tween)	
+  }
+  else {
+	game.tween = game.phaser.add.tween(dn).to(
+      {alpha: 1}, 500, Phaser.Easing.Sinusoidal.InOut, true
+    )
+    game.tween.onComplete.add(function () {
+      game.tween = game.phaser.add.tween(up).to(
+        {alpha: 0}, 500, Phaser.Easing.Sinusoidal.InOut, true
+      )
+    }, game.tween) 
+  }
+  
   // build life
   for (let target in it.card_list.life){
     for(let card of it.card_list.life[target]){
@@ -1204,6 +1225,27 @@ socket.on('turnShift', it => {
 	  
   game.page.game.end_turn.alpha = (it.start)? 1 : 0.3 
   game.page.game.attack.alpha = (it.start)? 1 : 0.3
+  
+  if (it.start) {
+    game.tween = game.phaser.add.tween(up).to(
+      {alpha: 1}, 500, Phaser.Easing.Sinusoidal.InOut, true
+    )
+    game.tween.onComplete.add(function () {
+      game.tween = game.phaser.add.tween(dn).to(
+        {alpha: 0}, 500, Phaser.Easing.Sinusoidal.InOut, true
+      )
+    }, game.tween)	
+  }
+  else {
+	game.tween = game.phaser.add.tween(dn).to(
+      {alpha: 1}, 500, Phaser.Easing.Sinusoidal.InOut, true
+    )
+    game.tween.onComplete.add(function () {
+      game.tween = game.phaser.add.tween(up).to(
+        {alpha: 0}, 500, Phaser.Easing.Sinusoidal.InOut, true
+      )
+    }, game.tween) 
+  }
   
   game.resetCardPick()
 })
@@ -1350,14 +1392,18 @@ socket.emit('preload', res => {
       let top = (100*(1 - game.default.game.width/opt.screen.width)/2).toString()+'%'
       let left = (100*(1 - game.default.game.height/opt.screen.height)/2).toString()+'%'
       $('#game').css({top: top, left: left})
-      game.phaser.add.sprite(0, 0, 'background')
-
+      game.phaser.add.sprite(0, -34, 'background')
+	  up = game.phaser.add.sprite(0, -34, 'bg_up')
+	  up.alpha = 0
+	  dn = game.phaser.add.sprite(0, 350, 'bg_dn')
+      dn.alpha = 0
+	  
       // init text
       game.text_group = game.phaser.add.group()
       for (let type in game.text) {
         let text = ''
         let init = game.text[type].init//{font: "26px Arial", fill: '#ffffff', align: 'left'}
-        let x = game.text[type].x + 15//(type === 'effect')? 21 + 12 + 18 : 21 + 12
+        let x = game.text[type].x + ((type !== 'effect')? 15 : -15)//(type === 'effect')? 21 + 12 + 18 : 21 + 12
         let y = game.default.game.height/2 + game.default.text[type]/game.default.scale
         if (type === 'effect' || type === 'stat') {
           init.backgroundColor = 'rgba(255,255,255,0.9)'
@@ -1391,9 +1437,10 @@ socket.emit('preload', res => {
       })
 
       // stat panel
-      game.page.game.stat_panel = game.phaser.add.sprite(-15, game.default.game.height/2, 'stat')
+      //game.page.game.stat_panel = game.phaser.add.sprite(-15, game.default.game.height/2, 'stat')
+	  game.page.game.stat_panel = game.phaser.add.sprite(25, game.default.game.height/2, 'stat')
       game.page.game.stat_panel.inputEnabled = true
-      game.page.game.stat_panel.events.onInputDown.add(function(){ game.showStat() }, this)
+      //game.page.game.stat_panel.events.onInputDown.add(function(){ game.showStat() }, this)
       game.page.game.stat_panel.addChild(game.text_group)
 
     },
