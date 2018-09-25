@@ -1,0 +1,1172 @@
+{
+  "aquarius": {
+    "name": "aquarius",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "heal": {
+          "personal": 3
+        },
+        "modify": {
+          "personal": {
+            "atk_damage": -1
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "heal": {
+          "personal": {
+            "hit": true
+          },
+		  "personal": {
+		    "aura": {
+			  "disease": false
+			}
+		  }
+        },
+        "modify": {}
+      }
+    },
+    "text": "Aquarius\n<Enchant>\n(1) AD -1\n(2) If your attack hits, HEAL 3 hp"
+  },
+  "aria": {
+    "name": "aria",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "recall": {
+          "personal": {
+            "artifact": 1,
+			"_to": "battle"
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "recall": {
+          "personal": {
+            "hit": true
+          }
+        }
+      }
+    },
+    "text": "Aria\n<Enchant>\nIf your attack hits, RECALL an artifact from your grave to battle"
+  },
+  "choco_banana": {
+    "name": "choco_banana",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "heal": {
+          "personal": 1
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "heal": {
+		  "personal": {
+		    "aura": {
+			  "disease": false
+			}
+		  }
+		}
+      }
+    },
+    "text": "Chocolate Banana\n<Enchant>\nHEAL 1 hp"
+  },
+  "claymore": {
+    "name": "claymore",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "modify": {
+          "personal": {
+            "atk_damage": 1
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "modify": {
+          "personal": {
+            "hit": true
+          }
+        }
+      }
+    },
+    "text": "Claymore\n<Enchant>\nAD +1"
+  },
+  "dagger": {
+    "name": "dagger",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "steal": {
+          "personal": {
+            "card": 1
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "steal": {
+          "personal": {
+            "hit": true
+          }
+        }
+      }
+    },
+    "text": "Dagger\n<Enchant>\nIf your attack hits, STEAL 1 opponent handcard"
+  },
+  "doom": {
+    "name": "doom",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "control": {
+          "personal": {
+            "battle": {
+              "artifact": 1
+            }
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "control": {
+          "personal": {
+            "hit": true
+          }
+        }
+      }
+    },
+    "aura": {
+      "cripple": {
+        "personal": true
+      }
+    },
+    "text": "Doom\n<Enchant>\nIf your attack hits, CONTROL 1 opponent artifact on battlefield\n<Aura>\nCrippled"
+  },
+  "hawkeye": {
+    "name": "hawkeye",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "trigger": 1
+      }
+    },
+    "effect": {
+      "trigger": {
+        "modify_1": {
+          "personal": {
+            "atk_phase": 1
+          }
+        },
+        "modify_2": {
+          "personal": {
+            "atk_phase": 1
+          }
+        }
+      }
+    },
+    "judge": {
+      "trigger": {
+        "modify_1": {
+          "personal": {
+            "hp": {
+              "goe": 5
+            }
+          }
+        },
+        "modify_2": {
+          "personal": {
+            "handcard": {
+              "goe": 5
+            }
+          }
+        }
+      }
+    },
+    "text": "Hawkeye\n<Trigger>\n(1) If your hp >= 5, AP + 1\n(2) If your handcard amount >= 5, AP + 1"
+  },
+  "judge": {
+    "name": "judge",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "destroy": {
+          "opponent": {
+            "battle": true
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "destroy": {
+          "personal": {
+            "hit": true
+          }
+        }
+      }
+    },
+    "text": "Judge\n<Enchant>\nf your attack hits, DESTROY all opponent artifact on battlefield"
+  },
+  "katana": {
+    "name": "katana",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "trigger": 1
+      }
+    },
+    "effect": {
+      "trigger": {
+        "modify": {
+          "personal": {
+            "atk_phase": 1
+          }
+        }
+      }
+    },
+    "judge": {
+      "trigger": {
+        "modify": {}
+      }
+    },
+    "text": "Katana\n<Trigger>\nAP +1"
+  },
+  "muse": {
+    "name": "muse",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "drain": {
+          "personal": {
+            "opponent": 1
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "drain": {
+		  "opponent": {
+		    "aura": {
+			  "fortify": false
+			}
+		  }
+		}
+      }
+    },
+    "text": "Muse\n<Enchant>\nDRAIN 1 opponent artifact on battlefield"
+  },
+  "shadow": {
+    "name": "shadow",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "retrieve": {
+          "personal": {
+            "card": 1,
+			"_to": "hand"
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "retrieve": {
+          "personal": {
+            "hit": true
+          }
+        }
+      }
+    },
+    "text": "Shadow\n<Enchant>\nIf your attack hits, RETRIEVE 1 card from your deck to hand"
+  },
+  "epoch": {
+    "name": "epoch",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "recall": {
+          "personal": {
+            "card": 1,
+			"_to": "hand"
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "recall": {
+          "personal": {
+            "hit": true
+          }
+        }
+      }
+    },
+    "text": "Epoch\n<Enchant>\nIf your attack hits, RECALL 1 card from your grave to hand"
+  },
+  "atom": {
+    "name": "atom",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "set": {
+          "personal": {
+            "atk_damage": {
+              "card_amount": "hand"
+            }
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "set": {
+          "personal": {
+            "hit": true
+          }
+        }
+      }
+    },
+    "text": "Atom\n<Enchant>\nIf your attack hits, your AD is equal to your handcard ammount"
+  },
+  "gohei": {
+    "name": "gohei",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "counter": 1
+      }
+    },
+    "effect": {
+      "counter": {}
+    },
+    "judge": {
+      "counter": {}
+    },
+	"counter": {
+      "effect": true
+    },
+    "text": "Gohei\n<Counter>\nCounter target opponent artifact when trigger"
+  },
+  "havok": {
+    "name": "havok",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "trigger": 1
+      }
+    },
+    "effect": {
+      "trigger": {
+        "modify": {
+          "personal": {
+            "atk_damage": 2
+          }
+        },
+        "buff": {
+          "eagle_eye": {
+            "personal": true
+          }
+        }
+      }
+    },
+    "judge": {
+      "trigger": {
+        "modify": {
+          "personal": {
+            "hp": {
+              "loe": 2
+            }
+          }
+        },
+        "buff": {
+          "personal": {
+            "handcard": {
+              "loe": 2
+            }
+          }
+        }
+      }
+    },
+    "aura": {
+      "cripple": {
+        "personal": true
+      }
+    },
+    "text": "Havok\n<Trigger>\n(1) AP + 2 if your hp <= 2\n(2) your attack can't be vanish if your handcard amount <= 2\n<Aura>\nCrippled"
+  },
+  "ion": {
+    "name": "ion",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "destroy": {
+          "opponent": {
+            "hand": true
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "destroy": {
+          "personal": {
+            "hit": true
+          }
+        }
+      }
+    },
+    "aura": {
+      "cripple": {
+        "personal": true
+      }
+    },
+    "text": "Ion\n<Enchant>\nIf your attack hits, your opponent discard all handcards\n<Aura>\nCrippled"
+  },
+  "pillow": {
+    "name": "pillow",
+    "type": {
+      "base": "item",
+      "effect": {
+        "mosaic": 1
+      }
+    },
+    "effect": {
+      "mosaic": {},
+	  "counter": {}
+    },
+    "judge": {
+      "mosaic": {},
+	  "counter": {}
+    },
+	"counter": {
+	  "damage": true
+	},
+    "text": "Pillow\n<Mosaic>\nBlock damage you receive this time"
+  },
+  "beer": {
+    "name": "beer",
+    "type": {
+      "base": "item",
+      "effect": {
+        "normal": 1
+      }
+    },
+    "effect": {
+      "normal": {
+        "modify": {
+          "personal": {
+            "atk_damage": 1
+          }
+        },
+        "draw": {
+          "personal": {
+            "deck": 1
+          }
+        }
+      }
+    },
+    "judge": {
+      "normal": {
+        "modify": {},
+        "draw": {}
+      }
+    },
+    "text": "Beer\n<Normal>\nAD +1, and draw 1 card"
+  },
+  "chocolate": {
+    "name": "chocolate",
+    "type": {
+      "base": "item",
+      "effect": {
+        "normal": 1
+      }
+    },
+    "effect": {
+      "normal": {
+        "heal": {
+          "personal": 1
+        },
+        "draw": {
+          "personal": {
+            "deck": 1
+          }
+        }
+      }
+    },
+    "judge": {
+      "normal": {
+        "heal": {
+		  "personal": {
+		    "aura": {
+			  "disease": false
+			}
+		  }
+		},
+        "draw": {}
+      }
+    },
+    "text": "Chococlate\n<Normal>\nHEAL 1 hp, and draw 1 card"
+  },
+  "omamoli": {
+    "name": "omamoli",
+    "type": {
+      "base": "item",
+      "effect": {
+        "mosaic": 1
+      }
+    },
+    "effect": {
+      "mosaic": {},
+	  "counter": {}
+    },
+    "judge": {
+      "mosaic": {},
+	  "counter": {}
+    },
+	"counter": {
+      "effect": true
+    },
+    "text": "Omamoli\n<Mosaic>\nCounter target opponent artifact when trigger"
+  },
+  "rune": {
+    "name": "rune",
+    "type": {
+      "base": "item",
+      "effect": {
+        "mosaic": 1
+      }
+    },
+    "effect": {
+      "mosaic": {},
+	  "counter": {}
+    },
+    "judge": {
+      "mosaic": {},
+	  "counter": {}
+    },
+	"counter": {
+      "item":true
+    },
+    "text": "Rune\n<Mosaic>\nCounter target opponent item when use"
+  },
+  "espresso": {
+    "name": "espresso",
+    "type": {
+      "base": "item",
+      "effect": {
+        "normal": 2
+      }
+    },
+    "effect": {
+      "normal_1": {
+        "bleed": {
+          "personal": 1
+        },
+        "stat": {
+          "stun": {
+            "opponent": true
+          }
+        }
+      },
+      "normal_2": {
+        "stat": {
+          "all": {
+            "personal": false
+          }
+        }
+      }
+    },
+    "judge": {
+      "normal_1": {
+        "bleed": {},
+        "stat": {}
+      },
+      "normal_2": {
+        "stat": {}
+      }
+    },
+    "text": "Espresso\n<Normal_1>\nBLEED 1 hp stun your opponent\n<Normal_2>\nRecover all ailment status"
+  },
+  "blood_desire": {
+    "name": "blood_desire",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "bleed": {
+          "personal": 1
+        },
+        "draw": {
+          "personal": {
+            "deck": 3
+          }
+        }
+      }
+    },
+    "judge": {
+      "instant": {
+        "bleed": {},
+        "draw": {}
+      }
+    },
+    "text": "Blood Desire\n<Instant>\nBLEED 1 hp, and draw 3 cards"
+  },
+  "slime_rush": {
+    "name": "slime_rush",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "damage_1": {
+          "personal": 2
+        },
+        "damage_2": {
+          "opponent": 2
+        }
+      }
+    },
+    "judge": {
+      "instant": {
+        "damage_1": {},
+        "damage_2": {
+          "opponent": {
+            "hp": {
+              "goe": 2
+            }
+          }
+        }
+      }
+    },
+    "text": "Slime Rush\n<Instant>\ndeal 2 damage to you, and deal 2 damage to opponent when his/hers hp > 2"
+  },
+  "warrior_spirit": {
+    "name": "warrior_spirit",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "steal": {
+          "personal": {
+            "card": 1
+          }
+        },
+        "discard": {
+          "personal": {
+            "card": 1
+          }
+        }
+      }
+    },
+    "judge": {
+      "instant": {
+        "steal": {},
+        "discard": {}
+      }
+    },
+    "text": "Warrior Spirit\n<Instant>\nSTEAL 1 opponent handcard, and DISCARD 1 card"
+  },
+  "bombard_hell": {
+    "name": "bombard_hell",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "counter": 1
+      }
+    },
+    "effect": {
+      "counter": {}
+    },
+    "judge": {
+      "counter": {}
+    },
+	"counter": {
+      "artifact": true
+    },
+    "text": "Bombard Hell\n<Counter\ncounter target opponent artifact when use"
+  },
+  "future_vision": {
+    "name": "future_vision",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "counter": 1
+      }
+    },
+    "effect": {
+      "counter": {}
+    },
+    "judge": {
+      "counter": {}
+    },
+	"counter": {
+      "spell": true
+    },
+    "text": "Furure Vision\n<Counter>\ncounter target opponent spell when use"
+  },
+  "rune_storm": {
+    "name": "rune_storm",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "counter": 1
+      }
+    },
+    "effect": {
+      "counter": {
+        "bleed": {
+          "personal": 1
+        }
+      }
+    },
+    "judge": {
+      "counter": {
+        "bleed": {}
+      }
+    },
+	"counter": {
+      "card": true
+    },
+    "text": "Rune Storm\n<Counter>\ncounter target opponent card when use and bleed 1 hp"
+  },
+  "plasma_wave": {
+    "name": "plasma_wave",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "stat": {
+          "stun": {
+            "opponent": true
+          }
+        },
+        "damage": {
+          "opponent": 1
+        }
+      }
+    },
+    "judge": {
+      "instant": {
+        "stat": {},
+        "damage": {}
+      }
+    },
+    "text": "Plasma Wave\n<Instant>\nstun your opponent and deal 1 damage"
+  },
+  "golden_apple": {
+    "name": "golden_apple",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "chanting": 1
+      }
+    },
+    "effect": {
+      "chanting": {
+        "heal": {
+          "personal": 3
+        }
+      }
+    },
+    "judge": {
+      "chanting": {
+        "heal": {
+		  "personal": {
+		    "aura": {
+			  "disease": false
+			}
+		  }
+		}
+      }
+    },
+    "text": "The Golden Apple\n<Chanting>\nheal 3 hp"
+  },
+  "laser_beam": {
+    "name": "laser_beam",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "chanting": 1
+      }
+    },
+    "effect": {
+      "chanting": {
+        "damage": {
+          "opponent": 3
+        },
+        "set": {
+          "personal": {
+            "interrupt": {
+              "value": true
+            }
+          }
+        }
+      }
+    },
+    "judge": {
+      "chanting": {
+        "damage": {},
+        "set": {}
+      }
+    },
+    "aura": {
+      "precise": {
+        "opponent": true
+      }
+    },
+    "text": "Laser Beam\n<Chanting>\ndeal 3 damage, and your turn ends immediately\n<Aura>\nopponent gain precise"
+  },
+  "vanish": {
+    "name": "vanish",
+    "type": {
+      "base": "vanish",
+      "effect": "vanish"
+    },
+    "effect": {
+      "conceal": "discard_this",
+      "tracking": "discard_this"
+    },
+    "judge": {},
+    "text": "Vanish\n(1) discard 1 vanish to CONCEAL to counter an attack\n(2) discard 2 vanish(s) to counter CONCEAL or TRACKING action"
+  },
+  "gravity": {
+    "name": "gravity",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "trigger": 1
+      }
+    },
+    "effect": {
+      "trigger": {
+        "control": {
+          "personal": {
+            "battle": {
+              "artifact": 1
+            }
+          }
+        },
+        "discard": {
+          "personal": {
+            "card": 1
+          }
+        }
+      }
+    },
+    "judge": {
+      "trigger": {
+        "control": {
+          "opponent": {
+            "battle": {
+              "goe": 1
+            }
+          }
+        },
+        "discard": {
+          "personal": {
+            "handcard": {
+              "goe": 1
+            }
+          }
+        }
+      }
+    },
+    "text": "Gravity\n<Trigger>\ncontrol 1 opponent artifact on battle field"
+  },
+  "equip_breaker": {
+    "name": "equip_breaker",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "break": {
+          "personal": {
+            "artifact": 1
+          }
+        }
+      }
+    },
+    "judge": {
+      "instant": {
+        "break": {
+          "opponent": {
+            "battle": {
+              "goe": 1
+            }
+          },
+		  "opponent": {
+		    "aura": {
+			  "fortify": false
+			}
+		  }
+        }
+      }
+    },
+    "text": "Equip Breaker\n<Instant>\nbreak an opponent artifact on battle field"
+  },
+  "the_trio": {
+    "name": "the_trio",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "permanent": 1
+      }
+    },
+    "effect": {
+	  "permanent": {}
+	},
+    "judge": {
+	  "permanent": {}
+	},
+    "aura": {
+      "triumph": {
+        "personal": true
+      }
+    },
+    "text": "The Trio\n<Permanent>\nwhen you have at least 3 artifact on battle field\nyour attack can't be vanish"
+  },
+  "umbrella": {
+    "name": "umbrella",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "counter": 1
+      }
+    },
+    "effect": {
+      "counter": {}
+    },
+    "judge": {
+      "counter": {}
+    },
+	"counter": {
+	  "damage": true
+	},
+    "text": "Umbrella\n<Counter>\nBlock damage when you receive damage"
+  },
+  "eclipse": {
+    "name": "eclipse",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "counter": 1
+      }
+    },
+    "effect": {
+      "counter": {}
+    },
+    "judge": {
+      "counter": {}
+    },
+	"counter": {
+	  "spell": true
+	},
+    "text": "Eclipse\n<Counter>\ncounter target opponent spell when use"
+  },
+  "corona": {
+    "name": "corona",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "counter": 1
+      }
+    },
+    "effect": {
+      "counter": {}
+    },
+    "judge": {
+      "counter": {}
+    },
+	"counter": {
+      "item": true
+	},
+    "text": "Corona\n<Counter>\ncounter target opponent item when use"
+  },
+  "giga": {
+    "name": "giga",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "counter": 1
+      }
+    },
+    "effect": {
+      "counter": {}
+    },
+    "judge": {
+      "counter": {}
+    },
+	"counter": {
+      "artifact": true
+	},
+    "text": "Giga\n<Counter>\ncounter target opponent artifact when use"
+  },
+  "plague": {
+    "name": "plague",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "aura": 1
+      }
+    },
+    "effect": {
+      "aura": {}
+    },
+    "judge": {
+      "aura": {}
+    },
+    "aura": {
+      "disease": {
+        "opponent": true
+      },
+	  "decay": {
+	    "personal": true
+	  }
+    },
+    "text": "Plague\n<Aura>\nopponent Disease\n<Aura>\nDecay, Turn down this artifact when you use vanish"
+  },
+  "arcanum": {
+    "name": "arcanum",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "aura": 1
+      }
+    },
+    "effect": {
+      "aura": {}
+    },
+    "judge": {
+      "aura": {}
+    },
+    "aura": {
+      "fortify": {
+        "personal": true
+      },
+	  "decay": {
+	    "personal": true
+	  }
+    },
+    "text": "Arcanum\n<Aura>\npersonal Fortify\n<Aura>\nDecay, Turn down this artifact when you use vanish"
+  },
+  
+  
+  
+  "summoners_craft": {
+    "name": "summoners_craft",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "chanting": 1
+      }
+    },
+    "effect": {
+      "chanting": {
+	    "retrieve": {
+          "personal": {
+            "card": 1,
+			"_to": "hand"
+          }
+        }
+	  }
+    },
+    "judge": {
+      "chanting": {
+	    "retrieve": {}
+	  }
+    },
+    "text": "Summoner's craft\n<Chanting>\nRetrieve a card from your deck to hand"
+  }  
+}

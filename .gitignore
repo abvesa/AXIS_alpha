@@ -1,11 +1,12 @@
-app/assets/
+
+# app/assets/
 json/
 node_modules/
 yarn.lock
 
-preload.json
+# preload.json
 db.json
 option.json
-card.json
-stat.json
+# card.json
+# stat.json
 

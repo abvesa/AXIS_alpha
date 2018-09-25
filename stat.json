@@ -1,0 +1,74 @@
+{
+  "cripple": {
+    "name": "cripple",
+    "text": "<cripple>\ncan't draw cards"
+  },
+  "disease": {
+    "name": "disease",
+    "text": "<disease>\ncan't use heal cards"
+  },
+  "silence": {
+    "name": "silence",
+    "text": "<silence>\ncan't use life field cards"
+  },
+  "fear": {
+    "name": "fear",
+    "text": "<fear>\ncan't attack"
+  },
+  "precise": {
+    "name": "precise",
+    "text": "<precise>\nyour attack can't be vanished"
+  },
+  "stamina": {
+    "name": "stamina",
+    "text": "<stamina>\nhandcard limit + 2"
+  },
+  "recycle": {
+    "name": "recycle",
+    "text": "<recycle>\ndraw 1 card when 1 artifact move to grave"
+  },
+  "berserk": {
+    "name": "berserk",
+    "text": "<berserk>\nequip artifact cost no action point"
+  },
+  "mana_tide": {
+    "name": "mana_tide",
+    "text": "<mana tide>\nnext spell you cast this turn\ncost no action point"
+  },
+  "quick_draw": {
+    "name": "quick_draw",
+    "text": "<quick draw>\nnext artifact you equip this turn\ncost no action point"
+  },
+  "eagle_eye": {
+    "name": "eagle_eye",
+    "text": "<eagle eye>\nyour next attack this turn\ncan't be vanished"
+  },
+  "charge": {
+    "name": "charge",
+    "text": "<charge>\nadd one additional turn after this turn"
+  },
+  "stun": {
+    "name": "stun",
+    "text": "<stun>\naction point -1 and can't use chanting spell this turn"
+  },
+  "freeze": {
+    "name": "freeze",
+    "text": "<freeze>\nyou can't attack or use item this turn"
+  },
+  "petrify": {
+    "name": "petrify",
+    "text": "<petrify>\nyou can only draw card this turn"
+  },
+  "triumph": {
+    "name": "triumph",
+    "text": "<triumph>\nyour attack can't be vanished\nwhen having 3 or more artifact on battle"
+  },
+  "decay": {
+    "name": "decay",
+	"text": "<decay>\nturn down specific artifacts after vanish is used"
+  },
+  "fortify": {
+    "name": "fortify",
+	"text": "<fortify>\nartifacts can't be destroy, break, or turn"
+  }
+}
