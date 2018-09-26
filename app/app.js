@@ -84,6 +84,8 @@ const Game = function () {
     },
     loading: {},
     game: {
+	  bg_up: {type: 'sprite', x: 0, y: -34, img: 'bg_up'},
+	  bg_dn: {type: 'sprite', x: 0, y: 350, img: 'bg_dn'},
       personal_deck: { type: 'sprite', x: this.default.game.width*(1 - 1/13) + 32 + 20 + 10, y: this.default.player.personal.y.deck, img: 'cardback', func: {onInputDown: this.player.personal.drawCard} },
       opponent_deck: { type: 'button', x: this.default.game.width*(1 - 1/13) + 32 + 20 + 10, y: this.default.player.opponent.y.deck, img: 'cardback', func: null },
       personal_grave: { type: 'button', x: this.default.game.width*(1 - 1/13) + 32 + 20 + 10, y: this.default.player.personal.y.grave, img: 'emptySlot', func: null },
@@ -135,7 +137,33 @@ Game.prototype.textPanel = function (text) {
     game.text.end.setText(text.end)
     game.phaser.world.bringToTop(game.text.end)
   }
-  game.phaser.world.bringToTop(game.page.game.stat_panel)
+  //game.phaser.world.bringToTop(game.page.game.stat_panel)
+}
+
+Game.prototype.backgroundPanel = function (your_turn) {
+  game.page.game.end_turn.alpha = (your_turn)? 1 : 0.3 
+  game.page.game.attack.alpha = (your_turn)? 1 : 0.3
+	
+  if (your_turn) {
+    game.tween = game.phaser.add.tween(game.page.game.bg_up).to(
+      {alpha: 1}, 500, Phaser.Easing.Sinusoidal.In, true
+    )
+    game.tween.onComplete.add(function () {
+      game.tween = game.phaser.add.tween(game.page.game.bg_dn).to(
+        {alpha: 0}, 500, Phaser.Easing.Sinusoidal.Out, true
+      )
+    }, game.tween)	
+  }
+  else {
+	game.tween = game.phaser.add.tween(game.page.game.bg_dn).to(
+      {alpha: 1}, 500, Phaser.Easing.Sinusoidal.In, true
+    )
+    game.tween.onComplete.add(function () {
+      game.tween = game.phaser.add.tween(game.page.game.bg_up).to(
+        {alpha: 0}, 500, Phaser.Easing.Sinusoidal.Out, true
+      )
+    }, game.tween) 
+  }
 }
 
 Game.prototype.buildFieldPanel = function (card_list, width = 7, height = 3, indent = 20, scaler = 1.3) {
@@ -513,9 +541,9 @@ Game.prototype.pageInit = function () {
             }
           }
 
-          if (elem.ext) Object.assign(this.page[page_name][elem_name], elem.ext)
+          if ('ext' in elem) Object.assign(this.page[page_name][elem_name], elem.ext)
           this.page[page_name][elem_name].kill()
-          if (page_name === 'game') this.page[page_name][elem_name].anchor.setTo(0.5, 0.5)
+          if (page_name === 'game' && (elem_name !== 'bg_dn' && elem_name !== 'bg_up')) this.page[page_name][elem_name].anchor.setTo(0.5, 0.5)
         }
       }
     }
@@ -1092,30 +1120,7 @@ function buildList (obj) {
 socket.on('gameStart', it => {
   // record deck
   // personal.record_deck = it.card_list.deck
-  
-  game.page.game.end_turn.alpha = (it.start)? 1 : 0.3 
-  game.page.game.attack.alpha = (it.start)? 1 : 0.3
-  
-  if (it.start) {
-    game.tween = game.phaser.add.tween(up).to(
-      {alpha: 1}, 500, Phaser.Easing.Sinusoidal.InOut, true
-    )
-    game.tween.onComplete.add(function () {
-      game.tween = game.phaser.add.tween(dn).to(
-        {alpha: 0}, 500, Phaser.Easing.Sinusoidal.InOut, true
-      )
-    }, game.tween)	
-  }
-  else {
-	game.tween = game.phaser.add.tween(dn).to(
-      {alpha: 1}, 500, Phaser.Easing.Sinusoidal.InOut, true
-    )
-    game.tween.onComplete.add(function () {
-      game.tween = game.phaser.add.tween(up).to(
-        {alpha: 0}, 500, Phaser.Easing.Sinusoidal.InOut, true
-      )
-    }, game.tween) 
-  }
+  game.backgroundPanel(it.start)
   
   // build life
   for (let target in it.card_list.life){
@@ -1129,6 +1134,11 @@ socket.on('gameStart', it => {
   game.fixCardPos({personal: {life: true}, opponent: {life: true}})
   game.changePage({next: 'game'})
   game.textPanel(it.msg)
+  
+  for (let type in game.text) {
+	game.phaser.world.bringToTop(game.text[type])  
+  }
+  game.phaser.world.bringToTop(game.page.game.stat_panel)
 })
 
 socket.on('playerCounter', it => {
@@ -1223,30 +1233,7 @@ socket.on('turnShift', it => {
   game.textPanel(it.msg)
   if (Object.keys(it.card).length) game.cardMove(it.card)
 	  
-  game.page.game.end_turn.alpha = (it.start)? 1 : 0.3 
-  game.page.game.attack.alpha = (it.start)? 1 : 0.3
-  
-  if (it.start) {
-    game.tween = game.phaser.add.tween(up).to(
-      {alpha: 1}, 500, Phaser.Easing.Sinusoidal.InOut, true
-    )
-    game.tween.onComplete.add(function () {
-      game.tween = game.phaser.add.tween(dn).to(
-        {alpha: 0}, 500, Phaser.Easing.Sinusoidal.InOut, true
-      )
-    }, game.tween)	
-  }
-  else {
-	game.tween = game.phaser.add.tween(dn).to(
-      {alpha: 1}, 500, Phaser.Easing.Sinusoidal.InOut, true
-    )
-    game.tween.onComplete.add(function () {
-      game.tween = game.phaser.add.tween(up).to(
-        {alpha: 0}, 500, Phaser.Easing.Sinusoidal.InOut, true
-      )
-    }, game.tween) 
-  }
-  
+  game.backgroundPanel(it.start)
   game.resetCardPick()
 })
 
@@ -1393,10 +1380,6 @@ socket.emit('preload', res => {
       let left = (100*(1 - game.default.game.height/opt.screen.height)/2).toString()+'%'
       $('#game').css({top: top, left: left})
       game.phaser.add.sprite(0, -34, 'background')
-	  up = game.phaser.add.sprite(0, -34, 'bg_up')
-	  up.alpha = 0
-	  dn = game.phaser.add.sprite(0, 350, 'bg_dn')
-      dn.alpha = 0
 	  
       // init text
       game.text_group = game.phaser.add.group()
