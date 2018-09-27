@@ -137,7 +137,7 @@ Game.prototype.textPanel = function (text) {
     game.text.end.setText(text.end)
     game.phaser.world.bringToTop(game.text.end)
   }
-  //game.phaser.world.bringToTop(game.page.game.stat_panel)
+  game.phaser.world.bringToTop(game.page.game.stat_panel)
 }
 
 Game.prototype.backgroundPanel = function (your_turn) {
@@ -148,21 +148,17 @@ Game.prototype.backgroundPanel = function (your_turn) {
     game.tween = game.phaser.add.tween(game.page.game.bg_up).to(
       {alpha: 1}, 500, Phaser.Easing.Sinusoidal.In, true
     )
-    game.tween.onComplete.add(function () {
-      game.tween = game.phaser.add.tween(game.page.game.bg_dn).to(
+	game.tween = game.phaser.add.tween(game.page.game.bg_dn).to(
         {alpha: 0}, 500, Phaser.Easing.Sinusoidal.Out, true
-      )
-    }, game.tween)	
+    )
   }
   else {
 	game.tween = game.phaser.add.tween(game.page.game.bg_dn).to(
       {alpha: 1}, 500, Phaser.Easing.Sinusoidal.In, true
     )
-    game.tween.onComplete.add(function () {
-      game.tween = game.phaser.add.tween(game.page.game.bg_up).to(
+	game.tween = game.phaser.add.tween(game.page.game.bg_up).to(
         {alpha: 0}, 500, Phaser.Easing.Sinusoidal.Out, true
-      )
-    }, game.tween) 
+    )
   }
 }
 
@@ -1394,8 +1390,11 @@ socket.emit('preload', res => {
         }
         game.text[type] = game.phaser.add.text(x, y, text, init)
         if (type === 'effect') game.text_group.add(game.text[type])
-        if (type === 'end') game.text[type].anchor.setTo(0.5)
-      }
+        if (type === 'end') {
+		  game.text[type].anchor.setTo(0.5)
+          game.text[type].addColor('#6e6e6e', 0)
+		}
+	  }
 
       // init
       socket.emit('init', it => {

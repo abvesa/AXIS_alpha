@@ -20,7 +20,7 @@
 	"endTurn": ".\\assets\\button\\end_turn.jpg",
 	"leave": ".\\assets\\button\\leave_long.png",
 	"setting": ".\\assets\\button\\setting_panel.png",
-	"end_match": ".\\assets\\button\\end_match.png",
+	"end_match": ".\\assets\\button\\game_over.png",
 	"attack": ".\\assets\\button\\atk.png",
 	"conceal": ".\\assets\\button\\conceal.png",
 	"tracking": ".\\assets\\button\\tracking.png",
