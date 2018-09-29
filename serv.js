@@ -85,6 +85,7 @@ const Card = function (init) {
   this.cover = true
   this.owner = init.owner
   this.curr_own = init.owner
+  this.room = null
 }
 
 Card.prototype.checkMultiType = function () {
@@ -98,6 +99,20 @@ Card.prototype.checkMultiType = function () {
   let rlt = {}
   for (let i of [0, 1]) rlt[eff_tp[i]] = eff_str[2*i+1] + '\n' + eff_str[2*i+2]
   return rlt
+}
+
+Card.prototype.checkCrossProtection = function () {
+  let room = game.room[this.room]
+  if ('socket' in this) {
+	for (let item_id in this.socket) {
+	  if (item_id in room.player[this.curr_own].anti.cross) {
+		game.emitCounter(room.player[this.curr_own], type = 'cross', spec_id = item_id)
+		break
+	  }
+	}
+	return false
+  }	
+  return false
 }
 
 const Game = function () {
@@ -179,7 +194,7 @@ Game.prototype.buildPlayer = function (client) {
     decay  : {}, // turn down cards in this list when use vanish
     cripple: {}, // can't draw card
     disease: {}, // can't heal
-    silence: {}, // can't use life field card
+    wither: {}, // can't use life field card
     fear   : {}, // can't attack
 
     fortify : {}, // your artifacts can't be destroy or break or turn 
@@ -206,7 +221,10 @@ Game.prototype.buildPlayer = function (client) {
 	item: {},
 	artifact: {},
 	effect: {},
-	damage: {}  
+	damage: {},
+    
+    // special
+    cross: {}	
   }
 
   client.eff_todo = {} // current effect emit to client
@@ -436,12 +454,12 @@ Game.prototype.effectEnd = function (room) {
 //////////////////////////////////////////////////////////////////////////////////
 // !-- action
 
-Game.prototype.emitCounter = function (personal, type = null) {
+Game.prototype.emitCounter = function (personal, type = null, spec_id = null) {
   // personal = who own counter card
   let room = this.room[personal._rid]
   let cnt_type = (type == null)? room.counter_status.type : type
   let anti_queue = Object.keys(personal.anti[cnt_type])
-  let card_id = anti_queue[0]
+  let card_id = (spec_id == null)? anti_queue[0] : spec_id
  
   let card = room.cards[card_id]
   if ('counter' in card && card.type.base === 'artifact') {
@@ -471,6 +489,8 @@ Game.prototype.checkCounter = function (personal, type) {
   if (anti_queue.length) {
 	let room = this.room[personal._rid]
 	let card = room.cards[anti_queue[0]]
+	if (type === 'artifact' && Object.keys(personal._foe.aura.fortify).length) return false
+	
 	if (card.type.base === 'artifact') {
 	  if (card.overheat == true || card.energy < 1) return false  
 	}
@@ -480,6 +500,7 @@ Game.prototype.checkCounter = function (personal, type) {
 	if (type !== 'damage' && type !== 'effect') {
 	  let anti_card = Object.keys(personal.anti.card)
 	  if (anti_card.length) {
+		if (type === 'artifact' && Object.keys(personal._foe.aura.fortify).length) return false	  
 		personal.anti[type][anti_card[0]] = true  
 		delete personal.anti.card[anti_card[0]]
 	    return true
@@ -515,7 +536,7 @@ Game.prototype.checkUse = function (client, it, cb) {
       if (room.cards[it.id].type.base === 'vanish') return cb( {err: 'only available in atk phase'} )
       if ((client.stat.stun ||client.action_point <= 0) && room.cards[it.id].type.base !== 'item') return cb( {err: 'not enough action point'} )
       if (card.field === 'life' && client.card_amount.hand == 0) return cb( {err: 'no handcard to replace'} )
-      if (card.field === 'life' && Object.keys(client.aura.silence).length) return cb({err: 'cant use life field cards when silenced'})
+      if (card.field === 'life' && Object.keys(client.aura.wither).length) return cb({err: 'cant use life field cards when withered'})
     }
     else
       if(card.field === 'life') return cb( {err: 'its not a handcard'} )
@@ -632,8 +653,8 @@ Game.prototype.triggerCard = function (client, it, cb) {
       return game.useCard(client)
   }
   if (room.phase !== 'normal') return cb({err: `not allowed in ${room.phase} phase`})
-  if ('counter' in card && Object.keys(game.default.all_card[card.name].type.effect).length == 1) 
-	  return cb({err: 'only available in counter phase'})
+  if ('counter' in card && Object.keys(game.default.all_card[card.name].type.effect).length == 1) return cb({err: 'only available in counter phase'})
+  if (card.type.base === 'artifact' && 'aura' in card.type.effect) return cb({err: 'no trigger effect'})
   if (card.type.base === 'spell' && !('trigger' in card.type.effect)) return cb({err: 'no trigger effect'})
 
   // choose one check ... if true return else continue
@@ -1249,16 +1270,20 @@ Game.prototype.destroy = function (personal, effect) {
 
   let rlt = {}
 
-  for (let tg in mod_eff) {
-    if (Object.keys(player[tg].aura.solidity).length) delete mod_eff[tg].battle
-  }
-
   let tmp = {personal: {}, opponent: {}}
   for (let id in room.cards) {
     let card = room.cards[id]
     let curr_own = (card.curr_own === personal._pid)? 'personal' : 'opponent'
-    if (!mod_eff[curr_own]) continue
-    if (!mod_eff[curr_own][card.field]) continue
+    if (!(curr_own in mod_eff)) continue
+    if (!(card.field in mod_eff[curr_own])) continue
+	if (card.field === 'battle') {
+	  for (let item_id in card.socket) {
+		if (item_id in player[curr_own].anti.cross) {
+		  game.emitCounter(player[curr_own], type = 'cross', spec_id = item_id)
+		  break
+		}
+	  }
+	}
     tmp[curr_own][id] = {from: card.field, to: 'grave'}
   }
 
@@ -1764,7 +1789,7 @@ io.on('connection', client => {
   })
 
   client.on('matchEnd', cb => {
-    if (!client.hp || !client._foe.hp) {
+    if (client.hp == 0 || client._foe.hp == 0) {
       game.buildPlayer(client)
       game.pool[client._pid] = client
       delete game.room[client._rid].player[client._pid]
@@ -1879,6 +1904,7 @@ io.on('connection', client => {
         for (let pid in room.player) {
           for (let [index, card] of room.player[pid].curr_deck.entries()) {
             let id = `card_${game.room[rid].card_id}`
+			card.room = rid
 			card.id = id
             room.cards[id] = card
             if (index < room.player[pid].life_max) {
@@ -1959,9 +1985,10 @@ io.on('connection', client => {
     client.atk_phase -= 1
 
     if ((Object.keys(client.aura.triumph).length && client.card_amount.battle >= 3) || Object.keys(client.aura.precise).length || client.buff.eagle_eye) {
-      game.buff(client, {eagle_eye: {personal: false}})
+      cb({msg: {phase: 'attack phase', action: 'attack hits'}})
+	  game.buff(client, {eagle_eye: {personal: false}})
       room.atk_status.hit = true
-	  game.buildEffectQueue(client, client.atk_enchant)
+	  game.buildEffectQueue(client, {enchant: client.atk_enchant})
       //let avail_effect = game.judge(client, client._foe, {enchant: client.atk_enchant})
       //game.effectTrigger(client, client._foe, avail_effect)
     }
@@ -2045,7 +2072,7 @@ io.on('connection', client => {
     client.emit(`plyUseVanish`, { msg: {action: `${action}... waiting opponent`}, card: rlt.personal, rlt: Object.assign({personal: true}, panel) })
     client._foe.emit(`plyUseVanish`, { msg: {action: `foe ${action}`}, card: rlt.opponent, rlt: Object.assign({opponent: true}, panel) })
     
-	game.drain(personal, {card_pick: personal.aura.decay}, use_vanish = true)
+	game.drain(client, {card_pick: client.aura.decay}, use_vanish = true)
     room.atk_status.curr = (client == room.atk_status.attacker)? (room.atk_status.defender) : (room.atk_status.attacker)
   })
 
@@ -2322,17 +2349,17 @@ io.on('connection', client => {
     //if (nxt_ply.stat.stun) nxt_ply.action_point -= 1
 
     // chanting spell trigger
-    if (!nxt_ply.stat.stun && Object.keys(nxt_ply.chanting).length) {
+    if (Object.keys(nxt_ply.chanting).length && !nxt_ply.stat.stun) {
       // card move
       rlt = game.cardMove(nxt_ply, nxt_ply.chanting)
       nxt_ply.emit('chantingTrigger', {card: rlt.personal})
       nxt_ply._foe.emit('chantingTrigger', {card: rlt.opponent})
       // effect
 	  game.buildEffectQueue(nxt_ply, {chanting: nxt_ply.chanting})
-      //let avail_effect = game.judge(nxt_ply, nxt_ply._foe, {chanting: nxt_ply.chanting})
+	  nxt_ply.chanting = {}
+	  //let avail_effect = game.judge(nxt_ply, nxt_ply._foe, {chanting: nxt_ply.chanting})
       //game.effectTrigger(nxt_ply, nxt_ply._foe, avail_effect)
     }
-	nxt_ply.chanting = {}
   }
 
   client.on('endTurn', cb => {

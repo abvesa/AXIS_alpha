@@ -23,9 +23,7 @@
       "enchant": {
         "heal": {
           "personal": {
-            "hit": true
-          },
-		  "personal": {
+            "hit": true,
 		    "aura": {
 			  "disease": false
 			}
@@ -248,11 +246,16 @@
         "destroy": {
           "personal": {
             "hit": true
-          }
+          },
+		  "opponent": {
+		    "aura": {
+			  "fortify": false
+			}
+		  }
         }
       }
     },
-    "text": "Judge\n<Enchant>\nf your attack hits, DESTROY all opponent artifact on battlefield"
+    "text": "Judge\n<Enchant>\nif your attack hits, DESTROY all opponent artifact on battlefield"
   },
   "katana": {
     "name": "katana",
@@ -959,7 +962,7 @@
         }
       }
     },
-    "text": "Gravity\n<Trigger>\ncontrol 1 opponent artifact on battle field"
+    "text": "Gravity\n<Trigger>\ncontrol 1 opponent artifact on battle field and discard one card"
   },
   "equip_breaker": {
     "name": "equip_breaker",
@@ -984,10 +987,8 @@
           "opponent": {
             "battle": {
               "goe": 1
-            }
-          },
-		  "opponent": {
-		    "aura": {
+            },
+            "aura": {
 			  "fortify": false
 			}
 		  }
@@ -1165,5 +1166,26 @@
 	  }
     },
     "text": "Summoner's craft\n<Chanting>\nRetrieve a card from your deck to hand"
-  }  
+  },
+  "cross": {
+    "name": "cross",
+	"type": {
+	  "base": "item",
+	  "effect": {
+	    "mosaic": 1
+	  }
+	},
+	"effect": {
+	  "mosaic": {},
+	  "counter": {}
+	},
+    "judge": {
+	  "mosaic": {},
+	  "counter": {}
+	},
+	"counter": {
+	  "cross": true
+	}
+	"text": "Cross\n<Mosaic>\nProtect your artifact from being affected once"
+  }
 }

@@ -641,6 +641,12 @@ Game.prototype.resetPlayer = function () {
     }
     opponent[field] = []
   }
+  
+  for (let stat_name in personal.stat) {
+	if (personal.stat[stat_name].status) personal.stat[stat_name].status = false
+    if (opponent.stat[stat_name].status) opponent.stat[stat_name].status = false
+  }
+  
   this.page.game.field_panel.removeChildren()
   this.page.game.personal_grave.loadTexture('emptySlot')
   this.page.game.opponent_grave.loadTexture('emptySlot')
@@ -703,6 +709,7 @@ const Player = function () {
 Player.prototype.attack = function () {
   socket.emit('attack', it => {
     if(it.err) return game.textPanel({cursor: it.err})
+	game.textPanel(it.msg)
   })
 }
 
@@ -1020,12 +1027,12 @@ Card.prototype.flip = function (name = null) {
   if (name != null) card.name = name
 
   game.tween = game.phaser.add.tween(card.body.scale).to(
-    {x: 0, y: 1}, 250, Phaser.Easing.Sinusoidal.InOut, true
+    {x: 0, y: 1}, 150, Phaser.Easing.Sinusoidal.InOut, true
   )
   game.tween.onComplete.add(function () {
     card.img.loadTexture((card.img.key !== 'cardback')? 'cardback' : card.name)
     game.tween = game.phaser.add.tween(card.body.scale).to(
-      {x: 1, y: 1}, 250, Phaser.Easing.Sinusoidal.InOut, true
+      {x: 1, y: 1}, 150, Phaser.Easing.Sinusoidal.InOut, true
     )
   }, game.tween)
 

@@ -7,9 +7,9 @@
     "name": "disease",
     "text": "<disease>\ncan't use heal cards"
   },
-  "silence": {
-    "name": "silence",
-    "text": "<silence>\ncan't use life field cards"
+  "wither": {
+    "name": "wither",
+    "text": "<wither>\ncan't use life field cards"
   },
   "fear": {
     "name": "fear",
@@ -69,6 +69,6 @@
   },
   "fortify": {
     "name": "fortify",
-	"text": "<fortify>\nartifacts can't be destroy, break, or turn"
+	"text": "<fortify>\nartifacts on your battle field\ncan't be destroy, break, or turn"
   }
 }
