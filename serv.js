@@ -107,12 +107,11 @@ Card.prototype.checkCrossProtection = function () {
 	for (let item_id in this.socket) {
 	  if (item_id in room.player[this.curr_own].anti.cross) {
 		game.emitCounter(room.player[this.curr_own], type = 'cross', spec_id = item_id)
-		break
+		return true
 	  }
 	}
-	return false
-  }	
-  return false
+  }
+  return false  
 }
 
 const Game = function () {
@@ -120,15 +119,15 @@ const Game = function () {
     all_card    : {},
     all_stat    : {},
     // card type
-    artifact_max: 5,//13,
-    spell_max   : 3,//14,
-    item_max    : 2,//12,
+    artifact_max: 6,//5,//13,
+    spell_max   : 7,//3,//14,
+    item_max    : 5,//2,//12,
     vanish_max  : 4,//11
     // player attribute
     atk_damage  : 1,
     atk_phase   : 1,
     action_point: 1,
-    deck_max    : 14, // 50
+    deck_max    : 22,//14, // 50
     hand_max    : 7,
     life_max    : 6
   }
@@ -314,13 +313,20 @@ Game.prototype.cardMove = function (personal, rlt) {
       }
     }
     else {
-      if ((card.field === rlt[id].to && card.curr_own !== player[rlt[id].new_own]._pid) || (rlt[id].from === 'grave' && rlt[id].to === 'battle')) {
-        if (game.default.all_card[card.name].aura) {
+	  // card owner change when card on battle or altar
+      if ((card.field === rlt[id].to && card.curr_own !== player[rlt[id].new_own]._pid && (card.field === 'battle' || card.field === 'altar')) || (rlt[id].from === 'grave' && rlt[id].to === 'battle')) {
+        if ('aura' in game.default.all_card[card.name]) {
           //aura_modify.personal[id] = false
           //aura_modify.opponent[id] = true
 		  aura_modify[rlt[id].curr_own][id] = false
 		  aura_modify[rlt[id].new_own][id] = true
         }
+		if ('counter' in card) {
+		  for (let counter_type in card.counter) {
+		    if (card.id in player[rlt[id].curr_own].anti[counter_type]) delete player[rlt[id].curr_own].anti[counter_type][card.id]
+			player[rlt[id].new_own].anti[counter_type][card.id] = true
+	      }
+		}
       }
     }
 		
@@ -644,7 +650,7 @@ Game.prototype.triggerCard = function (client, it, cb) {
   let room = game.room[client._rid]
   let card = room.cards[it.id]
 
-  if (room.phase === 'counter' || room.phase === 'effect') return cb({err: 'choose'})
+  if (room.phase === 'counter' || room.phase === 'effect' || room.phase === 'attack') return cb({err: 'choose'})
   if (room.curr_ply !== client._pid) return cb({err: 'waiting for opponent'})
   if (card.curr_own !== client._pid) return cb( {err: 'cant trigger opponent card'})
   if (room.phase === 'socket') {
@@ -1209,6 +1215,9 @@ Game.prototype.control = function (personal, param) {
     if (card.curr_own !== personal._foe._pid) return {err: 'please choose opponent card'}
     if (!effect.personal[card.field]) return {err: 'wrong type of chosen card field'}
     if (!effect.personal[card.field][card.type.base]) return {err: 'wrong type of chosen card type'}
+	if (card.field === 'battle') {
+	  if (card.checkCrossProtection()) continue
+    }
 
     let param = {}
     //param[id] = {from: card.field, to: card.field, new_own: 'opponent'}
@@ -1245,6 +1254,9 @@ Game.prototype.break = function (personal, param) {
     if (!effect[('card' in effect)? 'card' : card.type.base]) return {err: 'error type length'}
     effect[('card' in effect)? 'card' : card.type.base] --
     //param.card_pick[id] = {new_own: 'personal', to: 'grave'}
+	if (card.field === 'battle') {
+	  if (card.checkCrossProtection()) continue
+    }	
     param.card_pick[id] = {to: 'grave'}
   }
 
@@ -1277,14 +1289,9 @@ Game.prototype.destroy = function (personal, effect) {
     if (!(curr_own in mod_eff)) continue
     if (!(card.field in mod_eff[curr_own])) continue
 	if (card.field === 'battle') {
-	  for (let item_id in card.socket) {
-		if (item_id in player[curr_own].anti.cross) {
-		  game.emitCounter(player[curr_own], type = 'cross', spec_id = item_id)
-		  break
-		}
-	  }
-	}
-    tmp[curr_own][id] = {from: card.field, to: 'grave'}
+	  if (card.checkCrossProtection()) continue
+    }
+	tmp[curr_own][id] = {from: card.field, to: 'grave'}
   }
 
   for (let tg in mod_eff) {
@@ -1361,6 +1368,10 @@ Game.prototype.drain = function (personal, param, use_vanish = false) {
 	if (card.energy < 1 || (card.overheat && use_vanish)) continue
 	
 	let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
+	if (card_owner === 'opponent' && card.field === 'battle') {
+	  if (card.checkCrossProtection()) continue
+    }
+	
 	card.energy -= 1
 	if (use_vanish) card.overheat = true
 	
