@@ -424,8 +424,9 @@ Game.prototype.cardMove = function (rlt) {
 	  }
 	}
 	
-	if ((rlt[id].cover && card.img.key !== 'cardback') || (!rlt[id].cover && card.img.key !== card.name)) card.flip()
-
+	if ((rlt[id].cover && card.img.key !== 'cardback') || (!rlt[id].cover && card.img.key !== card.name)) {
+	  if (!(rlt[id].from === 'life' && (rlt[id].to === 'battle' || rlt[id].to === 'altar' || rlt[id].to !== 'socket'))) card.flip()
+    }
     card.frame.visible = false
     
     if (rlt[id].to === 'socket' || rlt[id].from === 'socket') {

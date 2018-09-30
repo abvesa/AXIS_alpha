@@ -655,11 +655,11 @@ Game.prototype.triggerCard = function (client, it, cb) {
   if (card.curr_own !== client._pid) return cb( {err: 'cant trigger opponent card'})
   if (room.phase === 'socket') {
     if (card.type.base !== 'artifact') return cb({err: 'can only socket on artifact'})
-      client.card_pause['socket'] = it.id
-      return game.useCard(client)
+    client.card_pause['socket'] = it.id
+    return game.useCard(client)
   }
   if (room.phase !== 'normal') return cb({err: `not allowed in ${room.phase} phase`})
-  if ('counter' in card && Object.keys(game.default.all_card[card.name].type.effect).length == 1) return cb({err: 'only available in counter phase'})
+  if ('counter' in card && Object.keys(card.type.effect).length == 1) return cb({err: 'only available in counter phase'})
   if (card.type.base === 'artifact' && 'aura' in card.type.effect) return cb({err: 'no trigger effect'})
   if (card.type.base === 'spell' && !('trigger' in card.type.effect)) return cb({err: 'no trigger effect'})
 
@@ -2284,7 +2284,8 @@ io.on('connection', client => {
     if (card == null) return {err: 'card = null'}
     //if (card.curr_own != client._pid) return
 
-    let type = ((card.field === 'battle' && !('counter' in game.default.all_card[card.name].effect)) || card.field === 'altar')? 'trigger' : 'use'
+    //let type = ((card.field === 'battle' && !('counter' in game.default.all_card[card.name].effect)) || card.field === 'altar')? 'trigger' : 'use'
+	let type = (card.field === 'battle' || card.field === 'altar')? 'trigger' : 'use'
     if (type === 'use') game.checkUse(client, it, cb)
     else game.triggerCard(client, it, cb)
   })

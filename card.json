@@ -770,7 +770,7 @@
 	"counter": {
       "artifact": true
     },
-    "text": "Bombard Hell\n<Counter\ncounter target opponent artifact when use"
+    "text": "Bombard Hell\n<Counter>\ncounter target opponent artifact when use"
   },
   "future_vision": {
     "name": "future_vision",
