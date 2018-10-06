@@ -199,8 +199,8 @@ Game.prototype.buildFieldPanel = function (card_list, width = 7, height = 3, ind
 }
 
 Game.prototype.viewFieldCards = function () {
-  let field = this.phaser.input.mouse._last_over_scroll
-  if (this.phaser.input.mouse.wheelDelta === Phaser.Mouse.WHEEL_UP) {
+  let field = game.phaser.input.mouse._last_over_scroll
+  if (game.phaser.input.mouse.wheelDelta === Phaser.Mouse.WHEEL_UP) {
     for (let card of field.children) {
       card.y -= 45
     }
