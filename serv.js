@@ -126,7 +126,7 @@ const Game = function () {
     // player attribute
     atk_damage  : 1,
     atk_phase   : 1,
-    action_point: 1,
+    action_point: 1,//100,//
     deck_max    : 22,//14, // 50
     hand_max    : 7,
     life_max    : 6
@@ -1194,6 +1194,28 @@ Game.prototype.stat = function (personal, effect) {
       for (let stat_name of tp) {
         player[target].stat[stat_name] = effect[name][target]
         rlt.stat[target][stat_name] = effect[name][target]
+		
+		// recover chanting after recover stun
+		if (stat_name === 'stun') {
+		  let chanting_mod = (effect[name][target] == true)? false : true
+   		  let avail_chanting = Object.keys(player[target].chanting).reduce( (last, curr) => {
+			if (player[target].chanting[curr].status != chanting_mod) {
+			  player[target].chanting[curr].status = chanting_mod
+			  if (chanting_mod) {
+			    last[curr] = player[target].chanting[curr]
+			    delete player[target].chanting[curr]
+			  }
+			}
+		    return last
+		  }, {})
+		  if (Object.keys(avail_chanting).length) {
+			let rtn = game.cardMove(player[target], avail_chanting)
+			player[target].emit('chantingTrigger', {card: rtn.personal})
+			player[target]._foe.emit('chantingTrigger', {card: rtn.opponent})
+			game.buildEffectQueue(player[target], {chanting: avail_chanting})
+		  }
+		}
+		//
       }
     }
   }
@@ -1934,7 +1956,7 @@ io.on('connection', client => {
         // game start
         opponent.emit('gameStart', {card_list: {life: life[opponent._pid], deck: record_deck[opponent._pid]}, msg: {phase: 'normal phase', action: 'your turn', cursor: ' '}, start: true })
         client.emit('gameStart', {card_list: {life: life[client._pid], deck: record_deck[client._pid]}, msg: {phase: 'normal phase', action: 'opponent turn', cursor: ' '}, start: false })
-      }
+	  }
       else{
         game.queue.push(client)
         delete game.pool[client._pid]
@@ -2208,7 +2230,7 @@ io.on('connection', client => {
         else {
           room.phase = 'normal'
           if (card.type.effect.chanting) {
-			client._foe.chanting[card.id] = {to: 'grave'}
+			client._foe.chanting[card.id] = {to: 'grave', status: true}
 		  }
 		  if ('counter' in card) {
 			/*
@@ -2343,7 +2365,8 @@ io.on('connection', client => {
 
         case 'altar':
           if (card.type.effect.trigger && card.lock) card.lock = false
-          break
+		  if (card.id in client.chanting && !client.chanting[card.id].status) param[id] = {from: card.field}
+		  break
 
         default: break
       }
@@ -2361,14 +2384,32 @@ io.on('connection', client => {
     //if (nxt_ply.stat.stun) nxt_ply.action_point -= 1
 
     // chanting spell trigger
-    if (Object.keys(nxt_ply.chanting).length && !nxt_ply.stat.stun) {
-      // card move
+    //if (Object.keys(nxt_ply.chanting).length && !nxt_ply.stat.stun) {
+	if (Object.keys(nxt_ply.chanting).length) {
+      let avail_chanting = Object.keys(nxt_ply.chanting).reduce( (last, curr) => {
+        if (nxt_ply.chanting[curr].status == true) {
+		  last[curr] = nxt_ply.chanting[curr]
+          delete nxt_ply.chanting[curr]
+		}
+		return last
+      }, {})
+	  if (Object.keys(avail_chanting).length) {
+		rlt = game.cardMove(nxt_ply, avail_chanting)
+        nxt_ply.emit('chantingTrigger', {card: rlt.personal})
+        nxt_ply._foe.emit('chantingTrigger', {card: rlt.opponent})
+		game.buildEffectQueue(nxt_ply, {chanting: avail_chanting})
+      }
+	  /*
+	  // card move  
       rlt = game.cardMove(nxt_ply, nxt_ply.chanting)
       nxt_ply.emit('chantingTrigger', {card: rlt.personal})
       nxt_ply._foe.emit('chantingTrigger', {card: rlt.opponent})
-      // effect
+      
+	  // effect
 	  game.buildEffectQueue(nxt_ply, {chanting: nxt_ply.chanting})
 	  nxt_ply.chanting = {}
+	  */
+	  
 	  //let avail_effect = game.judge(nxt_ply, nxt_ply._foe, {chanting: nxt_ply.chanting})
       //game.effectTrigger(nxt_ply, nxt_ply._foe, avail_effect)
     }
