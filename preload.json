@@ -82,6 +82,15 @@
 	"cross": ".\\assets\\card\\cross.jpg",
 	"summoners_craft": ".\\assets\\card\\summoners_craft.jpg",
 	
+	"dragon_orb": ".\\assets\\card\\dragon_orb.jpg",
+	"heros_hymn": ".\\assets\\card\\heros_hymn.jpg",
+	"sorcery_circle": ".\\assets\\card\\sorcery_circle.jpg",
+	"weapon_reforge": ".\\assets\\card\\weapon_reforge.jpg",	
+	"thunder_iron": ".\\assets\\card\\thunder_iron.jpg",
+	"holy_blade": ".\\assets\\card\\observer.jpg",
+	"observer": ".\\assets\\card\\observer.jpg",
+	"angle_incarnation": ".\\assets\\card\\angle_incarnation.jpg",
+	
 	"berserk": ".\\assets\\stat\\berserk.png",
 	"charge": ".\\assets\\stat\\charge.png",
 	"cripple": ".\\assets\\stat\\cripple.png",

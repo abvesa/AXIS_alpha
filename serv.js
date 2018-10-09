@@ -943,11 +943,6 @@ Game.prototype.effectJudge = function (card_eff) {
   return card_eff
 }
 
-
-
-
-
-
 /////////////////////////////////////////////////////////////////////////////////
 // !-- effect apply
 

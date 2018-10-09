@@ -56,7 +56,12 @@
       "enchant": {
         "recall": {
           "personal": {
-            "hit": true
+            "hit": true,
+			"grave": {
+			  "artifact": {
+			    "goe": 1
+			  }
+			}
           }
         }
       }
@@ -141,7 +146,14 @@
         "steal": {
           "personal": {
             "hit": true
-          }
+          },
+		  "opponent": {
+		    "hand": {
+			  "card": {
+			    "goe": 1
+			  }
+			}
+		  }
         }
       }
     },
@@ -215,7 +227,7 @@
         },
         "modify_2": {
           "personal": {
-            "handcard": {
+            "hand": {
               "goe": 5
             }
           }
@@ -333,7 +345,12 @@
       "enchant": {
         "retrieve": {
           "personal": {
-            "hit": true
+            "hit": true,
+		    "deck": {
+			  "card": {
+			    "goe": 1
+			  }
+			}
           }
         }
       }
@@ -362,7 +379,12 @@
       "enchant": {
         "recall": {
           "personal": {
-            "hit": true
+            "hit": true,
+			"grave": {
+			  "artifact": {
+			    "goe": 1
+			  }
+			}
           }
         }
       }
@@ -451,7 +473,7 @@
         },
         "buff": {
           "personal": {
-            "handcard": {
+            "hand": {
               "loe": 2
             }
           }
@@ -747,8 +769,24 @@
     },
     "judge": {
       "instant": {
-        "steal": {},
-        "discard": {}
+        "steal": {
+		  "opponent": {
+		    "hand": {
+			  "card": {
+			    "goe": 1
+			  }
+			}
+		  }
+		},
+        "discard": {
+		  "personal": {
+            "hand": {
+			  "card": {
+                "goe": 1
+              }
+			}
+          }
+		}
       }
     },
     "text": "Warrior Spirit\n<Instant>\nSTEAL 1 opponent handcard, and DISCARD 1 card"
@@ -951,15 +989,24 @@
             "battle": {
               "goe": 1
             }
+          },
+		  "personal": {
+            "hand": {
+			  "card": {
+                "goe": 1
+              }
+			}
           }
         },
         "discard": {
-          "personal": {
-            "handcard": {
-              "goe": 1
-            }
+		  "personal": {
+            "hand": {
+			  "card": {
+                "goe": 1
+              }
+			}
           }
-        }
+		}
       }
     },
     "text": "Gravity\n<Trigger>\ncontrol 1 opponent artifact on battle field and discard one card"
@@ -1162,7 +1209,15 @@
     },
     "judge": {
       "chanting": {
-	    "retrieve": {}
+	    "retrieve": {
+		  "personal": {
+		    "deck": {
+			  "card": {
+			    "goe": 1
+			  }
+			}
+		  }
+		}
 	  }
     },
     "text": "Summoner's craft\n<Chanting>\nRetrieve a card from your deck to hand"
@@ -1187,5 +1242,159 @@
 	  "cross": true
 	},
 	"text": "Cross\n<Mosaic>\nProtect your artifact from being affected once"
-  }
+  },
+  "dragon_orb": {
+    "name": "dragon_orb",
+	"type": {
+	  "base": "item",
+	  "effect": {
+	    "normal": 1
+	  }	  
+	},
+	"effect": {
+	  "normal": {
+	    "buff": {
+	      "quick_draw": {
+		    "personal": true
+		  } 
+	    }
+	  }
+	},
+	"judge": {
+	  "normal": {
+	    "buff": {}
+	  }
+	},
+	"text": "Dragon Orb\n<Normal>\nYour next artifact equip this turn cost no action point"
+  },
+  "heros_hymn": {
+    "name": "heros_hymn",
+	"type": {
+	  "base": "spell",
+	  "effect": {
+	    "chanting": 1
+	  }	  
+	},
+	"effect": {
+	  "chanting": {
+	    "buff": {
+		  "personal": {
+		    "eagle_eye": true
+		  }
+		},
+		"modify": {
+          "personal": {
+            "atk_damage": 2
+          }
+        }
+	  }
+	},
+	"judge": {
+	  "chanting": {
+	    "buff": {},
+		"modify": {}
+	  }
+	},
+	"text": "Hero's Hymn\n<Chanting>\nAttack damage +2, next attack you do can't be vanish"
+  },
+  "sorcery_circle": {
+    "name": "sorcery_circle",
+	"type": {
+	  "base": "spell",
+	  "effect": {
+	    "instant": 1
+	  }	  
+	},
+	"effect": {
+	  "instant": {
+	    "exchange": {
+		  "personal": {
+		    "card": 3
+		  }
+		}
+	  }
+	},
+	"judge": {
+	  "instant": {
+	    "exchange": {
+		  "opponent": {
+		    "hand": {
+			  "goe": 1
+			}
+		  }
+		}
+	  }
+	},
+	"text": "Sorcery Circle\n<Instant>\nExchange same amount of handcards with your opponent, up to 3"
+  },
+  "weapon_reforge": {
+    "name": "weapon_reforge",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "recall": {
+          "personal": {
+            "artifact": 1,
+			"_to": "battle"
+          }
+        }
+      }
+    },
+    "judge": {
+      "instant": {
+        "recall": {
+          "personal": {
+			"grave": {
+			  "artifact": {
+			    "goe": 1
+			  }
+			}
+          }
+        }
+      }
+    },
+    "text": "Weapon Reforge\n<Instant>\nRecall an artifact from your grave to battle"
+  },
+  "thunder_iron": {
+    "name": "thunder_iron",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "stat": {
+          "stun": {
+            "opponent": true
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "stat": {
+		  "personal": {
+		    "hit": true
+		  }
+		}
+      }
+    },
+    "text": "Thunder Iron\n<Enchant>\nIf your attack hits, stun your opponent"
+  },
+  "holy_blade": {
+  
+  },
+  "observer": {
+  
+  },
+  "angle_incarnation": {
+    
+  } 
 }
