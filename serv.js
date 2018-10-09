@@ -126,7 +126,7 @@ const Game = function () {
     // player attribute
     atk_damage  : 1,
     atk_phase   : 1,
-    action_point: 1,//100,//
+    action_point: 100,//1,//
     deck_max    : 22,//14, // 50
     hand_max    : 7,
     life_max    : 6
@@ -182,6 +182,15 @@ Game.prototype.buildPlayer = function (client) {
   client.hand_max = game.default.hand_max
   client.life_max = game.default.life_max
   client.card_amount = {altar: 0, battle: 0, deck: 0, grave: 0, hand: 0, life: 0, socket: 0}
+  client.field_detail = {
+	battle: {artifact: 0},
+	altar: {spell: 0},
+	socket: {item: 0},
+	deck: {item: 0, artifact: 0, spell: 0, vanish: 0}, 
+	hand: {item: 0, artifact: 0, spell: 0, vanish: 0},  
+	grave: {item: 0, artifact: 0, spell: 0, vanish: 0}, 
+    life: {item: 0, artifact: 0, spell: 0, vanish: 0}
+  }
   client.choose_deck = {}
 
   // action
@@ -360,8 +369,10 @@ Game.prototype.cardMove = function (personal, rlt) {
     // move card
     rlt[id].from = card.field
     player[rlt[id].curr_own].card_amount[rlt[id].from] -= 1
+	player[rlt[id].curr_own].field_detail[rlt[id].from][card.type.base] -= 1
     card.field = rlt[id].to
     player[rlt[id].new_own].card_amount[rlt[id].to] += 1
+	player[rlt[id].new_own].field_detail[rlt[id].to][card.type.base] += 1
     card.curr_own = player[rlt[id].new_own]._pid
     //if (!personal.card_amount.deck) rlt[id].deck_empty = 'personal'
 	if (!player[rlt[id].curr_own].card_amount.deck) rlt[id].deck_empty = rlt[id].curr_own
@@ -403,7 +414,10 @@ Game.prototype.cardMove = function (personal, rlt) {
   if (Object.keys(aura_modify.opponent)) game.aura(personal._foe, aura_modify.opponent)
   //console.log(param.opponent)
   //console.log(param.personal)
-
+  
+  //console.log(personal._pid, personal.field_detail)
+  //console.log(personal._foe._pid, personal._foe.field_detail)
+  
   return param
 }
 
@@ -766,6 +780,7 @@ Game.prototype.buildEffectQueue = function (personal, card_list) {
 Game.prototype.effectEmitter = function (room) {
   //console.log(room.effect_queue)
   let card_eff = this.effectJudge(room.effect_queue.shift())
+  //console.log(card_eff)
   let personal = card_eff.initiator
   let opponent = personal._foe
   let player = {personal: personal, opponent: opponent}
@@ -800,7 +815,7 @@ Game.prototype.effectEmitter = function (room) {
 		  //if (Object.keys(player[target].aura.dicease).length) continue
 		}
         else if (eff_name === 'steal') {
-		  if (opponent.card_amount.hand == 0) continue
+		  //if (opponent.card_amount.hand == 0) continue
           if (!('ext' in tmp)) tmp.ext = {}
           tmp.ext.hand = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
             if (this.room[personal._rid].cards[curr].curr_own === opponent._pid && this.room[personal._rid].cards[curr].field === 'hand')
@@ -809,7 +824,7 @@ Game.prototype.effectEmitter = function (room) {
           }, {})
         }
         else if (eff_name === 'retrieve') {
-		  if (personal.card_amount.deck == 0) continue
+		  //if (personal.card_amount.deck == 0) continue
           if (!('ext' in tmp)) tmp.ext = {}
           tmp.ext.deck = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
             if (this.room[personal._rid].cards[curr].curr_own === personal._pid && this.room[personal._rid].cards[curr].field === 'deck')
@@ -818,7 +833,7 @@ Game.prototype.effectEmitter = function (room) {
           }, {})
         }
 		else if (eff_name === 'recall') {
-		  if (personal.card_amount.grave == 0) continue
+		  //if (personal.card_amount.grave == 0) continue
           if (!('ext' in tmp)) tmp.ext = {}
           tmp.ext.deck = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
             if (this.room[personal._rid].cards[curr].curr_own === personal._pid && this.room[personal._rid].cards[curr].field === 'grave')
@@ -892,18 +907,25 @@ Game.prototype.effectJudge = function (card_eff) {
 			  
             case 'hp':
               curr_val = player[target].hp
-			  pass = pass && operation(curr_val, judge[effect][target][condition])
+			  pass = pass && checkValue(curr_val, judge[effect][target][condition])
               break
-			  
-            case 'handcard':
-              curr_val = player[target].card_amount.hand
-			  pass = pass && operation(curr_val, judge[effect][target][condition])
+			
+			case 'battle':
+			case 'altar':
+			case 'socket':
+			  curr_val = player[target].card_amount[condition]
+			  pass = pass && checkValue(curr_val, judge[effect][target][condition])
+			  break
+			
+			case 'grave':
+			case 'deck':
+			case 'life':
+            case 'hand':
+			  for (let type in judge[effect][target][condition]) {
+				curr_val = (type === 'card')? player[target].card_amount[condition] : player[target].field_detail[condition][type]
+			    pass = pass && checkValue(curr_val, judge[effect][target][condition][type]) 
+			  }
               break
-			  
-            case 'battle':
-              curr_val = player[target].card_amount.battle
-			  pass = pass && operation(curr_val, judge[effect][target][condition])
-              break	  
 			  
 			case 'aura':
 			  pass = pass && checkAura(player[target].aura, judge[effect][target][condition])
@@ -911,11 +933,6 @@ Game.prototype.effectJudge = function (card_eff) {
 			
             default:break
           }
-
-          //if (condition !== 'hit')
-            //pass = pass && operation(curr_val, judge[effect][target][condition])
-		    //if (operation(curr_val, judge[effect][target][condition])) 
-			//	avail_eff.push(effect)
         }
       }
 
@@ -1045,7 +1062,7 @@ Game.prototype.judge = function (personal, opponent, card_list) {
               }
 
               if (condition !== 'hit')
-                if (operation(curr_val, judge[effect][target][condition])) avail_effect[tg_tp][id].push(effect)
+                if (checkValue(curr_val, judge[effect][target][condition])) avail_effect[tg_tp][id].push(effect)
             }
           }
         }
@@ -1645,11 +1662,43 @@ Game.prototype.steal = function (personal, param) {
   return {}
 }
 
+Game.prototype.exchange = function (personal, param) {
+  let room = this.room[personal._rid]
+  let effect = Object.assign({}, game.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+
+  let card_pick = Object.keys(param.card_pick)
+  let total_len = 0
+  for (let tp in effect) {
+    total_len += effect[tp]
+	effect[tp] = {personal: effect[tp], opponent: effect[tp]}
+  }
+  if (card_pick.length > total_len*2 || (card.pick.length%2) != 0) return {err: 'error exchange length'}
+  
+  for (let id in param.card_pick) {
+    let card = room.cards[id]
+	let card_own = (card.curr_own === personal._pid)? 'personal' : 'opponent'
+	let new_own = (card_own === 'personal')? 'opponent' : 'personal'
+    if (card == null) return {err: 'no card id'}
+    if (card.field !== 'hand') return {err: 'please choose hand card'}
+    if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
+    if (!effect[('card' in effect)? 'card' : card.type.base][card_own]) return {err: 'error type length'}
+    effect[('card' in effect)? 'card' : card.type.base][card_own] --
+    param.card_pick[id] = {new_own: new_own, to: 'hand'}
+  }
+
+  let rlt = this.cardMove(personal, param.card_pick)
+  
+  personal.emit('effectTrigger', {card: {exchange: { personal: rlt.personal, opponent: {} }}})
+  personal._foe.emit('effectTrigger', {card: {exchange: { personal: {}, opponent: rlt.opponent }}})
+  
+  return {}
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////
 
 // utility
-function operation (curr_val, condition) {
+function checkValue (curr_val, condition) {
   let operator = Object.keys(condition)[0]
   switch (operator) {
     case 'more':
@@ -1901,6 +1950,7 @@ io.on('connection', client => {
         }
         client.curr_deck.push(new Card(init))
         client.card_amount.deck += 1
+		client.field_detail.deck[init.type.base] += 1
       }
 
       // find opponent
@@ -1946,6 +1996,8 @@ io.on('connection', client => {
               life[room.player[pid]._foe._pid].opponent.push({id: id})
               room.player[pid].card_amount.deck -= 1
               room.player[pid].card_amount.life += 1
+			  room.player[pid].field_detail.deck[card.type.base] -= 1
+			  room.player[pid].field_detail.life[card.type.base] += 1
             }
             else record_deck[pid].push({id: id, name: card.name})
             room.card_id ++
@@ -1956,6 +2008,9 @@ io.on('connection', client => {
         // game start
         opponent.emit('gameStart', {card_list: {life: life[opponent._pid], deck: record_deck[opponent._pid]}, msg: {phase: 'normal phase', action: 'your turn', cursor: ' '}, start: true })
         client.emit('gameStart', {card_list: {life: life[client._pid], deck: record_deck[client._pid]}, msg: {phase: 'normal phase', action: 'opponent turn', cursor: ' '}, start: false })
+	  
+	    //console.log(opponent._pid, opponent.field_detail)
+		//console.log(client._pid, client.field_detail)
 	  }
       else{
         game.queue.push(client)
