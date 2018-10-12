@@ -202,8 +202,9 @@ Game.prototype.buildPlayer = function (client) {
     decay  : {}, // turn down cards in this list when use vanish
     cripple: {}, // can't draw card
     disease: {}, // can't heal
-    wither: {}, // can't use life field card
+    wither : {}, // can't use life field card
     fear   : {}, // can't attack
+	unveil : {}, // show your hand cards to opponent
 
     fortify : {}, // your artifacts can't be destroy or break or turn 
     triumph : {}, // atk cant be vanish when artifact > 3 on battle
@@ -227,9 +228,11 @@ Game.prototype.buildPlayer = function (client) {
 	card: {},
 	spell: {},
 	item: {},
+	vanish: {},
 	artifact: {},
 	effect: {},
 	damage: {},
+	attack: {}
     
     // special
     cross: {}	
@@ -1146,6 +1149,7 @@ Game.prototype.block = function (personal, param) {
 Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true, ...}
   let player = {personal: personal, opponent: personal._foe}
   let rlt = { stat: {personal: {}, opponent: {}} }
+  let card_flip = {personal: {}, opponent: {}}
   let room = this.room[personal._rid]
 
   for (let cid in card_list) {
@@ -1158,26 +1162,19 @@ Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true
         }
         else {
           delete player[tg].aura[tp][cid]
-          rlt.stat[tg][tp] = false
+		  if (!Object.keys(player[tg].aura[tp]).length) rlt.stat[tg][tp] = false
         }
-        /*
-        if (player[tg].aura[tp][cid]) {
-          delete player[tg].aura[tp][cid]
-          rlt.stat[tg][tp] = false
-        }
-        else {
-          player[tg].aura[tp][cid] = true
-          rlt.stat[tg][tp] = true
-        }
-        */
+		
+		if (tp === 'unveil') {
+		  let cover = (card_list[cid])? false : true
+          
+		}
       }
     }
   }
 
   personal.emit('effectTrigger', rlt)
   personal._foe.emit('effectTrigger', genFoeRlt(rlt))
-
-  //console.log(personal.aura.cripple)
 
   return {}
 }
@@ -2077,9 +2074,17 @@ io.on('connection', client => {
     }
     else {
       client._foe.first_conceal = true
-      client.emit('playerAttack', { msg: {phase: 'attack phase', action: 'attack... waiting opponent'}, rlt: {personal: true, attack: true} })
-      client._foe.emit('playerAttack', { msg: {phase: 'attack phase', action: 'foe attack'}, rlt: {opponent: true, attack: true} })
-    }
+	  if (game.checkCounter(client._foe, 'attack')) {
+		game.emitCounter(client._foe, type='attack')  
+		room.atk_status.curr = room.atk_status.attacker
+		client._foe.emit('plyUseVanish', { msg: {action: 'conceal... waiting opponent'}, rlt: {personal: true, conceal: true} })
+		client.emit('plyUseVanish', { msg: {action: 'foe conceal'}, rlt: {opponent: true, conceal: true} })
+	  }
+	  else { 
+	    client.emit('playerAttack', { msg: {phase: 'attack phase', action: 'attack... waiting opponent'}, rlt: {personal: true, attack: true} })
+        client._foe.emit('playerAttack', { msg: {phase: 'attack phase', action: 'foe attack'}, rlt: {opponent: true, attack: true} })
+      }
+	}
   })
 
   client.on('useVanish', (it, cb) => {
@@ -2088,7 +2093,7 @@ io.on('connection', client => {
     if (typeof cb !== 'function') return
     if (room.phase !== 'attack') return
     if (client != room.atk_status.curr) return
-
+	
     let card_pick = Object.keys(it.card_pick)
     for (let id of card_pick) {
       let card = room.cards[id]
@@ -2097,7 +2102,7 @@ io.on('connection', client => {
     }
 
     let type = {life_use: {}, hand_use: {}, hand_swap: {}}
-    let action = (it.conceal)? 'conceal' : 'tracking'
+    let action = (client == room.atk_status.attacker)? 'tracking' : 'conceal'//('conceal' in it)? 'conceal' : 'tracking'
 
     for (let id of card_pick) {
       let card = room.cards[id]
@@ -2151,12 +2156,25 @@ io.on('connection', client => {
     let rlt = game.cardMove(client, param)
     let panel = {}
     panel[action] = true
-
-    client.emit(`plyUseVanish`, { msg: {action: `${action}... waiting opponent`}, card: rlt.personal, rlt: Object.assign({personal: true}, panel) })
-    client._foe.emit(`plyUseVanish`, { msg: {action: `foe ${action}`}, card: rlt.opponent, rlt: Object.assign({opponent: true}, panel) })
     
 	game.drain(client, {card_pick: client.aura.decay}, use_vanish = true)
-    room.atk_status.curr = (client == room.atk_status.attacker)? (room.atk_status.defender) : (room.atk_status.attacker)
+	
+	if (action === 'conceal' && game.checkCounter(client._foe, 'vanish')) {
+	  game.emitCounter(client._foe, type='attack')	
+
+	  client.emit('playerGiveUp', { msg: {action: 'be hit... waiting opponent', cursor: ' '}, rlt: {personal: true, give_up: true, conceal: true} })
+	  client._foe.emit('playerGiveUp', { msg: {action: 'attack hits... your turn', cursor: ' '}, rlt: {opponent: true, give_up: true, conceal: true} })
+	  room.atk_status.hit = true
+	  client.first_conceal = false
+
+	  // effect phase
+	  game.buildEffectQueue(room.atk_status.attacker, {enchant: room.atk_status.attacker.atk_enchant})
+	}
+	else {
+      client.emit('plyUseVanish', { msg: {action: `${action}... waiting opponent`}, card: rlt.personal, rlt: Object.assign({personal: true}, panel) })
+      client._foe.emit('plyUseVanish', { msg: {action: `foe ${action}`}, card: rlt.opponent, rlt: Object.assign({opponent: true}, panel) })
+      room.atk_status.curr = (client == room.atk_status.attacker)? (room.atk_status.defender) : (room.atk_status.attacker)
+    }
   })
 
   client.on('giveUp', () => {

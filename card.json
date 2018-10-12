@@ -1389,10 +1389,68 @@
     "text": "Thunder Iron\n<Enchant>\nIf your attack hits, stun your opponent"
   },
   "holy_blade": {
-  
+    "name": "holy_blade",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "counter": 1
+      }
+    },
+    "effect": {
+      "counter": {}
+    },
+    "judge": {
+      "counter": {}
+    },
+	"counter": {
+	  "vanish": true
+	},
+	"aura": {
+	  "unveil": {
+	    "personal": true
+	  }
+	},
+    "text": "Holy Blade\n<Counter>\ncounter target opponent vanish when use"
+  },
+  "paper_fan": {
+    "name": "paper_fan",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "counter": 1
+      }
+    },
+    "effect": {
+      "counter": {}
+    },
+    "judge": {
+      "counter": {}
+    },
+	"counter": {
+	  "attack": true
+	},
+    "text": "Paper Fan\n<Counter>\nwhen being attacked, vanish"
   },
   "observer": {
-  
+    "name": "observer",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "aura": 1
+      }
+    },
+    "effect": {
+      "aura": {}
+    },
+    "judge": {
+      "aura": {}
+    },
+    "aura": {
+	  "unveil": {
+	    "opponent": true
+	  }
+    },
+    "text": "Observer\n<Aura>\nopponent unveil"
   },
   "angle_incarnation": {
     

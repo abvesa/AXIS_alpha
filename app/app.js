@@ -1174,6 +1174,7 @@ socket.on('playerAttack', it => {
 socket.on('playerGiveUp', it => {
   game.resetCardPick()
   game.textPanel(it.msg)
+  if ('card' in it) game.cardMove(it.card)
   game.attackPanel(it.rlt)
 })
 
@@ -1251,13 +1252,15 @@ socket.on('effectTrigger', effect => {
   for (let type in effect.card) {
     switch (type) {
       // card flip
+	  case 'unveil':
       case 'receive':
       case 'heal':
       case 'bleed':
         let target = (Object.keys(effect.card[type].personal).length)? 'personal' : 'opponent'
+		let field = (type === 'receive' || type === 'heal' || type === 'bleed')? 'life' : 'hand'
         for (let id in effect.card[type][target]) {
-          let pos = game.findCard({id: id, curr_own: target, from: 'life'})
-          game.player[target].life[pos].flip(effect.card[type][target][id])
+          let pos = game.findCard({id: id, curr_own: target, from: field})
+          game.player[target][field][pos].flip(effect.card[type][target][id])
         }
         break
 
