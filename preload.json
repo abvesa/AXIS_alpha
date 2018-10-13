@@ -87,7 +87,7 @@
 	"sorcery_circle": ".\\assets\\card\\sorcery_circle.jpg",
 	"weapon_reforge": ".\\assets\\card\\weapon_reforge.jpg",	
 	"thunder_iron": ".\\assets\\card\\thunder_iron.jpg",
-	"holy_blade": ".\\assets\\card\\observer.jpg",
+	"holy_blade": ".\\assets\\card\\holy_blade.jpg",
 	"observer": ".\\assets\\card\\observer.jpg",
 	"paper_fan": ".\\assets\\card\\paper_fan.jpg",
 	"angle_incarnation": ".\\assets\\card\\angle_incarnation.jpg",
@@ -108,6 +108,7 @@
 	"wither": ".\\assets\\stat\\wither.png",
 	"stamina": ".\\assets\\stat\\stamina.png",
 	"stun": ".\\assets\\stat\\stun.png",
+	"unveil": ".\\assets\\stat\\unveil.png",
 	"triumph": ".\\assets\\stat\\triumph.png",
 	"decay": ".\\assets\\stat\\decay.png"
   }

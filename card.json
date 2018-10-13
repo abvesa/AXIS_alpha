@@ -1319,7 +1319,9 @@
 	    "exchange": {
 		  "opponent": {
 		    "hand": {
-			  "goe": 1
+			  "card": {
+			    "goe": 1
+			  }
 			}
 		  }
 		}
@@ -1410,7 +1412,7 @@
 	    "personal": true
 	  }
 	},
-    "text": "Holy Blade\n<Counter>\ncounter target opponent vanish when use"
+    "text": "Holy Blade\n<Counter>\ncounter target opponent vanish when use\n<Aura>\nunveil your handcards"
   },
   "paper_fan": {
     "name": "paper_fan",
@@ -1453,6 +1455,33 @@
     "text": "Observer\n<Aura>\nopponent unveil"
   },
   "angle_incarnation": {
-    
+    "name": "angle_incarnation",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "modify_1": {
+          "personal": {
+            "life_max": 1
+          }
+        },
+		"modify_2": {
+		  "personal": {
+		    "hp": 1
+		  }
+		}
+      }
+    },
+    "judge": {
+      "instant": {
+        "modify_1": {},
+        "modify_2": {}
+      }
+    },
+    "text": "Angle Incarnation\n<Instant>\nhp +1 and max hp +1"
   } 
 }

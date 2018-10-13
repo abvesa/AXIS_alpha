@@ -70,5 +70,9 @@
   "fortify": {
     "name": "fortify",
 	"text": "<fortify>\nartifacts on your battle field\ncan't be destroy, break, or turn"
+  },
+  "unveil": {
+    "name": "unveil",
+	"text": "<unveil>\nunveil your handcard"
   }
 }

@@ -778,7 +778,7 @@ Player.prototype.effectLoop = function () {
 
     if (curr_eff === 'damage') game.blockPanel({damage: true})
     else {
-      if (curr_eff === 'steal') {
+      if (curr_eff === 'steal' || curr_eff === 'exchange') {
         // flip opponent hand card
         for (let card of opponent.hand)
           card.flip()
@@ -1287,8 +1287,9 @@ socket.on('effectTrigger', effect => {
 
       // flip hand card back
       case 'recall':
+	  case 'exchange':
       case 'steal':
-        if (type === 'steal') {
+        if (type === 'steal' || type === 'exchange') {
 		  if (Object.keys(effect.card[type].personal).length) {
             for (let card of opponent.hand)
               if (!(card.id in effect.card[type].personal))
