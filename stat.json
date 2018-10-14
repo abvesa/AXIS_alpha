@@ -73,6 +73,6 @@
   },
   "unveil": {
     "name": "unveil",
-	"text": "<unveil>\nunveil your handcard"
+	"text": "<unveil>\nshow handcards"
   }
 }

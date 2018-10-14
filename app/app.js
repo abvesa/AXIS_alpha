@@ -119,8 +119,8 @@ const Game = function () {
     phase: {init: {font: "26px Arial", fill: '#ffffff', align: 'left'}, x: 51},
     action: {init: {font: "26px Arial", fill: '#ffffff', align: 'left'}, x: 51},
     cursor: {init: {font: "26px Arial", fill: '#ffffff', align: 'left'}, x: 51},
-    effect: {init: {font: "26px Arial", fill: '#ffffff', align: 'left'}, x: 51},
-    stat: {init: {font: "26px Arial", fill: '#ffffff', align: 'left'}, x: 33},
+    effect: {init: {font: "20px Arial", fill: '#ffffff', align: 'left'}, x: 51},
+    stat: {init: {font: "20px Arial", fill: '#ffffff', align: 'left'}, x: 33},
     end: {init: {font: "50px Arial", fill: '#ffffff', align: 'center'}, x: this.default.game.width/2}
   }
   this.text_group = null
@@ -1146,6 +1146,7 @@ socket.on('gameStart', it => {
 })
 
 socket.on('playerCounter', it => {
+  console.log(it.card)
   game.resetCardPick()
   game.textPanel(it.msg)
   if ('card' in it) game.cardMove(it.card)
@@ -1253,6 +1254,15 @@ socket.on('effectTrigger', effect => {
     switch (type) {
       // card flip
 	  case 'unveil':
+		let upd = effect.card[type]
+		if (Object.keys(upd).length) {
+		  for (let card of game.player.opponent.hand) {
+            card.name = upd[card.id]
+			card.flip()
+		  }
+	    }
+		break
+		
       case 'receive':
       case 'heal':
       case 'bleed':

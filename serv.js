@@ -288,7 +288,6 @@ Game.prototype.cardMove = function (personal, rlt) {
     rlt[id].curr_own = (card.curr_own === personal._pid)? 'personal' : 'opponent'
     rlt[id].name = (rlt[id].cover)? 'cardback' : card.name
     
-	//if (!('new_own' in rlt[id])) rlt[id].new_own = (card.owner === personal._pid)? 'personal' : 'opponent'
 	if (!('to' in rlt[id])) rlt[id].to = 'grave'
 	
 	if (!('new_own' in rlt[id])) {
@@ -300,18 +299,12 @@ Game.prototype.cardMove = function (personal, rlt) {
 	  }
 	}
     
-    if (rlt[id].to === 'grave' || rlt[id].to === 'hand' || ((rlt[id].to === 'deck' || rlt[id].to === 'life') && card.field !== 'hand') ) {
-      if (game.default.all_card[card.name].aura) {
-		//aura_modify.personal[id] = false
+    if (((rlt[id].to === 'grave' || rlt[id].to === 'hand') && (card.field === 'battle' || card.field === 'altar')) || ((rlt[id].to === 'deck' || rlt[id].to === 'life') && card.field !== 'hand') ) {
+      // reseting card when card leave field
+	  if (game.default.all_card[card.name].aura) {
 		aura_modify[rlt[id].curr_own][id] = false
 	  }
 	  if ('counter' in card) {
-		/*
-	    let effect_type = Object.keys(card.counter)[0]
-	    let counter_type = Object.keys(card.counter[effect_type])[0]
-	    if (card.id in player[rlt[id].curr_own].anti[counter_type])
-		  delete player[rlt[id].curr_own].anti[counter_type][card.id]
-        */
 		for (let counter_type in card.counter) {
 		  if (card.id in player[rlt[id].curr_own].anti[counter_type])
 		    delete player[rlt[id].curr_own].anti[counter_type][card.id]
@@ -330,8 +323,6 @@ Game.prototype.cardMove = function (personal, rlt) {
 	  // card owner change when card on battle or altar
       if ((card.field === rlt[id].to && card.curr_own !== player[rlt[id].new_own]._pid && (card.field === 'battle' || card.field === 'altar')) || (rlt[id].from === 'grave' && rlt[id].to === 'battle')) {
         if ('aura' in game.default.all_card[card.name]) {
-          //aura_modify.personal[id] = false
-          //aura_modify.opponent[id] = true
 		  aura_modify[rlt[id].curr_own][id] = false
 		  aura_modify[rlt[id].new_own][id] = true
         }
@@ -345,9 +336,6 @@ Game.prototype.cardMove = function (personal, rlt) {
     }
 		
     if (card.socket && Object.keys(card.socket).length) {
-      //let tmp = game.cardMove(personal, Object.assign({}, card.socket))
-      //Object.assign(param.personal, tmp.personal)
-      //Object.assign(param.opponent, tmp.opponent)
 	  let tmp = game.cardMove(player[rlt[id].curr_own], Object.assign({}, card.socket))
 	  if (rlt[id].curr_own === 'personal') {
         Object.assign(param.personal, tmp.personal)
@@ -360,13 +348,10 @@ Game.prototype.cardMove = function (personal, rlt) {
 	}
 
     if (rlt[id].on) {
-      //console.log('skt')
-      //game.room[personal._rid].cards[rlt[id].on].socket[id] = {off: rlt[id].on}
 	  room.cards[rlt[id].on].socket[id] = {off: rlt[id].on}
       card.bond = rlt[id].on
     }
     if (rlt[id].off) {
-      //delete game.room[personal._rid].cards[rlt[id].off].socket[id]
 	  delete room.cards[rlt[id].off].socket[id]
       card.bond = null
     }
@@ -391,7 +376,8 @@ Game.prototype.cardMove = function (personal, rlt) {
 	
     // build return object
     param.personal[id] = {}
-	if (rlt[id].to === 'hand' && rlt[id].new_own === 'opponent') {
+	if (rlt[id].to === 'hand' && rlt[id].new_own === 'opponent' && !Object.keys(player[rlt[id].new_own].aura.unveil).length) {
+	  //console.log('aaa')
 	  rlt[id].cover = true
 	  if (rlt[id].from === 'deck') delete rlt[id].name
     } 
@@ -405,23 +391,18 @@ Game.prototype.cardMove = function (personal, rlt) {
 
     //rlt[id].cover = (rlt[id].off)? true : false
 
-    if (rlt[id].to === 'hand' && rlt[id].new_own === 'opponent') {
-      rlt[id].cover = true
+    if (rlt[id].to === 'hand' && rlt[id].new_own === 'opponent' && !Object.keys(player[(rlt[id].new_own === 'opponent')? 'personal' : 'opponent'].aura.unveil).length) {
+      //console.log('bbb')
+	  rlt[id].cover = true
 	  if (rlt[id].from === 'deck') delete rlt[id].name
     }
 	else rlt[id].cover = false
 
     Object.assign(param.opponent[id], rlt[id])
-	//Object.assign(param[opposite_ply][id], rlt[id])
   }
 
-  if (Object.keys(aura_modify.personal)) game.aura(personal, aura_modify.personal)
-  if (Object.keys(aura_modify.opponent)) game.aura(personal._foe, aura_modify.opponent)
-  //console.log(param.opponent)
-  //console.log(param.personal)
-  
-  //console.log(personal._pid, personal.field_detail)
-  //console.log(personal._foe._pid, personal._foe.field_detail)
+  if (Object.keys(aura_modify.personal).length) game.aura(personal, aura_modify.personal)
+  if (Object.keys(aura_modify.opponent).length) game.aura(personal._foe, aura_modify.opponent)
   
   return param
 }
@@ -1169,14 +1150,24 @@ Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true
 		
 		if (tp === 'unveil') {
 		  let cover = (card_list[cid])? false : true
-          
+  
+          let tmp = Object.keys(room.cards).reduce( (last, curr) => {
+            if (room.cards[curr].curr_own === player[tg]._pid && room.cards[curr].field === 'hand')
+              last[curr] = room.cards[curr].name
+            return last
+          }, {})
+		  
+		  Object.assign(card_flip[tg], tmp)		  
 		}
       }
     }
   }
-
-  personal.emit('effectTrigger', rlt)
-  personal._foe.emit('effectTrigger', genFoeRlt(rlt))
+  
+  let personal_rlt = (Object.keys(card_flip.opponent).length)? Object.assign(rlt, {card: {unveil: card_flip.opponent}}) : rlt
+  personal.emit('effectTrigger', personal_rlt)
+  
+  let opponent_rlt = (Object.keys(card_flip.personal).length)? Object.assign(genFoeRlt(rlt), {card: {unveil: card_flip.personal}}) : genFoeRlt(rlt)
+  personal._foe.emit('effectTrigger', opponent_rlt)
 
   return {}
 }
@@ -1278,7 +1269,7 @@ Game.prototype.break = function (personal, param) {
   }
   if (card_pick.length != total_len) return {err: 'error break length'}
 
-  for (let id in param.card_pick) {
+  for (let id of card_pick) {
     let card = room.cards[id]
     if (card == null) return {err: 'no card id'}
     if (card.curr_own !== personal._foe._pid) return {err: 'please choose opponent card'}
@@ -1288,8 +1279,11 @@ Game.prototype.break = function (personal, param) {
     effect[('card' in effect)? 'card' : card.type.base] --
     //param.card_pick[id] = {new_own: 'personal', to: 'grave'}
 	if (card.field === 'battle') {
-	  if (card.checkCrossProtection()) continue
-    }	
+	  if (card.checkCrossProtection()) {
+		delete param.card_pick[id]
+		continue
+      }
+	}	
     param.card_pick[id] = {to: 'grave'}
   }
 
