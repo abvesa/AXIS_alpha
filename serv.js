@@ -1133,6 +1133,7 @@ Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true
   let player = {personal: personal, opponent: personal._foe}
   let rlt = { stat: {personal: {}, opponent: {}} }
   let card_flip = {personal: {}, opponent: {}}
+
   let room = this.room[personal._rid]
 
   for (let cid in card_list) {
@@ -1157,7 +1158,7 @@ Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true
             return last
           }, {})
 		  
-		  Object.assign(card_flip[tg], tmp)		  
+		  Object.assign(card_flip[tg], tmp)
 		}
       }
     }
@@ -1492,14 +1493,43 @@ Game.prototype.heal = function (personal, param) {
 Game.prototype.modify = function(personal, effect) {
   let player = {personal: personal, opponent: personal._foe}
   let rlt = { attr: { personal: {}, opponent: {} } }
+  let card_move = {card: {modify: {personal: {}, opponent: {}}}}
+  
   for (let target in effect) {
     for (let object in effect[target]) {
       player[target][object] += effect[target][object]
       rlt.attr[target][object] = effect[target][object]
+	  
+	  if (object === 'life_max') {
+		  
+		  
+	  }
     }
   }
   personal.emit('effectTrigger', rlt)
   personal._foe.emit('effectTrigger', genFoeRlt(rlt))
+  return {}
+}
+
+Game.prototype.shuffle = function (personal, effect) {
+  let room = this.room[personal._rid] 
+  let player = {personal: personal, opponent: personal._foe}
+  
+  for (let target in effect) {	  
+	if (player[target].card_amount.deck <= 1) continue 
+	let deck_list = Object.keys(room.cards).reduce( (last, curr) => {
+	  if (room.cards[curr].curr_own === player[target]._pid && room.cards[curr].field === 'deck')
+		last.push(curr)
+	  return last
+	}, [])
+	deck_list = shuffle(deck_list)
+	for (let cid of deck_list) {
+	  let tmp = room.cards[cid]
+	  delete room.cards[cid]
+	  room.cards[cid] = tmp		  
+	}
+  }
+  
   return {}
 }
 

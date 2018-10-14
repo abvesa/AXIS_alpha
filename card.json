@@ -338,7 +338,10 @@
             "card": 1,
 			"_to": "hand"
           }
-        }
+        },
+		"shuffle": {
+		  "personal": true
+		}
       }
     },
     "judge": {
@@ -352,8 +355,8 @@
 			  }
 			}
           }
-        }
-      }
+        },
+		"shuffle": {}
     },
     "text": "Shadow\n<Enchant>\nIf your attack hits, RETRIEVE 1 card from your deck to hand"
   },
@@ -1204,7 +1207,10 @@
             "card": 1,
 			"_to": "hand"
           }
-        }
+        },
+		"shuffle": {
+		  "personal": true
+		}
 	  }
     },
     "judge": {
@@ -1217,7 +1223,8 @@
 			  }
 			}
 		  }
-		}
+		},
+		"shuffle": {}
 	  }
     },
     "text": "Summoner's craft\n<Chanting>\nRetrieve a card from your deck to hand"
@@ -1464,22 +1471,17 @@
     },
     "effect": {
       "instant": {
-        "modify_1": {
+        "modify": {
           "personal": {
-            "life_max": 1
-          }
-        },
-		"modify_2": {
-		  "personal": {
-		    "hp": 1
+            "life_max": 1,
+            "hp": 1
 		  }
 		}
       }
     },
     "judge": {
       "instant": {
-        "modify_1": {},
-        "modify_2": {}
+        "modify": {}
       }
     },
     "text": "Angle Incarnation\n<Instant>\nhp +1 and max hp +1"
