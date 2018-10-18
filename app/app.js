@@ -1275,6 +1275,7 @@ socket.on('effectTrigger', effect => {
         break
 
       // generate new card
+	  case 'modify':
       case 'retrieve':
       case 'draw':
         if (type === 'retrieve') {
@@ -1282,14 +1283,14 @@ socket.on('effectTrigger', effect => {
           field_panel.removeChildren(begin = 0)
           field_panel.kill()
         }
-        if (type === 'draw' || type === 'retrieve') {
+        if (type === 'draw' || type === 'retrieve' || type === 'modify') {
 		  let fix_field = {}
 		  let tg = (Object.keys(effect.card[type].personal).length)? 'personal' : 'opponent'
 		  for (let id in effect.card[type][tg]) {
 		    let curr = effect.card[type][tg][id]
-		    game.player[curr.new_own].hand.push( new Card({name: (curr.name)? curr.name : 'cardback', id: id, cover: (curr.cover)? curr.cover : (false), owner: curr.new_own, field: curr.to}) )
+		    game.player[curr.new_own][curr.to].push( new Card({name: (curr.name)? curr.name : 'cardback', id: id, cover: (curr.cover)? curr.cover : (false), owner: curr.new_own, field: curr.to}) )
 		    if (curr.deck_empty) game.page.game[`${curr.new_own}_deck`].kill()
-		    if (!fix_field[curr.new_own]) fix_field[curr.new_own] = {hand: true}
+		    if (!fix_field[curr.new_own]) fix_field[curr.new_own] = {[curr.to]: true}
 		  }
 		  game.fixCardPos(fix_field)
 		}

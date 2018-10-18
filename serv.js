@@ -366,12 +366,12 @@ Game.prototype.cardMove = function (personal, rlt) {
     card.curr_own = player[rlt[id].new_own]._pid
     //if (!personal.card_amount.deck) rlt[id].deck_empty = 'personal'
 	if (!player[rlt[id].curr_own].card_amount.deck) rlt[id].deck_empty = rlt[id].curr_own
-	
-    if ((rlt[id].from === 'hand' || rlt[id].from === 'deck' || rlt[id].from === 'grave') && (rlt[id].to === 'life' || rlt[id].to === 'battle' || rlt[id].to === 'altar' || rlt[id].to === 'socket')) {
-	  card.cover = false	
-	}
-	else if (rlt[id].to === 'hand' || rlt[id].to === 'grave') {
+	    
+	if ((rlt[id].to === 'hand' || rlt[id].to === 'grave') || (rlt[id].to === 'life' && rlt[id].from === 'deck')) {
 	  card.cover = true
+	}
+	else if ((rlt[id].from === 'hand' || rlt[id].from === 'deck' || rlt[id].from === 'grave') && (rlt[id].to === 'life' || rlt[id].to === 'battle' || rlt[id].to === 'altar' || rlt[id].to === 'socket')) {
+	  card.cover = false	
 	}
 	
     // build return object
@@ -381,6 +381,10 @@ Game.prototype.cardMove = function (personal, rlt) {
 	  rlt[id].cover = true
 	  if (rlt[id].from === 'deck') delete rlt[id].name
     } 
+	else if (rlt[id].to === 'life' && rlt[id].from === 'deck') {
+	  rlt[id].cover = true
+	  if (rlt[id].new_own === 'opponent') delete rlt[id].name
+	}
 	else rlt[id].cover = false
     Object.assign(param.personal[id], rlt[id])
 	
@@ -395,9 +399,12 @@ Game.prototype.cardMove = function (personal, rlt) {
       //console.log('bbb')
 	  rlt[id].cover = true
 	  if (rlt[id].from === 'deck') delete rlt[id].name
-    }
+    } 
+	else if (rlt[id].to === 'life' && rlt[id].from === 'deck') {
+	  rlt[id].cover = true
+	  if (rlt[id].new_own === 'opponent') delete rlt[id].name
+	}
 	else rlt[id].cover = false
-
     Object.assign(param.opponent[id], rlt[id])
   }
 
@@ -1245,14 +1252,10 @@ Game.prototype.control = function (personal, param) {
     }
 
     let param = {}
-    //param[id] = {from: card.field, to: card.field, new_own: 'opponent'}
 	param[id] = {from: card.field, to: card.field, new_own: 'personal'}
-    //rlt = this.cardMove(personal._foe, param)
 	rlt = this.cardMove(personal, param)
   }
 
-  //personal.emit('effectTrigger', {card:{control:{ personal: rlt.opponent, opponent: {} }}})
-  //personal._foe.emit('effectTrigger', {card:{control:{ personal: {}, opponent: rlt.personal }}})
   personal.emit('effectTrigger', {card:{control:{ personal: rlt.personal, opponent: {} }}})
   personal._foe.emit('effectTrigger', {card:{control:{ personal: {}, opponent: rlt.opponent }}})
   return {}
@@ -1288,11 +1291,8 @@ Game.prototype.break = function (personal, param) {
     param.card_pick[id] = {to: 'grave'}
   }
 
-  //let rlt = this.cardMove(personal._foe, param.card_pick)
   let rlt = this.cardMove(personal, param.card_pick)
 
-  //personal.emit('effectTrigger', {card: {break: { personal: rlt.opponent, opponent: {} }}})
-  //personal._foe.emit('effectTrigger', {card: {break: { personal: {}, opponent: rlt.personal }}})
   personal.emit('effectTrigger', {card: {break: { personal: rlt.personal, opponent: {} }}})
   personal._foe.emit('effectTrigger', {card: {break: { personal: {}, opponent: rlt.opponent }}})
   
@@ -1491,23 +1491,34 @@ Game.prototype.heal = function (personal, param) {
 }
 
 Game.prototype.modify = function(personal, effect) {
+  let room = this.room[personal._rid] 
   let player = {personal: personal, opponent: personal._foe}
   let rlt = { attr: { personal: {}, opponent: {} } }
-  let card_move = {card: {modify: {personal: {}, opponent: {}}}}
+  let card_move = {}
   
   for (let target in effect) {
     for (let object in effect[target]) {
       player[target][object] += effect[target][object]
       rlt.attr[target][object] = effect[target][object]
 	  
-	  if (object === 'life_max') {
-		  
-		  
+	  if (object === 'life_max' && player[target].card_amount.deck > 0) {
+	    let tmp = {}
+		for (let id in room.cards) {
+		  let card = room.cards[id]
+		  if (card.field === 'deck' && card.curr_own === player[target]._pid) {
+			tmp[id] = {to: 'life'}
+			break
+		  }
+		}  
+		card_move = game.cardMove(player[target], tmp)
 	  }
     }
   }
-  personal.emit('effectTrigger', rlt)
-  personal._foe.emit('effectTrigger', genFoeRlt(rlt))
+  personal_rlt = (Object.keys(card_move).length)? Object.assign(rlt, {card: {modify: {personal: card_move.personal, opponent: {}}}}) : rlt  
+  personal.emit('effectTrigger',  personal_rlt)
+  
+  opponent_rlt = (Object.keys(card_move).length)? Object.assign(genFoeRlt(rlt), {card: {modify: {opponent: card_move.opponent, personal: {}}}}) : genFoeRlt(rlt)
+  personal._foe.emit('effectTrigger', opponent_rlt)
   return {}
 }
 
