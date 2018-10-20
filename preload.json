@@ -90,13 +90,20 @@
 	"observer": ".\\assets\\card\\observer.jpg",
 	"paper_fan": ".\\assets\\card\\paper_fan.jpg",
 	"angle_incarnation": ".\\assets\\card\\angle_incarnation.jpg",
+	
 	"death": ".\\assets\\card\\death.jpg",
 	"the_golden_egg": ".\\assets\\card\\the_golden_egg.jpg",
 	"tsunami_wave": ".\\assets\\card\\tsunami_wave.jpg",
 	"twilight_zone": ".\\assets\\card\\twilight_zone.jpg",
 	"undead_recall": ".\\assets\\card\\undead_recall.jpg",
 	
-	
+	"luxury_banquet": ".\\assets\\card\\luxury_banquet.jpg",
+	"butterfly_effect": ".\\assets\\card\\butterfly_effect.jpg",
+	"perfect_crime": ".\\assets\\card\\perfect_crime.jpg",
+	"prime_cathedral": ".\\assets\\card\\prime_cathedral.jpg",
+	"financial_monopoly": ".\\assets\\card\\financial_monopoly.jpg",
+	"emergency_jetpack": ".\\assets\\card\\emergency_jetpack.jpg",
+	"shockwave": ".\\assets\\card\\shockwave.jpg",
 	
 	"berserk": ".\\assets\\stat\\berserk.png",
 	"charge": ".\\assets\\stat\\charge.png",

@@ -314,7 +314,10 @@
       "enchant": {
         "drain": {
 		  "opponent": {
-		    "aura": {
+            "battle": {
+              "goe": 1
+            },
+            "aura": {
 			  "fortify": false
 			}
 		  }
@@ -562,7 +565,7 @@
         },
         "draw": {
           "personal": {
-            "deck": 1
+            "card": 1
           }
         }
       }
@@ -590,7 +593,7 @@
         },
         "draw": {
           "personal": {
-            "deck": 1
+            "card": 1
           }
         }
       }
@@ -704,7 +707,7 @@
         },
         "draw": {
           "personal": {
-            "deck": 3
+            "card": 3
           }
         }
       }
@@ -1487,6 +1490,7 @@
     },
     "text": "Angle Incarnation\n<Instant>\nhp +1 and max hp +1"
   },
+  
   "death": {
     "name": "death",
     "type": {
@@ -1520,7 +1524,7 @@
 	  "chanting": {
 	    "draw": {
           "personal": {
-            "deck": 3
+            "card": 3
           }
         }
 	  }
@@ -1612,5 +1616,242 @@
 	  }
 	},
 	"text": "Tsunami Wave\n<Chanting>\nAP+3"
+  },
+  
+  "shockwave": {
+    "name": "shockwave",
+	"type": {
+	  "base": "spell",
+	  "effect": {
+	    "instant": 1
+	  }	  
+	},
+	"effect": {
+	  "instant": {
+	    "drainAll": {
+          "opponent": true
+        },
+		"repairAll": {
+		  "personal": true
+		}
+	  }
+	},
+	"judge": {
+	  "instant": {
+	    "drainAll": {
+		  "opponent": {
+            "battle": {
+              "goe": 1
+            },
+            "aura": {
+			  "fortify": false
+			}
+		  }
+		},
+		"repairAll": {
+		  "personal": {
+            "battle": {
+              "goe": 1
+            }
+		  }
+		}
+	  }
+	},
+	"text": "Shockwave\n<Instant>\nDrain all opponent's artifact and Repair all yours"
+  },
+  "emergency_jetpack": {
+    "name": "emergency_jetpack",
+	"type": {
+	  "base": "spell",
+	  "effect": {
+	    "trigger": 1
+	  }	  
+	},
+	"effect": {
+      "trigger": {
+        "retrieve": {
+          "personal": {
+            "vanish": 2,
+			"_to": "hand"
+          }
+        }
+      }
+    },
+    "judge": {
+      "trigger": {
+        "retrieve": {
+          "personal": {
+		    "deck": {
+			  "vanish": {
+			    "goe": 2
+			  }
+			}
+          }
+        }
+	  }
+    },
+	"text": "Emergency Jetpack\n<Trigger>\nRetrieve 2 vanish from your deck to hand"
+  },
+  "financial_monopoly": {
+    "name": "financial_monopoly",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "draw": {
+          "personal": {
+            "card": 3
+          }
+        }
+      }
+    },
+    "judge": {
+      "instant": {
+        "draw": {
+		  "opponent": {
+		    "hand": {
+			  "card": {
+			    "goe": 5
+			  }
+			}
+          }
+		}
+      }
+    },
+    "text": "Financial Monopoly\n<Instant>\nDraw 3 cards if opponent handcard amount >= 5"
+  }
+  "prime_cathedral": {
+    "name": "prime_cathedral",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "aura": 1
+      }
+    },
+    "effect": {
+      "aura": {}
+    },
+    "judge": {
+      "aura": {}
+    },
+    "aura": {
+      "stamina": {
+        "personal": true
+      }
+    },
+    "text": "Prime Cathedral\n<Aura>\npersonal Stamina"
+  },
+  "butterfly_effect": {
+    "name": "butterfly_effect",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "destroy": {
+          "opponent": {
+            "battle": true
+          }
+        }
+      }
+    },
+    "judge": {
+      "instant": {
+        "destroy": {
+		  "opponent": {
+		    "aura": {
+			  "fortify": false
+			},
+			"battle": {
+			  "goe": 2
+			}
+		  }
+        }
+      }
+    },
+    "text": "Butterfly Effect\n<Instant>\nif opponent have 2 or more artifact on battlefield DESTROY them all"
+  },
+  "perfect_crime": {
+    "name": "perfect_crime",
+	"type": {
+	  "base": "spell",
+	  "effect": {
+	    "chanting": 1
+	  }	  
+	},
+	"effect": {
+	  "chanting": {
+	    "discard": {
+          "opponent": {
+            "card": 2
+          }
+        }
+	  }
+	},
+	"judge": {
+	  "chanting": {
+	    "discard": {
+		  "opponent": {
+            "hand": {
+			  "card": {
+                "goe": 2
+              }
+			}
+          }
+		}
+	  }
+	},
+	"text": "Perfect Crime\n<Chanting>\nOpponent discard 2 handcard"
+  },
+  "luxury_banquet": {
+    "name": "luxury_banquet",
+	"type": {
+	  "base": "spell",
+	  "effect": {
+	    "instant": 1
+	  }	  
+	},
+	"effect": {
+	  "instant": {
+	    "heal": {
+          "personal": 3
+        },
+		"discard": {
+		  "personal": {
+		    "card": 1
+		  }
+		}
+	  }
+	},
+	"judge": {
+	  "instant": {
+	    "heal": {
+		  "personal": {
+            "hand": {
+			  "card": {
+                "goe": 1
+              }
+			}
+          }
+		},
+		"discard": {
+		  "personal": {
+            "hand": {
+			  "card": {
+                "goe": 1
+              }
+			}
+          }
+		}
+	  }
+	},
+	"text": "Luxury Banquet\n<Instant>\nIf you discard 1 card, heal 3 HP"
   }
 }

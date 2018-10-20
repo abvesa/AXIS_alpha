@@ -805,10 +805,8 @@ Game.prototype.effectEmitter = function (room) {
 		}
         else if (eff_name === 'heal') {        
 		  if (player[target].hp == player[target].life_max) continue 
-		  //if (Object.keys(player[target].aura.dicease).length) continue
 		}
         else if (eff_name === 'steal' || eff_name === 'exchange') {
-		  //if (opponent.card_amount.hand == 0) continue
           if (!('ext' in tmp)) tmp.ext = {}
           tmp.ext.hand = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
             if (this.room[personal._rid].cards[curr].curr_own === opponent._pid && this.room[personal._rid].cards[curr].field === 'hand')
@@ -817,7 +815,6 @@ Game.prototype.effectEmitter = function (room) {
           }, {})
         }
         else if (eff_name === 'retrieve') {
-		  //if (personal.card_amount.deck == 0) continue
           if (!('ext' in tmp)) tmp.ext = {}
           tmp.ext.deck = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
             if (this.room[personal._rid].cards[curr].curr_own === personal._pid && this.room[personal._rid].cards[curr].field === 'deck')
@@ -826,7 +823,6 @@ Game.prototype.effectEmitter = function (room) {
           }, {})
         }
 		else if (eff_name === 'recall') {
-		  //if (personal.card_amount.grave == 0) continue
           if (!('ext' in tmp)) tmp.ext = {}
           tmp.ext.deck = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
             if (this.room[personal._rid].cards[curr].curr_own === personal._pid && this.room[personal._rid].cards[curr].field === 'grave')
@@ -1331,7 +1327,7 @@ Game.prototype.destroy = function (personal, effect) {
 Game.prototype.discard = function (personal, param) {
   let room = this.room[personal._rid]
   let effect = (room.phase === 'end')
-               ? {card: personal.card_amount.hand + Object.keys(personal.aura.stamina).length*2 - personal.hand_max}
+               ? {card: personal.card_amount.hand + (((Object.keys(personal.aura.stamina).length)? 1 : 0)*2) - personal.hand_max}
                : Object.assign({}, game.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
 
   let card_pick = Object.keys(param.card_pick)
@@ -1409,9 +1405,9 @@ Game.prototype.repairAll = function (personal, effect) {
   let aura_modify = {personal: {}, opponent: {}}
   for (let id in room.cards) {
     let card = room.cards[id]
+	if (card.field !== 'battle') continue
     let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
-    if (!(card_owner in mod_eff)) continue
-    if (!(card.field in mod_eff[card_owner])) continue
+    if (!(card_owner in mod_eff)) continue    
 	if (card.energy > 1) continue
 	
     if (card.energy == 0 && this.default.all_card[card.name].aura) aura_modify[card_owner][card.id] = true
@@ -1492,9 +1488,9 @@ Game.prototype.drainAll = function (personal, effect) {
   let aura_modify = {personal: {}, opponent: {}}
   for (let id in room.cards) {
     let card = room.cards[id]
+	if (card.field !== 'battle') continue
     let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
     if (!(card_owner in mod_eff)) continue
-    if (!(card.field in mod_eff[card_owner])) continue
 	if (card.field === 'battle') {
 	  if (card.checkCrossProtection()) continue
     }		
@@ -1525,7 +1521,7 @@ Game.prototype.draw = function (personal, effect) {
       let tmp = {}
       for (let id in room.cards) {
         let card = room.cards[id]
-        if (card.field === 'deck' && card.curr_own === player[target]._pid) {
+        if (card.field === 'deck' && card.curr_own === player[target]._pid && card.type.base === object) {
           tmp[id] = {to: 'hand'}
           val --
         }
