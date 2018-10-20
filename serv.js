@@ -1171,10 +1171,10 @@ Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true
     }
   }
   
-  let personal_rlt = (Object.keys(card_flip.opponent).length)? Object.assign(rlt, {card: {unveil: card_flip.opponent}}) : rlt
+  let personal_rlt = (Object.keys(card_flip.opponent).length)? Object.assign({}, rlt, {card: {unveil: card_flip.opponent}}) : rlt
   personal.emit('effectTrigger', personal_rlt)
   
-  let opponent_rlt = (Object.keys(card_flip.personal).length)? Object.assign(genFoeRlt(rlt), {card: {unveil: card_flip.personal}}) : genFoeRlt(rlt)
+  let opponent_rlt = (Object.keys(card_flip.personal).length)? Object.assign({}, genFoeRlt(rlt), {card: {unveil: card_flip.personal}}) : genFoeRlt(rlt)
   personal._foe.emit('effectTrigger', opponent_rlt)
 
   return {}
@@ -1514,10 +1514,10 @@ Game.prototype.modify = function(personal, effect) {
 	  }
     }
   }
-  personal_rlt = (Object.keys(card_move).length)? Object.assign(rlt, {card: {modify: {personal: card_move.personal, opponent: {}}}}) : rlt  
+  personal_rlt = (Object.keys(card_move).length)? Object.assign({}, rlt, {card: {modify: {personal: card_move.personal, opponent: {}}}}) : rlt  
   personal.emit('effectTrigger',  personal_rlt)
   
-  opponent_rlt = (Object.keys(card_move).length)? Object.assign(genFoeRlt(rlt), {card: {modify: {opponent: card_move.opponent, personal: {}}}}) : genFoeRlt(rlt)
+  opponent_rlt = (Object.keys(card_move).length)? Object.assign({}, genFoeRlt(rlt), {card: {modify: {opponent: card_move.opponent, personal: {}}}}) : genFoeRlt(rlt)
   personal._foe.emit('effectTrigger', opponent_rlt)
   return {}
 }
