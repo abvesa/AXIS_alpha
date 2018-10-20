@@ -81,7 +81,6 @@
 	"arcanum": ".\\assets\\card\\arcanum.jpg",
 	"cross": ".\\assets\\card\\cross.jpg",
 	"summoners_craft": ".\\assets\\card\\summoners_craft.jpg",
-	
 	"dragon_orb": ".\\assets\\card\\dragon_orb.jpg",
 	"heros_hymn": ".\\assets\\card\\heros_hymn.jpg",
 	"sorcery_circle": ".\\assets\\card\\sorcery_circle.jpg",
@@ -91,6 +90,13 @@
 	"observer": ".\\assets\\card\\observer.jpg",
 	"paper_fan": ".\\assets\\card\\paper_fan.jpg",
 	"angle_incarnation": ".\\assets\\card\\angle_incarnation.jpg",
+	"death": ".\\assets\\card\\death.jpg",
+	"the_golden_egg": ".\\assets\\card\\the_golden_egg.jpg",
+	"tsunami_wave": ".\\assets\\card\\tsunami_wave.jpg",
+	"twilight_zone": ".\\assets\\card\\twilight_zone.jpg",
+	"undead_recall": ".\\assets\\card\\undead_recall.jpg",
+	
+	
 	
 	"berserk": ".\\assets\\stat\\berserk.png",
 	"charge": ".\\assets\\stat\\charge.png",

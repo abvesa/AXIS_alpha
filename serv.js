@@ -1304,10 +1304,6 @@ Game.prototype.destroy = function (personal, effect) {
   let room = this.room[personal._rid]
   let player = {personal: personal, opponent: personal._foe}
   let mod_eff = Object.assign({}, effect)
-  //let rlt = { card: { destroy: { personal: {}, opponent: {} } } }
-
-  // remove effect which is canceled by aura
-
   let rlt = {}
 
   let tmp = {personal: {}, opponent: {}}
@@ -1361,6 +1357,77 @@ Game.prototype.discard = function (personal, param) {
   return {}
 }
 
+Game.prototype.repair = function (personal, param) {
+  let room = this.room[personal._rid]
+  let player = {personal: personal, opponent: personal._foe}
+  let rlt = {personal: {}, opponent: {}}
+
+  let effect = Object.assign({}, game.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+  let card_pick = Object.keys(param.card_pick)
+  let total_len = 0
+  
+  for (let target in effect) {
+    total_len += effect[target]
+  }
+  if (card_pick.length != total_len) return {err: 'error repair length'}
+  
+  for (let id in param.card_pick) {
+    let card = room.cards[id]
+    let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
+    if (card == null) return {err: 'no card id'}
+    if (card.field !== 'battle') return {err: 'please choose card on battle field'}
+    if (!(card_owner in effect)) return {err: 'error card owner'}
+    if (!effect[card_owner]) return {err: 'error owner length'}
+    effect[card_owner] --
+  }
+  
+  let aura_modify = {personal: {}, opponent: {}}
+  for (let id in param.card_pick) {
+    let card = room.cards[id]
+	if (card.energy > 1) continue
+	let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
+	if (card.energy == 0 && this.default.all_card[card.name].aura) aura_modify[card_owner][card.id] = true
+	card.energy += 1
+	rlt[card_owner][id] = {turn: 'up'}
+  }	
+  
+  personal.emit('effectTrigger', {card: {repair: { personal: rlt.personal, opponent: rlt.opponent }}})
+  personal._foe.emit('effectTrigger', {card: {repair: { personal: rlt.opponent, opponent: rlt.personal }}})
+  
+  if (Object.keys(aura_modify.personal)) this.aura(personal, aura_modify.personal)
+  if (Object.keys(aura_modify.opponent)) this.aura(personal._foe, aura_modify.opponent)
+  
+  return {}
+}
+
+Game.prototype.repairAll = function (personal, effect) {
+  let room = this.room[personal._rid]
+  let player = {personal: personal, opponent: personal._foe}
+  let mod_eff = Object.assign({}, effect)
+  let rlt = {personal: {}, opponent: {}}
+  
+  let aura_modify = {personal: {}, opponent: {}}
+  for (let id in room.cards) {
+    let card = room.cards[id]
+    let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
+    if (!(card_owner in mod_eff)) continue
+    if (!(card.field in mod_eff[card_owner])) continue
+	if (card.energy > 1) continue
+	
+    if (card.energy == 0 && this.default.all_card[card.name].aura) aura_modify[card_owner][card.id] = true
+	card.energy += 1
+	rlt[card_owner][id] = {turn: 'up'}
+  }
+
+  personal.emit('effectTrigger', {card: {repair: { personal: rlt.personal, opponent: rlt.opponent }}})
+  personal._foe.emit('effectTrigger', {card: {repair: { personal: rlt.opponent, opponent: rlt.personal }}})
+  
+  if (Object.keys(aura_modify.personal)) this.aura(personal, aura_modify.personal)
+  if (Object.keys(aura_modify.opponent)) this.aura(personal._foe, aura_modify.opponent)
+  
+  return {}
+}
+
 Game.prototype.drain = function (personal, param, use_vanish = false) {
   let room = this.room[personal._rid]
   let player = {personal: personal, opponent: personal._foe}
@@ -1407,6 +1474,37 @@ Game.prototype.drain = function (personal, param, use_vanish = false) {
 	rlt[card_owner][id] = {turn: 'down'}
   }	
   
+  personal.emit('effectTrigger', {card: {drain: { personal: rlt.personal, opponent: rlt.opponent }}})
+  personal._foe.emit('effectTrigger', {card: {drain: { personal: rlt.opponent, opponent: rlt.personal }}})
+  
+  if (Object.keys(aura_modify.personal)) this.aura(personal, aura_modify.personal)
+  if (Object.keys(aura_modify.opponent)) this.aura(personal._foe, aura_modify.opponent)
+  
+  return {}
+}
+
+Game.prototype.drainAll = function (personal, effect) {
+  let room = this.room[personal._rid]
+  let player = {personal: personal, opponent: personal._foe}
+  let mod_eff = Object.assign({}, effect)
+  let rlt = {personal: {}, opponent: {}}
+  
+  let aura_modify = {personal: {}, opponent: {}}
+  for (let id in room.cards) {
+    let card = room.cards[id]
+    let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
+    if (!(card_owner in mod_eff)) continue
+    if (!(card.field in mod_eff[card_owner])) continue
+	if (card.field === 'battle') {
+	  if (card.checkCrossProtection()) continue
+    }		
+	if (card.energy < 1) continue
+	
+	card.energy -= 1
+    if (card.energy == 0 && this.default.all_card[card.name].aura) aura_modify[card_owner][card.id] = false
+	rlt[card_owner][id] = {turn: 'down'}
+  }
+
   personal.emit('effectTrigger', {card: {drain: { personal: rlt.personal, opponent: rlt.opponent }}})
   personal._foe.emit('effectTrigger', {card: {drain: { personal: rlt.opponent, opponent: rlt.personal }}})
   

@@ -1486,5 +1486,131 @@
       }
     },
     "text": "Angle Incarnation\n<Instant>\nhp +1 and max hp +1"
-  } 
+  },
+  "death": {
+    "name": "death",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "aura": 1
+      }
+    },
+    "effect": {
+      "aura": {}
+    },
+    "judge": {
+      "aura": {}
+    },
+    "aura": {
+	  "wither": {
+	    "opponent": true
+	  }
+    },
+    "text": "Death\n<Aura>\nopponent wither"
+  },
+  "the_golden_egg": {
+    "name": "the_golden_egg",
+	"type": {
+	  "base": "spell",
+	  "effect": {
+	    "chanting": 1
+	  }	  
+	},
+	"effect": {
+	  "chanting": {
+	    "draw": {
+          "personal": {
+            "deck": 3
+          }
+        }
+	  }
+	},
+	"judge": {
+	  "chanting": {
+	    "draw": {}
+	  }
+	},
+	"text": "The Golden Egg\n<Chanting>\nDraw 3 cards"
+  },
+  "twilight_zone": {
+    "name": "twilight_zone",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "aura": 1
+      }
+    },
+    "effect": {
+      "aura": {}
+    },
+    "judge": {
+      "aura": {}
+    },
+    "aura": {
+      "wither": {
+        "personal": true
+      },
+	  "berserk": {
+	    "personal": true
+	  }
+    },
+    "text": "Twilight Zone\n<Aura>\npersonal Wither\n<Aura>\npersonal Berserk"
+  },
+  "undead_recall": {
+    "name": "undead_recall",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "recall": {
+          "personal": {
+            "card": 1,
+			"_to": "hand"
+          }
+        }
+      }
+    },
+    "judge": {
+      "instant": {
+        "recall": {
+          "personal": {
+			"grave": {
+			  "card": {
+			    "goe": 1
+			  }
+			}
+          }
+        }
+      }
+    },
+    "text": "Undead Recall\n<Instant>\nRECALL a card from your grave to hand"
+  },
+  "tsunami_wave": {
+    "name": "tsunami_wave",
+	"type": {
+	  "base": "spell",
+	  "effect": {
+	    "chanting": 1
+	  }	  
+	},
+	"effect": {
+	  "chanting": {
+	    "modify": {
+          "personal": {
+            "atk_phase": 3
+          }
+        }
+	  }
+	},
+	"judge": {
+	  "chanting": {
+	    "modify": {}
+	  }
+	},
+	"text": "Tsunami Wave\n<Chanting>\nAP+3"
+  }
 }
