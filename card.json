@@ -525,7 +525,7 @@
         "personal": true
       }
     },
-    "text": "Ion\n<Enchant>\nIf your attack hits, your opponent discard all handcards\n<Aura>\nCrippled"
+    "text": "Ion\n<Enchant>\nIf your attack hits, destroy all your opponent handcards\n<Aura>\nCrippled"
   },
   "pillow": {
     "name": "pillow",
@@ -889,8 +889,8 @@
     },
     "text": "Plasma Wave\n<Instant>\nstun your opponent and deal 1 damage"
   },
-  "golden_apple": {
-    "name": "golden_apple",
+  "eternal_apple": {
+    "name": "eternal_apple",
     "type": {
       "base": "spell",
       "effect": {
@@ -915,7 +915,7 @@
 		}
       }
     },
-    "text": "The Golden Apple\n<Chanting>\nheal 3 hp"
+    "text": "Eternal Apple\n<Chanting>\nheal 3 hp"
   },
   "laser_beam": {
     "name": "laser_beam",
@@ -1853,5 +1853,145 @@
 	  }
 	},
 	"text": "Luxury Banquet\n<Instant>\nIf you discard 1 card, heal 3 HP"
+  },
+  
+  "golem_rage": {
+    "name": "golem_rage",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "destroy": {
+          "opponent": {
+            "battle": true
+          }
+        },
+		"discard": {
+		  "personal": {
+		    "card": 1
+		  }
+		}
+      }
+    },
+    "judge": {
+      "instant": {
+        "destroy": {
+		  "opponent": {
+		    "aura": {
+			  "fortify": false
+			}
+		  },
+		  "personal": {
+            "hand": {
+			  "card": {
+                "goe": 1
+              }
+			}
+          }
+        },
+		"discard": {
+		  "personal": {
+            "hand": {
+			  "card": {
+                "goe": 1
+              }
+			}
+          }
+		}
+      }
+    },
+    "text": "Golem Rage\n<Instant>\nDiscard 1 card and DESTROY all opponent artifact on battlefield"
+  },
+  "dark_gust": {
+    "name": "dark_gust",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "destroy": {
+          "opponent": {
+            "socket": true
+          },
+		  "personal": {
+		    "socket": true
+		  }
+        },
+		"stat": {
+		  "stun": {
+		    "opponent": true
+		  }
+		}
+      }
+    },
+    "judge": {
+      "instant": {
+        "destroy": {},
+		"stun": {}
+      }
+    },
+    "text": "Dark Gust\n<Instant>\nDestroy all mosaic item on field and stun your opponent"
   }
+  "supernova_explosion": {
+    "name": "supernova_explosion",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "destroy_1": {
+          "opponent": {
+            "battle": true
+          },
+		},
+		"destroy_2": {
+		  "personal": {
+		    "battle": true
+		  }
+        },
+		"destroy_3": {
+          "opponent": {
+            "altar": true
+          },
+		  "personal": {
+		    "altar": true
+		  }
+        },
+		"bleed": {
+		  "personal": 1
+		}
+      }
+    },
+    "judge": {
+      "instant": {
+        "destroy_1": {
+		  "opponent": {
+		    "aura": {
+			  "fortify": false
+			}
+		  }
+		},
+		"destroy_2": {
+		  "personal": {
+		    "aura": {
+			  "fortify": false
+			}
+		  }
+		},
+		"destroy_3": {},
+		"bleed": {}
+      }
+    },
+    "text": "Dark Gust\n<Instant>\nDestroy all mosaic item on field and stun your opponent"
+  } 
 }
