@@ -912,6 +912,13 @@ Game.prototype.effectJudge = function (card_eff) {
             case 'hand':
 			  for (let type in judge[effect][target][condition]) {
 				curr_val = (type === 'card')? player[target].card_amount[condition] : player[target].field_detail[condition][type]
+				if (type in game.default.all_card) {
+				  curr_val = 0
+				  for (let id in room.cards) {
+					if (room.cards[id].name === type)
+                      curr_val += 1						
+				  }
+				}
 			    pass = pass && checkValue(curr_val, judge[effect][target][condition][type]) 
 			  }
               break
@@ -1342,9 +1349,9 @@ Game.prototype.discard = function (personal, param) {
     if (card == null) return {err: 'no card id'}
     if (card.curr_own !== personal._pid) return {err: 'please choose your card'}
     if (card.field !== 'hand') return {err: 'please choose hand card'}
-    if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
-    if (!effect[('card' in effect)? 'card' : card.type.base]) return {err: 'error type length'}
-    effect[('card' in effect)? 'card' : card.type.base] --
+    if (!(card.name in effect) && !('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}	
+	if (!effect[(card.name in effect)? card.name : ((card.type.base in effect)? card.type.base : 'card')]) return {err: 'error type length'}
+    effect[(card.name in effect)? card.name : ((card.type.base in effect)? card.type.base : 'card')] --
   }
 
   let rlt = this.cardMove(personal, param.card_pick)
@@ -1817,6 +1824,49 @@ Game.prototype.exchange = function (personal, param) {
   return {}
 }
 
+Game.prototype.reverse = function (personal, effect) {
+  let room = this.room[personal._rid]
+  let player = {personal: personal, opponent: personal._foe}
+  let mod_eff = Object.assign({}, effect)
+  let aura_modify = {personal: {}, opponent: {}}
+  
+  // init reverse field
+  let reverse_cards = {personal: {}, opponent: {}}
+  for (let field in mod_eff.personal) {
+	reverse_cards.personal[field] = {}
+    reverse_cards.opponent[field] = {}
+  }
+  
+  // find reverse cards
+  for (let id in room.cards) {
+    let card = room.cards[id]
+	if (!(card.field in mod_eff.personal)) continue
+	let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
+	let new_own = (card_owner === 'personal')? 'opponent' : 'personal'
+	
+	if (card.field === 'battle') { 
+	  if (card.checkCrossProtection()) continue 
+	  if (card.energy != 0 && this.default.all_card[card.name].aura) {
+	    aura_modify[card_owner][card.id] = false
+	    aura_modify[new_own][card_id] = true
+	  }
+	}
+	
+	reverse_cards[card_owner][card.id] = {new_own: new_own, to: card.field}
+  }
+  
+  // generate return object
+  personal_reverse = this.cardMove(personal, reverse_cards.personal)
+  opponent_reverse = this.cardMove(perosnal._foe, reverse_cards.opponent)
+
+  personal.emit('effectTrigger', {card: {reverse: { personal: personal_reverse.personal, opponent: opponent_reverse.opponent }}})
+  personal._foe.emit('effectTrigger', {card: {reverse: { personal: opponent_reverse.personal, opponent: personal_reverse.opponent }}})
+  
+  if (Object.keys(aura_modify.personal)) this.aura(personal, aura_modify.personal)
+  if (Object.keys(aura_modify.opponent)) this.aura(personal._foe, aura_modify.opponent)
+  
+  return {}
+}
 
 /////////////////////////////////////////////////////////////////////////////////
 

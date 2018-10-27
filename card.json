@@ -1993,5 +1993,79 @@
       }
     },
     "text": "Dark Gust\n<Instant>\nDestroy all mosaic item on field and stun your opponent"
-  } 
+  },
+  "potion_master": {
+    "name": "potion_master",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "heal": {
+          "personal": 6
+        },
+		"discard": {
+		  "personal": {
+            "potion": 1
+		  }
+		}
+      }
+    },
+    "judge": {
+      "instant": {
+        "heal": {
+		  "personal": {
+            "hand": {
+			  "potion": {
+                "goe": 1
+              }
+			},
+			"aura": {
+			  "disease": false
+			}
+          }
+		},
+		"discard": {
+		  "personal": {
+            "hand": {
+			  "potion": {
+                "goe": 1
+              }
+			}
+          }
+		}
+      }
+    },
+    "text": "Potion Master\n<Instant>\nDiscard 1 potion and heal 6 hp"
+  }
+  "reverse_world": {
+    "name": "reverse_world",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "trigger": 1
+      }
+    },
+    "effect": {
+      "trigger": {
+        "reverse": {
+		  "personal": {
+            "battle": true
+          }
+		}
+      }
+    },
+    "judge": {
+      "trigger": {
+        "reverse": {}
+      }
+    },
+    "text": "Reverse World\n<Trigger>\nReverse both player's battle field"
+  }
+  
+  
+  
 }
