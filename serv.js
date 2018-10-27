@@ -806,7 +806,7 @@ Game.prototype.effectEmitter = function (room) {
         else if (eff_name === 'heal') {        
 		  if (player[target].hp == player[target].life_max) continue 
 		}
-        else if (eff_name === 'steal' || eff_name === 'exchange') {
+        else if (eff_name === 'steal' || eff_name === 'exchange' ) {
           if (!('ext' in tmp)) tmp.ext = {}
           tmp.ext.hand = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
             if (this.room[personal._rid].cards[curr].curr_own === opponent._pid && this.room[personal._rid].cards[curr].field === 'hand')
@@ -885,7 +885,8 @@ Game.prototype.effectJudge = function (card_eff) {
     else {
 	  let pass = true	
 	  
-	  for (let target in judge[effect]) {		
+	  for (let target in judge[effect]) {	
+        if (target === '_valve') continue	  
         for (let condition in judge[effect][target]) {
           let curr_val = null
           switch (condition) {
@@ -932,7 +933,13 @@ Game.prototype.effectJudge = function (card_eff) {
         }
       }
 
-      if (pass) avail_eff.push(effect)		  
+      if (pass) {
+		avail_eff.push(effect)	
+      }
+	  else if ('_valve' in judge[effect]) {
+		avail_eff = []
+		break
+      }		
 	}
   }
   card_eff.eff = avail_eff
@@ -1867,6 +1874,8 @@ Game.prototype.reverse = function (personal, effect) {
   
   return {}
 }
+
+
 
 /////////////////////////////////////////////////////////////////////////////////
 

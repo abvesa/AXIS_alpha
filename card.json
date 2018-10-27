@@ -991,32 +991,26 @@
     },
     "judge": {
       "trigger": {
+	    "discard": {
+		  "_valve": true,
+		  "personal": {
+            "hand": {
+			  "card": {
+                "goe": 1
+              }
+			}
+          }
+		},
         "control": {
           "opponent": {
             "battle": {
               "goe": 1
             }
-          },
-		  "personal": {
-            "hand": {
-			  "card": {
-                "goe": 1
-              }
-			}
           }
-        },
-        "discard": {
-		  "personal": {
-            "hand": {
-			  "card": {
-                "goe": 1
-              }
-			}
-          }
-		}
+        }       
       }
     },
-    "text": "Gravity\n<Trigger>\ncontrol 1 opponent artifact on battle field and discard one card"
+    "text": "Gravity\n<Trigger>\nDiscard 1 card to control 1 opponent artifact on battle field"
   },
   "equip_breaker": {
     "name": "equip_breaker",
@@ -1832,7 +1826,8 @@
 	},
 	"judge": {
 	  "instant": {
-	    "heal": {
+	    "discard": {
+		  "_valve": true,
 		  "personal": {
             "hand": {
 			  "card": {
@@ -1841,18 +1836,16 @@
 			}
           }
 		},
-		"discard": {
+	    "heal": {
 		  "personal": {
-            "hand": {
-			  "card": {
-                "goe": 1
-              }
+		    "aura": {
+			  "dicease": false
 			}
-          }
+		  }
 		}
 	  }
 	},
-	"text": "Luxury Banquet\n<Instant>\nIf you discard 1 card, heal 3 HP"
+	"text": "Luxury Banquet\n<Instant>\nDiscard 1 card to heal 3 HP"
   },
   
   "golem_rage": {
@@ -1879,32 +1872,26 @@
     },
     "judge": {
       "instant": {
+	    "discard": {
+		  "_valve": true,
+		  "personal": {
+            "hand": {
+			  "card": {
+                "goe": 1
+              }
+			}
+          }
+		},
         "destroy": {
 		  "opponent": {
 		    "aura": {
 			  "fortify": false
 			}
-		  },
-		  "personal": {
-            "hand": {
-			  "card": {
-                "goe": 1
-              }
-			}
-          }
-        },
-		"discard": {
-		  "personal": {
-            "hand": {
-			  "card": {
-                "goe": 1
-              }
-			}
-          }
-		}
+		  }
+        }	
       }
     },
-    "text": "Golem Rage\n<Instant>\nDiscard 1 card and DESTROY all opponent artifact on battlefield"
+    "text": "Golem Rage\n<Instant>\nDiscard 1 card to DESTROY all opponent artifact on battlefield"
   },
   "dark_gust": {
     "name": "dark_gust",
@@ -2016,30 +2003,26 @@
     },
     "judge": {
       "instant": {
-        "heal": {
+	    "discard": {
+		  "_valve": true,
 		  "personal": {
             "hand": {
 			  "potion": {
                 "goe": 1
               }
-			},
+			}
+          }
+		},
+        "heal": {
+		  "personal": {
 			"aura": {
 			  "disease": false
 			}
           }
-		},
-		"discard": {
-		  "personal": {
-            "hand": {
-			  "potion": {
-                "goe": 1
-              }
-			}
-          }
-		}
+		}	
       }
     },
-    "text": "Potion Master\n<Instant>\nDiscard 1 potion and heal 6 hp"
+    "text": "Potion Master\n<Instant>\nDiscard 1 potion to heal 6 hp"
   }
   "reverse_world": {
     "name": "reverse_world",
@@ -2064,8 +2047,84 @@
       }
     },
     "text": "Reverse World\n<Trigger>\nReverse both player's battle field"
+  },
+  "coconut": {
+    "name": "coconut",
+	"type": {
+	  "base": "item",
+	  "effect": {
+	    "normal": 2
+	  }
+	},
+	"effect": {
+      "normal_1": {
+        "damage": {
+          "personal": 1
+        }
+      },
+      "normal_2": {
+        "damage": {
+          "opponent": 1
+        }
+      }
+    },
+    "judge": {
+      "normal_1": {
+        "damage": {}
+      },
+      "normal_2": {
+        "damage": {}
+      }
+    },
+    "text": "Coconut\n<Normal_1>\nDeal 1 damage to yourself\n<Normal_2>\nDeal 1 damage to opponent"
+  },
+  "chocolate_sundae": {
+    "name": "chocolate_sundae",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "heal": {
+          "personal": 3
+        },
+		"draw": {
+		  "personal": 2
+		}
+		"discard": {
+		  "personal": {
+            "chocolate": 1
+		  }
+		}
+      }
+    },
+    "judge": {
+      "instant": {
+	    "discard": {
+		  "_valve": true
+		  "personal": {
+            "hand": {
+			  "chocolate": {
+                "goe": 1
+              }
+			}
+          }
+		},
+        "heal": {
+		  "personal": {
+			"aura": {
+			  "disease": false
+			}
+          }
+		},
+		"draw": {}
+      }
+    },
+    "text": "Chocolate Sundae\n<Instant>\nDiscard 1 chocolate to heal 3 hp and draw 2 cards"
   }
-  
   
   
 }
