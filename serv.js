@@ -207,6 +207,7 @@ Game.prototype.buildPlayer = function (client) {
     wither : {}, // can't use life field card
     fear   : {}, // can't attack
 	unveil : {}, // show your hand cards to opponent
+	blur   : {}, // all your cards can become vanish
 
     fortify : {}, // your artifacts can't be destroy or break or turn 
     triumph : {}, // atk cant be vanish when artifact > 3 on battle
@@ -237,7 +238,8 @@ Game.prototype.buildPlayer = function (client) {
 	attack: {},
     
     // special
-    cross: {}	
+    cross: {},
+    poopoo: {}	
   }
 
   client.eff_todo = {} // current effect emit to client
@@ -947,130 +949,6 @@ Game.prototype.effectJudge = function (card_eff) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////
-// !-- effect apply
-
-Game.prototype.effectTrigger = function (personal, opponent, card_list) {
-  // card_list = {
-  //   type_1: {
-  //     card_id_1: [effect1, effect2 ...],
-  //     card_id_2 ...
-  //   },
-  //   type_2: {}
-  // }
-  //
-  // effect = { effect: { target: { field: { type: value } } } }
-  let room = this.room[personal._rid]
-  let player = {personal: personal, opponent: opponent}
-
-  console.log(card_list)
-
-  // effect phase of attack enchant will count as attack phase
-  if(room.phase !== 'attack') room.phase = 'effect'
-  personal.emit('phaseShift', {msg: {phase: `${room.phase} phase`}})
-  opponent.emit('phaseShift', {msg: {phase: `${room.phase} phase`}})
-
-  for (let tp in card_list) {
-    for (let id in card_list[tp]) {
-      let card_name = this.room[personal._rid].cards[id].name
-      for (let avail_effect of card_list[tp][id]) {
-        let effect_name = avail_effect.split('_')[0]
-        let effect = this.default.all_card[card_name].effect[tp][avail_effect]
-
-        if (this.choose_eff[effect_name]) {
-          for (let target in effect) {
-            let tmp = {id: id, name: card_name, eff: avail_effect, tp: tp, tg: target}
-
-            if (effect_name === 'damage')
-              player[target].dmg_blk.push(effect[target])
-
-            if (effect_name === 'steal') {
-              if (!('ext' in tmp)) tmp.ext = {}
-              tmp.ext.hand = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
-                if (this.room[personal._rid].cards[curr].curr_own === opponent._pid && this.room[personal._rid].cards[curr].field === 'hand')
-                  last[curr] = this.room[personal._rid].cards[curr].name
-                return last
-              }, {})
-            }
-            if (effect_name === 'retrieve') {
-              if (!('ext' in tmp)) tmp.ext = {}
-              tmp.ext.deck = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
-                if (this.room[personal._rid].cards[curr].curr_own === personal._pid && this.room[personal._rid].cards[curr].field === 'deck')
-                  last[curr] = this.room[personal._rid].cards[curr].name
-                return last
-              }, {})
-            }
-
-            player[target].emit('effectLoop', {rlt: tmp})
-
-            if (!(id in player[target].eff_todo)) player[target].eff_todo[id] = {}
-            if (!(tp in player[target].eff_todo[id])) player[target].eff_todo[id][tp] = {}
-            player[target].eff_todo[id][tp][avail_effect] = true
-          }
-        }
-        else
-          game[effect_name](personal, effect)
-      }
-    }
-  }
-  if (!Object.keys(personal.eff_todo).length && !Object.keys(opponent.eff_todo).length) this.effectEnd(room)
-}
-
-Game.prototype.judge = function (personal, opponent, card_list) {
-  // card_list = {type: {list}}
-  // console.log(card_list)
-  let room = this.room[personal._rid]
-  let player = {personal: personal, opponent: opponent}
-  let avail_effect = {}
-
-  for (let tp in card_list) {
-    //avail_effect[tp] = {}
-    for (let id in card_list[tp]) {
-      let card = room.cards[id]
-      let tg_tp = (card.curr_eff)? card.curr_eff : (tp)
-      let judge = this.default.all_card[card.name].judge[tg_tp]
-
-      if (!avail_effect[tg_tp]) avail_effect[tg_tp] = {}
-      avail_effect[tg_tp][id] = []
-
-      for (let effect in judge) {
-        // for effects don't need to judge
-        if(!Object.keys(judge[effect]).length) {
-          if (effect !== 'counter') avail_effect[tg_tp][id].push(effect)
-        }
-        // for effects with judges
-        else {
-          for (let target in judge[effect]) {
-            for (let condition in judge[effect][target]) {
-              let curr_val = null
-
-              switch (condition) {
-                case 'hit':
-                  if (room.atk_status.hit) avail_effect[tg_tp][id].push(effect)
-                  break
-                case 'hp':
-                  curr_val = player[target].hp
-                  break
-                case 'handcard':
-                  curr_val = player[target].card_amount.hand
-                  break
-                case 'battle':
-                  curr_val = player[target].card_amount.battle
-
-                default:break
-              }
-
-              if (condition !== 'hit')
-                if (checkValue(curr_val, judge[effect][target][condition])) avail_effect[tg_tp][id].push(effect)
-            }
-          }
-        }
-      }
-    }
-  }
-  return avail_effect
-}
-
-/////////////////////////////////////////////////////////////////////////////////
 // !-- card effects
 Game.prototype.bleed = function (personal, param) {
   let room = this.room[personal._rid]
@@ -1349,7 +1227,7 @@ Game.prototype.discard = function (personal, param) {
   for (let tp in effect) {
     total_len += effect[tp]
   }
-  if (card_pick.length != total_len) return {err: 'error discard length'}
+  if ((card_pick.length < total_len && card_pick.length != personal.card_amount.hand) || (card_pick.length > total_len)) return {err: 'error discard length'}
 
   for (let id in param.card_pick) {
     let card = room.cards[id]
