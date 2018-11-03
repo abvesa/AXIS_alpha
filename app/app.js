@@ -778,7 +778,7 @@ Player.prototype.effectLoop = function () {
 
     if (curr_eff === 'damage') game.blockPanel({damage: true})
     else {
-      if (curr_eff === 'steal' || curr_eff === 'exchange') {
+      if (curr_eff === 'steal' || curr_eff === 'exchange' || (curr_eff === 'teleport' && ('hand' in eff_queue[0].ext))) {
         // flip opponent hand card
         for (let card of opponent.hand)
           card.flip()

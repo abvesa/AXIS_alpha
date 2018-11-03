@@ -1535,14 +1535,22 @@
     "type": {
       "base": "spell",
       "effect": {
-        "aura": 1
+        "trigger": 1
       }
     },
     "effect": {
-      "aura": {}
+      "trigger": {
+	    "modify": {
+		  "personal": {
+		    "action_point": -1
+		  }
+		}
+	  }
     },
     "judge": {
-      "aura": {}
+      "trigger": {
+	    "modify": {}
+	  }
     },
     "aura": {
       "wither": {
@@ -1723,14 +1731,14 @@
     "type": {
       "base": "spell",
       "effect": {
-        "aura": 1
+        "permanent": 1
       }
     },
     "effect": {
-      "aura": {}
+      "permanent": {}
     },
     "judge": {
-      "aura": {}
+      "permanent": {}
     },
     "aura": {
       "stamina": {
@@ -1795,7 +1803,7 @@
 		  "opponent": {
             "hand": {
 			  "card": {
-                "goe": 2
+                "goe": 1
               }
 			}
           }
@@ -2125,6 +2133,68 @@
     },
     "text": "Chocolate Sundae\n<Instant>\nDiscard 1 chocolate to heal 3 hp and draw 2 cards"
   }
+  "entrance": {
+    "name": "entrance",
+	"type": {
+	  "base": "artifact",
+	  "effect": {
+	    "enchant": 1
+	  }
+	},
+	"effect": {
+	  "enchant": {
+	    "repairAll": {
+		  "personal": true
+		}
+	  }
+	},
+	"judge": {
+	  "enchant": {
+	    "repairAll": {}
+	  }
+	},
+	"text": "Entrance\n<Enchant>\nRepair all your artifacts once on battle field"
+  },
+  "scary_box": {
+    "name": "scary_box",
+	"type": {
+	  "base": "item",
+	  "effect": {
+	    "normal": 1
+	  },
+	  "effect": {
+	    "normal": {
+		  "teleport": {
+		    "personal": {
+			  "card": 1,
+			  "_from": "hand",
+			  "_to": "grave"
+			}
+		  }
+		}
+	  },
+	  "judge": {
+	    "normal": {
+		  "teleport": {
+		    "personal": {
+			  "hand": {
+			    "card": {
+				  "goe": 1
+				}
+			  }
+			}
+		  }
+		}
+	  },
+	  "text": "Scary Box\n<Normal>\nTeleport 1 opponent handcard to grave"
+	}
+  }
+  
+  "phoenix_feather": {
+    
+  }
+  
+  
   
   
 }

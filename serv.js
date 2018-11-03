@@ -808,7 +808,7 @@ Game.prototype.effectEmitter = function (room) {
         else if (eff_name === 'heal') {        
 		  if (player[target].hp == player[target].life_max) continue 
 		}
-        else if (eff_name === 'steal' || eff_name === 'exchange' ) {
+        else if (eff_name === 'steal' || eff_name === 'exchange' || (eff_name === 'teleport' && eff_core[target]._from === 'hand')) {
           if (!('ext' in tmp)) tmp.ext = {}
           tmp.ext.hand = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
             if (this.room[personal._rid].cards[curr].curr_own === opponent._pid && this.room[personal._rid].cards[curr].field === 'hand')
@@ -1713,7 +1713,6 @@ Game.prototype.reverse = function (personal, effect) {
   let room = this.room[personal._rid]
   let player = {personal: personal, opponent: personal._foe}
   let mod_eff = Object.assign({}, effect)
-  let aura_modify = {personal: {}, opponent: {}}
   
   // init reverse field
   let reverse_cards = {personal: {}, opponent: {}}
@@ -1730,11 +1729,7 @@ Game.prototype.reverse = function (personal, effect) {
 	let new_own = (card_owner === 'personal')? 'opponent' : 'personal'
 	
 	if (card.field === 'battle') { 
-	  if (card.checkCrossProtection()) continue 
-	  if (card.energy != 0 && this.default.all_card[card.name].aura) {
-	    aura_modify[card_owner][card.id] = false
-	    aura_modify[new_own][card_id] = true
-	  }
+	  if (card.checkCrossProtection()) continue
 	}
 	
 	reverse_cards[card_owner][card.id] = {new_own: new_own, to: card.field}
@@ -1747,11 +1742,40 @@ Game.prototype.reverse = function (personal, effect) {
   personal.emit('effectTrigger', {card: {reverse: { personal: personal_reverse.personal, opponent: opponent_reverse.opponent }}})
   personal._foe.emit('effectTrigger', {card: {reverse: { personal: opponent_reverse.personal, opponent: personal_reverse.opponent }}})
   
-  if (Object.keys(aura_modify.personal)) this.aura(personal, aura_modify.personal)
-  if (Object.keys(aura_modify.opponent)) this.aura(personal._foe, aura_modify.opponent)
-  
   return {}
 }
+
+Game.prototype.teleport = function (personal, param) {
+  let room = this.room[personal._rid]
+  let effect = Object.assign({}, game.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+
+  let card_pick = Object.keys(param.card_pick)
+  let total_len = 0
+  for (let type in effect) {
+	if (type[0] == '_') continue
+    total_len += effect[type]
+  }
+  if (card_pick.length != total_len) return {err: 'error teleport length'}
+
+  for (let id in param.card_pick) {
+    let card = room.cards[id]
+    if (card == null) return {err: 'no card id'}
+    if (card.curr_own !== opponent._pid) return {err: 'please choose opponent card'}
+
+    if (card.field !== effect._from) return {err: 'error card field'}
+    if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
+    if (!effect[('card' in effect)? 'card': card.type.base]) return {err: 'error type length'}
+    effect[('card' in effect)? 'card' : card.type.base] --
+	param.card_pick[id] = {to: effect._to}
+  }
+
+  let rlt = this.cardMove(personal, param.card_pick)
+
+  personal.emit('effectTrigger', {card: {teleport: { personal: rlt.personal, opponent: {} }}})
+  personal._foe.emit('effectTrigger', {card: {teleport: { personal: {}, opponent: rlt.opponent }}})
+  return {}
+}
+
 
 
 

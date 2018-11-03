@@ -74,5 +74,9 @@
   "unveil": {
     "name": "unveil",
 	"text": "<unveil>\nshow handcards"
+  },
+  "blur": {
+    "name": "blur",
+	"text": "<blur>\nall your cards can use as vanish"
   }
 }
