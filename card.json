@@ -2176,7 +2176,7 @@
 	  "judge": {
 	    "normal": {
 		  "teleport": {
-		    "personal": {
+		    "opponent": {
 			  "hand": {
 			    "card": {
 				  "goe": 1
@@ -2188,13 +2188,163 @@
 	  },
 	  "text": "Scary Box\n<Normal>\nTeleport 1 opponent handcard to grave"
 	}
-  }
+  },
   
   "phoenix_feather": {
     
-  }
+  },
   
-  
-  
+  "anarchy": {
+    "name": "anarchy",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "trigger": 1
+      }
+    },
+    "effect": {
+      "trigger": {
+        "modify": {
+          "personal": {
+            "atk_damage": 2
+          }
+        },
+        "buff": {
+          "eagle_eye": {
+            "personal": true
+          }
+        }
+      }
+    },
+    "judge": {
+      "trigger": {
+        "modify": {
+          "personal": {
+            "hand": {
+              "loe": 2
+            }
+          }
+        },
+        "buff": {
+          "personal": {
+			"hp": {
+              "loe": 2
+            }
+          }
+        }
+      }
+    },
+    "aura": {
+      "cripple": {
+        "personal": true
+      }
+    },
+    "text": "Anarchy\n<Trigger>\n(1) your attack can't be vanish if your hp <= 2\n(2) AP + 2 if your handcard amount <= 2\n<Aura>\nCrippled"
+  },
+  "spectrum": {
+    "name": "spectrum",
+	"type": {
+	  "base": "artifact",
+	  "effect": {
+	    "enchant": 1
+	  }
+	}
+	"effect": {
+	  "enchant": {
+	    "teleport": {
+		  "personal": {
+		    "artifact": 1,
+			"_from": "battle",
+			"_to": "deck"
+		  }
+		}
+	  }
+	},
+	"judge": {
+	  "enchant": {
+	    "teleport": {
+		  "personal": {
+		    "hit": true
+		  },
+		  "opponent": {
+		    "battle": {
+		   	  "goe": 1
+			}
+		  }
+		}
+	  }
+	},
+	"text": "Spectrum\n<Enchant>\nIf your effect attack hits, Teleport 1 opponent artifact on battle to deck bottom"
+  },
+  "obelisk": {
+    "name": "obelisk",
+	"type": {
+	  "base": "artifact",
+	  "effect": {
+	    "enchant": 1
+	  }
+	}
+	"effect": {
+	  "enchant": {
+	    "teleport": {
+		  "personal": {
+		    "card": 2,
+			"_from": "hand",
+			"_to": "deck"
+		  }
+		}
+	  }
+	},
+	"judge": {
+	  "enchant": {
+	    "teleport": {
+		  "personal": {
+		    "hit": true
+		  },
+		  "opponent": {
+		    "hand": {
+			  "card": {
+		   	    "goe": 1
+			  }
+			}
+		  }
+		}
+	  }
+	},
+	"text": "Spectrum\n<Enchant>\nIf your effect attack hits, Teleport 2 opponent handcard to deck bottom"
+  },
+  "rod_of_fate": {
+    "name": "rod_of_fate",
+	"type": {
+	  "base": "artifact",
+	  "effect": {
+	    "enchant": 1
+	  }
+	}
+	"effect": {
+	  "enchant": {
+	    "draw": {
+		  "personal": 3
+		},
+		"discard": {
+		  "personal": {
+		    "card": 2
+		  }
+		}
+	  }
+	},
+	"judge": {
+	  "enchant": {
+	    "draw": {
+		  "_valve": true,
+		  "personal": {
+		    "hit": true
+		  }
+		},
+		"discard": {}
+	  }
+	},
+	"text": "Rod of Fate\n<Enchant>\nIf your effect attack hits, draw 3 cards and discard 2 cards"
+  }  
   
 }

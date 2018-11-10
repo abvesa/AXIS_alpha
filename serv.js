@@ -549,7 +549,7 @@ Game.prototype.checkUse = function (client, it, cb) {
     if (!Object.keys(client.card_pause).length) {
       //if (Object.keys(client.aura.dicease).length && game.default.all_card[card.name].effect.heal) return cb({err: 'cant use heal effect cards when diceased'})
       if (room.cards[it.id].type.base === 'vanish') return cb( {err: 'only available in atk phase'} )
-      if ((client.stat.stun ||client.action_point <= 0) && room.cards[it.id].type.base !== 'item') return cb( {err: 'not enough action point'} )
+      if ((client.stat.stun || client.action_point <= 0) && room.cards[it.id].type.base !== 'item') return cb( {err: 'not enough action point'} )
       if (card.field === 'life' && client.card_amount.hand == 0) return cb( {err: 'no handcard to replace'} )
       if (card.field === 'life' && Object.keys(client.aura.wither).length) return cb({err: 'cant use life field cards when withered'})
     }
@@ -1746,6 +1746,7 @@ Game.prototype.reverse = function (personal, effect) {
 }
 
 Game.prototype.teleport = function (personal, param) {
+  // to deck bottom is not available now
   let room = this.room[personal._rid]
   let effect = Object.assign({}, game.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
 
@@ -1755,7 +1756,7 @@ Game.prototype.teleport = function (personal, param) {
 	if (type[0] == '_') continue
     total_len += effect[type]
   }
-  if (card_pick.length != total_len) return {err: 'error teleport length'}
+  if ((card_pick.length < total_len && card_pick.length != personal.card_amount.hand) || (card_pick.length > total_len)) return {err: 'error teleport length'}
 
   for (let id in param.card_pick) {
     let card = room.cards[id]
