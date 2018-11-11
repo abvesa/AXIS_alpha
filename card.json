@@ -574,7 +574,13 @@
     "judge": {
       "normal": {
         "modify": {},
-        "draw": {}
+        "draw": {
+		  "personal": {
+		    "aura": {
+			  "cripple": false
+			}
+		  }
+		}
       }
     },
     "text": "Beer\n<Normal>\nAD +1, and draw 1 card"
@@ -608,7 +614,13 @@
 			}
 		  }
 		},
-        "draw": {}
+        "draw": {
+		  "personal": {
+		    "aura": {
+			  "cripple": false
+			}
+		  }
+		}
       }
     },
     "text": "Chococlate\n<Normal>\nHEAL 1 hp, and draw 1 card"
@@ -716,7 +728,13 @@
     "judge": {
       "instant": {
         "bleed": {},
-        "draw": {}
+        "draw": {
+		  "personal": {
+		    "aura": {
+			  "cripple": false
+			}
+		  }
+		}
       }
     },
     "text": "Blood Desire\n<Instant>\nBLEED 1 hp, and draw 3 cards"
@@ -1526,7 +1544,13 @@
 	},
 	"judge": {
 	  "chanting": {
-	    "draw": {}
+	    "draw": {
+		  "personal": {
+		    "aura": {
+			  "cripple": false
+			}
+		  }
+		}
 	  }
 	},
 	"text": "The Golden Egg\n<Chanting>\nDraw 3 cards"
@@ -1721,7 +1745,12 @@
 			    "goe": 5
 			  }
 			}
-          }
+          },
+		  "personal": {
+		    "aura": {
+			  "cripple": false
+			}
+		  }
 		}
       }
     },
@@ -2129,7 +2158,13 @@
 			}
           }
 		},
-		"draw": {}
+		"draw": {
+		  "personal": {
+		    "aura": {
+			  "cripple": false
+			}
+		  }
+		}
       }
     },
     "text": "Chocolate Sundae\n<Instant>\nDiscard 1 chocolate to heal 3 hp and draw 2 cards"
@@ -2169,7 +2204,8 @@
 		    "personal": {
 			  "card": 1,
 			  "_from": "hand",
-			  "_to": "grave"
+			  "_to": "grave",
+			  "_target": ['opponent']
 			}
 		  }
 		}
@@ -2252,7 +2288,8 @@
 		  "personal": {
 		    "artifact": 1,
 			"_from": "battle",
-			"_to": "deck"
+			"_to": "deck",
+			"_target": ['opponent']
 		  }
 		}
 	  }
@@ -2287,7 +2324,8 @@
 		  "personal": {
 		    "card": 2,
 			"_from": "hand",
-			"_to": "deck"
+			"_to": "deck",
+			"_target": ['opponent']
 		  }
 		}
 	  }
@@ -2436,28 +2474,106 @@
 	  }
     },
     "judge": {
-      "enchant": {
+      "normal_1": {
         "drain": {
+		  "_opap": true,
 		  "opponent": {
             "battle": {
               "goe": 1
-            },
-            "aura": {
-			  "fortify": false
+            }
+		  },
+		  "personal": {
+		    "battle": {
+              "goe": 1
+            }
+		  }
+		}
+      },
+	  "normal_2": {
+	    "repair": {
+		  "_opap": true,
+		  "opponent": {
+            "battle": {
+              "goe": 1
+            }
+		  },
+		  "personal": {
+		    "battle": {
+              "goe": 1
+            }
+		  }
+		}
+	  }
+    },
+    "text": "Switch\n<Normal_1>\nDrain 1 artifact on battlefield\n<Normal_2>\nRepair 1 artifact on battlefield"
+  },
+  "potion": {
+    "name": "potion",
+    "type": {
+      "base": "item",
+      "effect": {
+        "normal": 1
+      }
+    },
+    "effect": {
+      "normal": {
+        "heal": {
+          "personal": 2
+        }
+      }
+    },
+    "judge": {
+      "normal": {
+        "heal": {
+		  "personal": {
+		    "aura": {
+			  "disease": false
 			}
 		  }
 		}
       }
     },
-    "text": "Muse\n<Enchant>\nDRAIN 1 opponent artifact on battlefield"
-  },
-  "potion": {
-  
+    "text": "Potion\n<Normal>\nHEAL 2 hp"
   },
   "magnet": {
-  
-  }
-  
+    "name": "magnet",
+	"type": {
+	  "base": "item",
+	  "effect": {
+	    "normal": 1
+	  },
+	  "effect": {
+	    "normal": {
+		  "teleport": {
+		    "personal": {
+			  "artifact": 1,
+			  "_from": "battle",
+			  "_to": "hand",
+			  "_target": ['personal', 'opponent']
+			}
+		  }
+		}
+	  },
+	  "judge": {
+	    "normal": {
+		  "teleport": {
+		    "_opap": true,
+		    "opponent": {
+			  "battle": {
+				"goe": 1
+			  }
+			},
+			"personal": {
+			  "battle": {
+				"goe": 1
+			  }
+			},
+		  }
+		}
+	  },
+	  "text": "Magnet\n<Normal>\nTeleport 1 artifact on battle to hand"
+	}
+  }  
   
   
 }

@@ -1778,7 +1778,7 @@ Game.prototype.teleport = function (personal, param) {
   for (let id in param.card_pick) {
     let card = room.cards[id]
     if (card == null) return {err: 'no card id'}
-    if (card.curr_own !== opponent._pid) return {err: 'please choose opponent card'}
+    if (!(card.curr_own in effect[type]._target)) return {err: 'please choose opponent card'}
 
     if (card.field !== effect._from) return {err: 'error card field'}
     if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
