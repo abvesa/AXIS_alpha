@@ -305,7 +305,8 @@
       "enchant": {
         "drain": {
           "personal": {
-            "opponent": 1
+		    "artifact": 1,
+            "_target": ['opponent']
           }
         }
       }
@@ -2190,10 +2191,6 @@
 	}
   },
   
-  "phoenix_feather": {
-    
-  },
-  
   "anarchy": {
     "name": "anarchy",
     "type": {
@@ -2345,6 +2342,122 @@
 	  }
 	},
 	"text": "Rod of Fate\n<Enchant>\nIf your effect attack hits, draw 3 cards and discard 2 cards"
-  }  
+  },
+  "capsule": {
+    "name": "capsule",
+	"type": {
+	  "base": "item",
+	  "effect": {
+	    "normal": 1
+	  }	  
+	},
+	"effect": {
+	  "normal": {
+	    "buff": {
+	      "mana_tide": {
+		    "personal": true
+		  } 
+	    }
+	  }
+	},
+	"judge": {
+	  "normal": {
+	    "buff": {}
+	  }
+	},
+	"text": "Capsule\n<Normal>\nYour next Spell use this turn cost no action point"
+  },
+  "bomb": {
+    "name": "bomb",
+	"type": {
+	  "base": "item",
+	  "effect": {
+	    "normal": 1
+	  }	  
+	},
+	"effect": {
+	  "normal": {
+	    "break": {
+	      "personal": {
+		    "artifact": 1
+		  } 
+	    },
+		"bleed": {
+		  "personal": 1
+		}
+	  }
+	},
+	"judge": {
+	  "normal": {
+	    "break": {
+		  "personal": {
+		    "battle": {
+			  "goe": 2
+			}
+		  },
+		  "opponent": {
+            "battle": {
+              "goe": 1
+            },
+            "aura": {
+			  "fortify": false
+			}
+		  }
+		},
+		"bleed": {}
+	  }
+	},
+	"text": "Bomb\n<Normal>\nWhen you have multiple Artifacts on your Battlefield\nDestroy an Artifact on Battlefield, and your HP-1"
+  },
+  "switch": {
+    "name": "switch",
+    "type": {
+      "base": "item",
+      "effect": {
+        "normal": 2
+      }
+    },
+    "effect": {
+      "normal_1": {
+        "drain": {
+          "personal": {
+            "artifact": 1,
+			"_target": ["opponent", "personal"]
+          }
+		}
+      },
+	  "normal_2": {
+	    "repair": {
+		  "personal": {
+		    "artifact": 1,
+            "_target": ["opponent", "personal"]
+		  }
+		}
+	  }
+    },
+    "judge": {
+      "enchant": {
+        "drain": {
+		  "opponent": {
+            "battle": {
+              "goe": 1
+            },
+            "aura": {
+			  "fortify": false
+			}
+		  }
+		}
+      }
+    },
+    "text": "Muse\n<Enchant>\nDRAIN 1 opponent artifact on battlefield"
+  },
+  "potion": {
+  
+  },
+  "magnet": {
+  
+  }
+  
+  
   
 }

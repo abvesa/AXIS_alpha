@@ -885,28 +885,31 @@ Game.prototype.effectJudge = function (card_eff) {
 	  avail_eff.push(effect)
 	}  
     else {
-	  let pass = true	
+	  let pass = true
+      let one_pass_all_pass = ('_opap' in judge[effect])? true : false
 	  
 	  for (let target in judge[effect]) {	
+	    let judge_abort = false	  
+		
         if (target === '_valve') continue	  
         for (let condition in judge[effect][target]) {
           let curr_val = null
+		  let curr_round_judge = true
           switch (condition) {
             case 'hit':
-              //if (room.atk_status.hit) avail_eff.push(effect)
-              pass = pass && room.atk_status.hit
+			  curr_round_judge = room.atk_status.hit
 		      break
 			  
             case 'hp':
               curr_val = player[target].hp
-			  pass = pass && checkValue(curr_val, judge[effect][target][condition])
+			  curr_round_judge = checkValue(curr_val, judge[effect][target][condition])
               break
 			
 			case 'battle':
 			case 'altar':
 			case 'socket':
 			  curr_val = player[target].card_amount[condition]
-			  pass = pass && checkValue(curr_val, judge[effect][target][condition])
+			  curr_round_judge = checkValue(curr_val, judge[effect][target][condition])
 			  break
 			
 			case 'grave':
@@ -922,17 +925,28 @@ Game.prototype.effectJudge = function (card_eff) {
                       curr_val += 1						
 				  }
 				}
-			    pass = pass && checkValue(curr_val, judge[effect][target][condition][type]) 
+				curr_round_judge = curr_round_judge && checkValue(curr_val, judge[effect][target][condition][type]) 
 			  }
               break
 			  
 			case 'aura':
-			  pass = pass && checkAura(player[target].aura, judge[effect][target][condition])
+			  curr_round_judge = checkAura(player[target].aura, judge[effect][target][condition])
 			  break
 			
             default:break
           }
-        }
+		  
+		  if (one_pass_all_pass && curr_round_judge) {
+			judge_abort = true
+			pass = true  
+			break  
+		  }
+		  else {
+		    pass = pass && curr_round_judge
+          }
+		}
+		
+		if (judge_abort) break
       }
 
       if (pass) {
@@ -1254,8 +1268,9 @@ Game.prototype.repair = function (personal, param) {
   let card_pick = Object.keys(param.card_pick)
   let total_len = 0
   
-  for (let target in effect) {
-    total_len += effect[target]
+  for (let type in effect) {
+	if (type === '_target') continue
+    total_len += effect[type]
   }
   if (card_pick.length != total_len) return {err: 'error repair length'}
   
@@ -1264,9 +1279,9 @@ Game.prototype.repair = function (personal, param) {
     let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
     if (card == null) return {err: 'no card id'}
     if (card.field !== 'battle') return {err: 'please choose card on battle field'}
-    if (!(card_owner in effect)) return {err: 'error card owner'}
-    if (!effect[card_owner]) return {err: 'error owner length'}
-    effect[card_owner] --
+    if (!(card_owner in effect._target)) return {err: 'error card owner'}
+    if (!effect.artifact) return {err: 'error card length'}
+    effect.artifact --
   }
   
   let aura_modify = {personal: {}, opponent: {}}
@@ -1326,8 +1341,9 @@ Game.prototype.drain = function (personal, param, use_vanish = false) {
     let card_pick = Object.keys(param.card_pick)
     let total_len = 0
   
-    for (let target in effect) {
-      total_len += effect[target]
+    for (let type in effect) {
+	  if (type === '_target') continue
+      total_len += effect[type]
     }
     if (card_pick.length != total_len) return {err: 'error drain length'}
   
@@ -1336,9 +1352,10 @@ Game.prototype.drain = function (personal, param, use_vanish = false) {
 	  let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
       if (card == null) return {err: 'no card id'}
       if (card.field !== 'battle') return {err: 'please choose card on battle field'}
-      if (!(card_owner in effect)) return {err: 'error card owner'}
-      if (!effect[card_owner]) return {err: 'error owner length'}
-      effect[card_owner] --
+      if (!(card_owner in effect._target)) return {err: 'error card owner'}
+	  if (Object.keys(player[card_owner].aura.fortify).length) delete param.card_pick[id]
+      if (!effect.artifact) return {err: 'error card length'}
+      effect.artifact --
     }
   }
   else {
@@ -1767,6 +1784,9 @@ Game.prototype.teleport = function (personal, param) {
     if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
     if (!effect[('card' in effect)? 'card': card.type.base]) return {err: 'error type length'}
     effect[('card' in effect)? 'card' : card.type.base] --
+	if (card.field === 'battle') {
+	  if (card.checkCrossProtection()) continue
+    }
 	param.card_pick[id] = {to: effect._to}
   }
 
