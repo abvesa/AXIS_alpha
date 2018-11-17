@@ -2573,7 +2573,30 @@
 	  },
 	  "text": "Magnet\n<Normal>\nTeleport 1 artifact on battle to hand"
 	}
-  }  
-  
+  },  
+  "sniper_scope": {
+    "name": "sniper_scope",
+	"type": {
+      "base": "item",
+      "effect": {
+        "normal": 1
+      }
+    },
+    "effect": {
+      "normal": {
+        "buff": {
+		  "eagle_eye": {
+            "personal": true
+          }
+		}
+      }
+    },
+    "judge": {
+      "normal": {
+        "buff": {}
+      }
+    },
+    "text": "Sniper Scope\n<Normal>\nYour next attack can't be vanished"
+  }
   
 }
