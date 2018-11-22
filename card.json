@@ -32,7 +32,7 @@
         "modify": {}
       }
     },
-    "text": "Aquarius\n<Enchant>\n(1) AD -1\n(2) If your attack hits, HEAL 3 hp"
+    "text": "Aquarius\n<Artifact/Enchant>\n(1) AD -1\n(2) If your attack hits, HEAL 3 hp"
   },
   "aria": {
     "name": "aria",
@@ -66,7 +66,7 @@
         }
       }
     },
-    "text": "Aria\n<Enchant>\nIf your attack hits, RECALL an artifact from your grave to battle"
+    "text": "Aria\n<Artifact/Enchant>\nIf your attack hits, RECALL an artifact from your grave to battle"
   },
   "choco_banana": {
     "name": "choco_banana",
@@ -94,7 +94,7 @@
 		}
       }
     },
-    "text": "Chocolate Banana\n<Enchant>\nHEAL 1 hp"
+    "text": "Chocolate Banana\n<Artifact/Enchant>\nHEAL 1 hp"
   },
   "claymore": {
     "name": "claymore",
@@ -122,7 +122,7 @@
         }
       }
     },
-    "text": "Claymore\n<Enchant>\nAD +1"
+    "text": "Claymore\n<Artifact/Enchant>\nAD +1"
   },
   "dagger": {
     "name": "dagger",
@@ -157,7 +157,7 @@
         }
       }
     },
-    "text": "Dagger\n<Enchant>\nIf your attack hits, STEAL 1 opponent handcard"
+    "text": "Dagger\n<Artifact/Enchant>\nIf your attack hits, STEAL 1 opponent handcard"
   },
   "doom": {
     "name": "doom",
@@ -192,7 +192,7 @@
         "personal": true
       }
     },
-    "text": "Doom\n<Enchant>\nIf your attack hits, CONTROL 1 opponent artifact on battlefield\n<Aura>\nCrippled"
+    "text": "Doom\n<Artifact/Enchant>\nIf your attack hits, CONTROL 1 opponent artifact on battlefield\n<Aura>\nCrippled"
   },
   "hawkeye": {
     "name": "hawkeye",
@@ -234,7 +234,7 @@
         }
       }
     },
-    "text": "Hawkeye\n<Trigger>\n(1) If your hp >= 5, AP + 1\n(2) If your handcard amount >= 5, AP + 1"
+    "text": "Hawkeye\n<Artifact/Trigger>\n(1) If your hp >= 5, AP + 1\n(2) If your handcard amount >= 5, AP + 1"
   },
   "judge": {
     "name": "judge",
@@ -267,7 +267,7 @@
         }
       }
     },
-    "text": "Judge\n<Enchant>\nif your attack hits, DESTROY all opponent artifact on battlefield"
+    "text": "Judge\n<Artifact/Enchant>\nif your attack hits, DESTROY all opponent artifact on battlefield"
   },
   "katana": {
     "name": "katana",
@@ -291,7 +291,7 @@
         "modify": {}
       }
     },
-    "text": "Katana\n<Trigger>\nAP +1"
+    "text": "Katana\n<Artifact/Trigger>\nAP +1"
   },
   "muse": {
     "name": "muse",
@@ -325,7 +325,7 @@
 		}
       }
     },
-    "text": "Muse\n<Enchant>\nDRAIN 1 opponent artifact on battlefield"
+    "text": "Muse\n<Artifact/Enchant>\nDRAIN 1 opponent artifact on battlefield"
   },
   "shadow": {
     "name": "shadow",
@@ -363,7 +363,7 @@
 		"shuffle": {}
 	  }
     },
-    "text": "Shadow\n<Enchant>\nIf your attack hits, RETRIEVE 1 card from your deck to hand"
+    "text": "Shadow\n<Artifact/Enchant>\nIf your attack hits, RETRIEVE 1 card from your deck to hand"
   },
   "epoch": {
     "name": "epoch",
@@ -397,7 +397,7 @@
         }
       }
     },
-    "text": "Epoch\n<Enchant>\nIf your attack hits, RECALL 1 card from your grave to hand"
+    "text": "Epoch\n<Artifact/Enchant>\nIf your attack hits, RECALL 1 card from your grave to hand"
   },
   "atom": {
     "name": "atom",
@@ -427,7 +427,7 @@
         }
       }
     },
-    "text": "Atom\n<Enchant>\nIf your attack hits, your AD is equal to your handcard ammount"
+    "text": "Atom\n<Artifact/Enchant>\nIf your attack hits, your AD is equal to your handcard ammount"
   },
   "gohei": {
     "name": "gohei",
@@ -446,7 +446,7 @@
 	"counter": {
       "effect": true
     },
-    "text": "Gohei\n<Counter>\nCounter target opponent artifact when trigger"
+    "text": "Gohei\n<Artifact/Counter>\nCounter target opponent artifact when trigger"
   },
   "havok": {
     "name": "havok",
@@ -493,7 +493,7 @@
         "personal": true
       }
     },
-    "text": "Havok\n<Trigger>\n(1) AP + 2 if your hp <= 2\n(2) your attack can't be vanish if your handcard amount <= 2\n<Aura>\nCrippled"
+    "text": "Havok\n<Artifact/Trigger>\n(1) AP + 2 if your hp <= 2\n(2) your attack can't be vanish if your handcard amount <= 2\n<Aura>\nCrippled"
   },
   "ion": {
     "name": "ion",
@@ -526,7 +526,7 @@
         "personal": true
       }
     },
-    "text": "Ion\n<Enchant>\nIf your attack hits, destroy all your opponent handcards\n<Aura>\nCrippled"
+    "text": "Ion\n<Artifact/Enchant>\nIf your attack hits, destroy all your opponent handcards\n<Aura>\nCrippled"
   },
   "pillow": {
     "name": "pillow",
@@ -547,7 +547,7 @@
 	"counter": {
 	  "damage": true
 	},
-    "text": "Pillow\n<Mosaic>\nBlock damage you receive this time"
+    "text": "Pillow\n<Item/Mosaic>\nBlock damage you receive this time"
   },
   "beer": {
     "name": "beer",
@@ -583,7 +583,7 @@
 		}
       }
     },
-    "text": "Beer\n<Normal>\nAD +1, and draw 1 card"
+    "text": "Beer\n<Item/Normal>\nAD +1, and draw 1 card"
   },
   "chocolate": {
     "name": "chocolate",
@@ -623,7 +623,7 @@
 		}
       }
     },
-    "text": "Chococlate\n<Normal>\nHEAL 1 hp, and draw 1 card"
+    "text": "Chococlate\n<Item/Normal>\nHEAL 1 hp, and draw 1 card"
   },
   "omamoli": {
     "name": "omamoli",
@@ -644,7 +644,7 @@
 	"counter": {
       "effect": true
     },
-    "text": "Omamoli\n<Mosaic>\nCounter target opponent artifact when trigger"
+    "text": "Omamoli\n<Item/Mosaic>\nCounter target opponent artifact when trigger"
   },
   "rune": {
     "name": "rune",
@@ -665,7 +665,7 @@
 	"counter": {
       "item":true
     },
-    "text": "Rune\n<Mosaic>\nCounter target opponent item when use"
+    "text": "Rune\n<Item/Mosaic>\nCounter target opponent item when use"
   },
   "espresso": {
     "name": "espresso",
@@ -737,7 +737,7 @@
 		}
       }
     },
-    "text": "Blood Desire\n<Instant>\nBLEED 1 hp, and draw 3 cards"
+    "text": "Blood Desire\n<Spell/Instant>\nBLEED 1 hp, and draw 3 cards"
   },
   "slime_rush": {
     "name": "slime_rush",
@@ -769,7 +769,7 @@
         }
       }
     },
-    "text": "Slime Rush\n<Instant>\ndeal 2 damage to you, and deal 2 damage to opponent when his/hers hp > 2"
+    "text": "Slime Rush\n<Spell/Instant>\ndeal 2 damage to you, and deal 2 damage to opponent when his/hers hp > 2"
   },
   "warrior_spirit": {
     "name": "warrior_spirit",
@@ -815,7 +815,7 @@
 		}
       }
     },
-    "text": "Warrior Spirit\n<Instant>\nSTEAL 1 opponent handcard, and DISCARD 1 card"
+    "text": "Warrior Spirit\n<Spell/Instant>\nSTEAL 1 opponent handcard, and DISCARD 1 card"
   },
   "bombard_hell": {
     "name": "bombard_hell",
@@ -834,7 +834,7 @@
 	"counter": {
       "artifact": true
     },
-    "text": "Bombard Hell\n<Counter>\ncounter target opponent artifact when use"
+    "text": "Bombard Hell\n<Spell/Counter>\ncounter target opponent artifact when use"
   },
   "future_vision": {
     "name": "future_vision",
@@ -853,7 +853,7 @@
 	"counter": {
       "spell": true
     },
-    "text": "Furure Vision\n<Counter>\ncounter target opponent spell when use"
+    "text": "Furure Vision\n<Spell/Counter>\ncounter target opponent spell when use"
   },
   "rune_storm": {
     "name": "rune_storm",
@@ -878,7 +878,7 @@
 	"counter": {
       "card": true
     },
-    "text": "Rune Storm\n<Counter>\ncounter target opponent card when use and bleed 1 hp"
+    "text": "Rune Storm\n<Spell/Counter>\ncounter target opponent card when use and bleed 1 hp"
   },
   "plasma_wave": {
     "name": "plasma_wave",
@@ -906,7 +906,7 @@
         "damage": {}
       }
     },
-    "text": "Plasma Wave\n<Instant>\nstun your opponent and deal 1 damage"
+    "text": "Plasma Wave\n<Spell/Instant>\nstun your opponent and deal 1 damage"
   },
   "eternal_apple": {
     "name": "eternal_apple",
@@ -934,7 +934,7 @@
 		}
       }
     },
-    "text": "Eternal Apple\n<Chanting>\nheal 3 hp"
+    "text": "Eternal Apple\n<Spell/Chanting>\nheal 3 hp"
   },
   "laser_beam": {
     "name": "laser_beam",
@@ -969,7 +969,7 @@
         "opponent": true
       }
     },
-    "text": "Laser Beam\n<Chanting>\ndeal 3 damage, and your turn ends immediately\n<Aura>\nopponent gain precise"
+    "text": "Laser Beam\n<Spell/Chanting>\ndeal 3 damage, and your turn ends immediately\n<Aura>\nopponent gain precise"
   },
   "vanish": {
     "name": "vanish",
@@ -1029,7 +1029,7 @@
         }       
       }
     },
-    "text": "Gravity\n<Trigger>\nDiscard 1 card to control 1 opponent artifact on battle field"
+    "text": "Gravity\n<Spell/Trigger>\nDiscard 1 card to control 1 opponent artifact on battle field"
   },
   "equip_breaker": {
     "name": "equip_breaker",
@@ -1062,7 +1062,7 @@
         }
       }
     },
-    "text": "Equip Breaker\n<Instant>\nbreak an opponent artifact on battle field"
+    "text": "Equip Breaker\n<Spell/Instant>\nbreak an opponent artifact on battle field"
   },
   "the_trio": {
     "name": "the_trio",
@@ -1083,7 +1083,7 @@
         "personal": true
       }
     },
-    "text": "The Trio\n<Permanent>\nwhen you have at least 3 artifact on battle field\nyour attack can't be vanish"
+    "text": "The Trio\n<Spell/Permanent>\nwhen you have at least 3 artifact on battle field\nyour attack can't be vanish"
   },
   "umbrella": {
     "name": "umbrella",
@@ -1102,7 +1102,7 @@
 	"counter": {
 	  "damage": true
 	},
-    "text": "Umbrella\n<Counter>\nBlock damage when you receive damage"
+    "text": "Umbrella\n<Artifact/Counter>\nBlock damage when you receive damage"
   },
   "eclipse": {
     "name": "eclipse",
@@ -1121,7 +1121,7 @@
 	"counter": {
 	  "spell": true
 	},
-    "text": "Eclipse\n<Counter>\ncounter target opponent spell when use"
+    "text": "Eclipse\n<Artifact/Counter>\ncounter target opponent spell when use"
   },
   "corona": {
     "name": "corona",
@@ -1140,7 +1140,7 @@
 	"counter": {
       "item": true
 	},
-    "text": "Corona\n<Counter>\ncounter target opponent item when use"
+    "text": "Corona\n<Artifact/Counter>\ncounter target opponent item when use"
   },
   "giga": {
     "name": "giga",
@@ -1159,7 +1159,7 @@
 	"counter": {
       "artifact": true
 	},
-    "text": "Giga\n<Counter>\ncounter target opponent artifact when use"
+    "text": "Giga\n<Artifact/Counter>\ncounter target opponent artifact when use"
   },
   "plague": {
     "name": "plague",
@@ -1183,7 +1183,7 @@
 	    "personal": true
 	  }
     },
-    "text": "Plague\n<Aura>\nopponent Disease\n<Aura>\nDecay, Turn down this artifact when you use vanish"
+    "text": "Plague\n<Artifact/Aura>\nopponent Disease\n<Aura>\nDecay, Turn down this artifact when you use vanish"
   },
   "arcanum": {
     "name": "arcanum",
@@ -1207,7 +1207,7 @@
 	    "personal": true
 	  }
     },
-    "text": "Arcanum\n<Aura>\npersonal Fortify\n<Aura>\nDecay, Turn down this artifact when you use vanish"
+    "text": "Arcanum\n<Artifact/Aura>\npersonal Fortify\n<Aura>\nDecay, Turn down this artifact when you use vanish"
   },
   "summoners_craft": {
     "name": "summoners_craft",
@@ -1244,7 +1244,7 @@
 		"shuffle": {}
 	  }
     },
-    "text": "Summoner's craft\n<Chanting>\nRetrieve a card from your deck to hand"
+    "text": "Summoner's craft\n<Spell/Chanting>\nRetrieve a card from your deck to hand"
   },
   "cross": {
     "name": "cross",
@@ -1265,7 +1265,7 @@
 	"counter": {
 	  "cross": true
 	},
-	"text": "Cross\n<Mosaic>\nProtect your artifact from being affected once"
+	"text": "Cross\n<Item/Mosaic>\nProtect your artifact from being affected once"
   },
   "dragon_orb": {
     "name": "dragon_orb",
@@ -1289,7 +1289,7 @@
 	    "buff": {}
 	  }
 	},
-	"text": "Dragon Orb\n<Normal>\nYour next artifact equip this turn cost no action point"
+	"text": "Dragon Orb\n<Item/Normal>\nYour next artifact equip this turn cost no action point"
   },
   "heros_hymn": {
     "name": "heros_hymn",
@@ -1319,7 +1319,7 @@
 		"modify": {}
 	  }
 	},
-	"text": "Hero's Hymn\n<Chanting>\nAttack damage +2, next attack you do can't be vanish"
+	"text": "Hero's Hymn\n<Spell/Chanting>\nAttack damage +2, next attack you do can't be vanish"
   },
   "sorcery_circle": {
     "name": "sorcery_circle",
@@ -1351,7 +1351,7 @@
 		}
 	  }
 	},
-	"text": "Sorcery Circle\n<Instant>\nExchange same amount of handcards with your opponent, up to 3"
+	"text": "Sorcery Circle\n<Spell/Instant>\nExchange same amount of handcards with your opponent, up to 3"
   },
   "weapon_reforge": {
     "name": "weapon_reforge",
@@ -1384,7 +1384,7 @@
         }
       }
     },
-    "text": "Weapon Reforge\n<Instant>\nRecall an artifact from your grave to battle"
+    "text": "Weapon Reforge\n<Spell/Instant>\nRecall an artifact from your grave to battle"
   },
   "thunder_iron": {
     "name": "thunder_iron",
@@ -1412,7 +1412,7 @@
 		}
       }
     },
-    "text": "Thunder Iron\n<Enchant>\nIf your attack hits, stun your opponent"
+    "text": "Thunder Iron\n<Artifact/Enchant>\nIf your attack hits, stun your opponent"
   },
   "holy_blade": {
     "name": "holy_blade",
@@ -1436,7 +1436,7 @@
 	    "personal": true
 	  }
 	},
-    "text": "Holy Blade\n<Counter>\ncounter target opponent vanish when use\n<Aura>\nunveil your handcards"
+    "text": "Holy Blade\n<Artifact/Counter>\ncounter target opponent vanish when use\n<Aura>\nunveil your handcards"
   },
   "paper_fan": {
     "name": "paper_fan",
@@ -1455,7 +1455,7 @@
 	"counter": {
 	  "attack": true
 	},
-    "text": "Paper Fan\n<Counter>\nwhen being attacked, vanish"
+    "text": "Paper Fan\n<Artifact/Counter>\nwhen being attacked, vanish"
   },
   "observer": {
     "name": "observer",
@@ -1476,7 +1476,7 @@
 	    "opponent": true
 	  }
     },
-    "text": "Observer\n<Aura>\nopponent unveil"
+    "text": "Observer\n<Artifact/Aura>\nopponent unveil"
   },
   "angle_incarnation": {
     "name": "angle_incarnation",
@@ -1501,7 +1501,7 @@
         "modify": {}
       }
     },
-    "text": "Angle Incarnation\n<Instant>\nhp +1 and max hp +1"
+    "text": "Angle Incarnation\n<Spell/Instant>\nhp +1 and max hp +1"
   },
   
   "death": {
@@ -1523,7 +1523,7 @@
 	    "opponent": true
 	  }
     },
-    "text": "Death\n<Aura>\nopponent wither"
+    "text": "Death\n<Artifact/Aura>\nopponent wither"
   },
   "the_golden_egg": {
     "name": "the_golden_egg",
@@ -1553,7 +1553,7 @@
 		}
 	  }
 	},
-	"text": "The Golden Egg\n<Chanting>\nDraw 3 cards"
+	"text": "The Golden Egg\n<Spell/Chanting>\nDraw 3 cards"
   },
   "twilight_zone": {
     "name": "twilight_zone",
@@ -1585,7 +1585,7 @@
 	    "personal": true
 	  }
     },
-    "text": "Twilight Zone\n<Aura>\npersonal Wither\n<Aura>\npersonal Berserk"
+    "text": "Twilight Zone\n<Spell/Trigger>\nlose 1 action point when trigger<Aura>\npersonal Wither\n<Aura>\npersonal Berserk"
   },
   "undead_recall": {
     "name": "undead_recall",
@@ -1618,7 +1618,7 @@
         }
       }
     },
-    "text": "Undead Recall\n<Instant>\nRECALL a card from your grave to hand"
+    "text": "Undead Recall\n<Spell/Instant>\nRECALL a card from your grave to hand"
   },
   "tsunami_wave": {
     "name": "tsunami_wave",
@@ -1642,7 +1642,7 @@
 	    "modify": {}
 	  }
 	},
-	"text": "Tsunami Wave\n<Chanting>\nAP+3"
+	"text": "Tsunami Wave\n<Spell/Chanting>\nAP+3"
   },
   
   "shockwave": {
@@ -1684,7 +1684,7 @@
 		}
 	  }
 	},
-	"text": "Shockwave\n<Instant>\nDrain all opponent's artifact and Repair all yours"
+	"text": "Shockwave\n<Spell/Instant>\nDrain all opponent's artifact and Repair all yours"
   },
   "emergency_jetpack": {
     "name": "emergency_jetpack",
@@ -1717,7 +1717,7 @@
         }
 	  }
     },
-	"text": "Emergency Jetpack\n<Trigger>\nRetrieve 2 vanish from your deck to hand"
+	"text": "Emergency Jetpack\n<Spell/Trigger>\nRetrieve 2 vanish from your deck to hand"
   },
   "financial_monopoly": {
     "name": "financial_monopoly",
@@ -1754,7 +1754,7 @@
 		}
       }
     },
-    "text": "Financial Monopoly\n<Instant>\nDraw 3 cards if opponent handcard amount >= 5"
+    "text": "Financial Monopoly\n<Spell/Instant>\nDraw 3 cards if opponent handcard amount >= 5"
   }
   "prime_cathedral": {
     "name": "prime_cathedral",
@@ -1775,7 +1775,7 @@
         "personal": true
       }
     },
-    "text": "Prime Cathedral\n<Aura>\npersonal Stamina"
+    "text": "Prime Cathedral\n<Spell/Aura>\npersonal Stamina"
   },
   "butterfly_effect": {
     "name": "butterfly_effect",
@@ -1808,7 +1808,7 @@
         }
       }
     },
-    "text": "Butterfly Effect\n<Instant>\nif opponent have 2 or more artifact on battlefield DESTROY them all"
+    "text": "Butterfly Effect\n<Spell/Instant>\nif opponent have 2 or more artifact on battlefield DESTROY them all"
   },
   "perfect_crime": {
     "name": "perfect_crime",
@@ -1840,7 +1840,7 @@
 		}
 	  }
 	},
-	"text": "Perfect Crime\n<Chanting>\nOpponent discard 2 handcard"
+	"text": "Perfect Crime\n<Spell/Chanting>\nOpponent discard 2 handcard"
   },
   "luxury_banquet": {
     "name": "luxury_banquet",
@@ -1883,7 +1883,7 @@
 		}
 	  }
 	},
-	"text": "Luxury Banquet\n<Instant>\nDiscard 1 card to heal 3 HP"
+	"text": "Luxury Banquet\n<Spell/Instant>\nDiscard 1 card to heal 3 HP"
   },
   
   "golem_rage": {
@@ -1929,7 +1929,7 @@
         }	
       }
     },
-    "text": "Golem Rage\n<Instant>\nDiscard 1 card to DESTROY all opponent artifact on battlefield"
+    "text": "Golem Rage\n<Spell/Instant>\nDiscard 1 card to DESTROY all opponent artifact on battlefield"
   },
   "dark_gust": {
     "name": "dark_gust",
@@ -1962,7 +1962,7 @@
 		"stun": {}
       }
     },
-    "text": "Dark Gust\n<Instant>\nDestroy all mosaic item on field and stun your opponent"
+    "text": "Dark Gust\n<Spell/Instant>\nDestroy all mosaic item on field and stun your opponent"
   }
   "supernova_explosion": {
     "name": "supernova_explosion",
@@ -2017,7 +2017,7 @@
 		"bleed": {}
       }
     },
-    "text": "Dark Gust\n<Instant>\nDestroy all mosaic item on field and stun your opponent"
+    "text": "Dark Gust\n<Spell/Instant>\nDestroy all mosaic item on field and stun your opponent"
   },
   "potion_master": {
     "name": "potion_master",
@@ -2060,7 +2060,7 @@
 		}	
       }
     },
-    "text": "Potion Master\n<Instant>\nDiscard 1 potion to heal 6 hp"
+    "text": "Potion Master\n<Spell/Instant>\nDiscard 1 potion to heal 6 hp"
   }
   "reverse_world": {
     "name": "reverse_world",
@@ -2084,7 +2084,7 @@
         "reverse": {}
       }
     },
-    "text": "Reverse World\n<Trigger>\nReverse both player's battle field"
+    "text": "Reverse World\n<Spell/Trigger>\nReverse both player's battle field"
   },
   "coconut": {
     "name": "coconut",
@@ -2167,7 +2167,7 @@
 		}
       }
     },
-    "text": "Chocolate Sundae\n<Instant>\nDiscard 1 chocolate to heal 3 hp and draw 2 cards"
+    "text": "Chocolate Sundae\n<Spell/Instant>\nDiscard 1 chocolate to heal 3 hp and draw 2 cards"
   }
   "entrance": {
     "name": "entrance",
@@ -2189,7 +2189,7 @@
 	    "repairAll": {}
 	  }
 	},
-	"text": "Entrance\n<Enchant>\nRepair all your artifacts once on battle field"
+	"text": "Entrance\n<Artifact/Enchant>\nRepair all your artifacts once on battle field"
   },
   "scary_box": {
     "name": "scary_box",
@@ -2223,7 +2223,7 @@
 		  }
 		}
 	  },
-	  "text": "Scary Box\n<Normal>\nTeleport 1 opponent handcard to grave"
+	  "text": "Scary Box\n<Item/Normal>\nTeleport 1 opponent handcard to grave"
 	}
   },
   
@@ -2272,7 +2272,7 @@
         "personal": true
       }
     },
-    "text": "Anarchy\n<Trigger>\n(1) your attack can't be vanish if your hp <= 2\n(2) AP + 2 if your handcard amount <= 2\n<Aura>\nCrippled"
+    "text": "Anarchy\n<Artifact/Trigger>\n(1) your attack can't be vanish if your hp <= 2\n(2) AP + 2 if your handcard amount <= 2\n<Aura>\nCrippled"
   },
   "spectrum": {
     "name": "spectrum",
@@ -2308,7 +2308,7 @@
 		}
 	  }
 	},
-	"text": "Spectrum\n<Enchant>\nIf your effect attack hits, Teleport 1 opponent artifact on battle to deck bottom"
+	"text": "Spectrum\n<Artifact/Enchant>\nIf your effect attack hits, Teleport 1 opponent artifact on battle to deck bottom"
   },
   "obelisk": {
     "name": "obelisk",
@@ -2346,7 +2346,7 @@
 		}
 	  }
 	},
-	"text": "Spectrum\n<Enchant>\nIf your effect attack hits, Teleport 2 opponent handcard to deck bottom"
+	"text": "Spectrum\n<Artifact/Enchant>\nIf your effect attack hits, Teleport 2 opponent handcard to deck bottom"
   },
   "rod_of_fate": {
     "name": "rod_of_fate",
@@ -2379,7 +2379,7 @@
 		"discard": {}
 	  }
 	},
-	"text": "Rod of Fate\n<Enchant>\nIf your effect attack hits, draw 3 cards and discard 2 cards"
+	"text": "Rod of Fate\n<Artifact/Enchant>\nIf your effect attack hits, draw 3 cards and discard 2 cards"
   },
   "capsule": {
     "name": "capsule",
@@ -2403,7 +2403,7 @@
 	    "buff": {}
 	  }
 	},
-	"text": "Capsule\n<Normal>\nYour next Spell use this turn cost no action point"
+	"text": "Capsule\n<Item/Normal>\nYour next Spell use this turn cost no action point"
   },
   "bomb": {
     "name": "bomb",
@@ -2445,7 +2445,7 @@
 		"bleed": {}
 	  }
 	},
-	"text": "Bomb\n<Normal>\nWhen you have multiple Artifacts on your Battlefield\nDestroy an Artifact on Battlefield, and your HP-1"
+	"text": "Bomb\n<Item/Normal>\nWhen you have multiple Artifacts on your Battlefield\nDestroy an Artifact on Battlefield, and your HP-1"
   },
   "switch": {
     "name": "switch",
@@ -2533,7 +2533,7 @@
 		}
       }
     },
-    "text": "Potion\n<Normal>\nHEAL 2 hp"
+    "text": "Potion\n<Item/Normal>\nHEAL 2 hp"
   },
   "magnet": {
     "name": "magnet",
@@ -2571,7 +2571,7 @@
 		  }
 		}
 	  },
-	  "text": "Magnet\n<Normal>\nTeleport 1 artifact on battle to hand"
+	  "text": "Magnet\n<Item/Normal>\nTeleport 1 artifact on battle to hand"
 	}
   },  
   "sniper_scope": {
@@ -2596,7 +2596,63 @@
         "buff": {}
       }
     },
-    "text": "Sniper Scope\n<Normal>\nYour next attack can't be vanished"
+    "text": "Sniper Scope\n<Item/Normal>\nYour next attack can't be vanished"
   }
+  
+  "inferno": {
+    "name": "inferno",
+	"type": {
+	  "base": "artifact",
+	  "effect": {
+	    "trigger": 1
+	  }
+	},
+	"effect": {
+	  "trigger": {
+	    "buff": {
+		  "quick_draw": {
+		    "personal": true
+		  }
+		}
+	  }
+	},
+	"judge": {
+	  "trigger": {
+	    "buff": {}
+	  }
+	},
+	"text": "Inferno\n<Artifact/Trigger>\nYour next artifact equip cost no action points"
+  },
+  "asclepius": {
+    "name": "asclepius",
+	"type": {
+	  "base": "artifact",
+	  "effect": {
+	    "enchant": 1
+	  }
+	},
+	"effect": {
+	  "enchant": {
+	    "bleed": {
+		  "personal": 1
+		},
+		"draw": {
+		  "personal": 3
+		}
+	  }
+	},
+	"judge": {
+	  "enchant": {
+	    "bleed": {},
+		"draw": {
+		  "personal": {
+		    "hit": true
+		  }
+		}
+	  }
+	},
+	"text": "asclepius\n<Artifact/Enchant>\n-1 hp, if your effect attack hits, draw 3 cards"
+  }
+  
   
 }
