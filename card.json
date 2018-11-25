@@ -1521,9 +1521,12 @@
     "aura": {
 	  "wither": {
 	    "opponent": true
+	  },
+	  "decay": {
+	    "personal": true
 	  }
     },
-    "text": "Death\n<Artifact/Aura>\nopponent wither"
+    "text": "Death\n<Artifact/Aura>\nopponent wither\n<Aura>\nDecay, Turn down this artifact when you use vanish"
   },
   "the_golden_egg": {
     "name": "the_golden_egg",
@@ -1974,17 +1977,7 @@
     },
     "effect": {
       "instant": {
-        "destroy_1": {
-          "opponent": {
-            "battle": true
-          },
-		},
-		"destroy_2": {
-		  "personal": {
-		    "battle": true
-		  }
-        },
-		"destroy_3": {
+	    "destroy_1": {
           "opponent": {
             "altar": true
           },
@@ -1992,6 +1985,16 @@
 		    "altar": true
 		  }
         },
+        "destroy_2": {
+          "opponent": {
+            "battle": true
+          },
+		},
+		"destroy_3": {
+		  "personal": {
+		    "battle": true
+		  }
+        },		
 		"bleed": {
 		  "personal": 1
 		}
@@ -1999,21 +2002,21 @@
     },
     "judge": {
       "instant": {
-        "destroy_1": {
+	    "destroy_1": {},
+        "destroy_2": {
 		  "opponent": {
 		    "aura": {
 			  "fortify": false
 			}
 		  }
 		},
-		"destroy_2": {
+		"destroy_3": {
 		  "personal": {
 		    "aura": {
 			  "fortify": false
 			}
 		  }
 		},
-		"destroy_3": {},
 		"bleed": {}
       }
     },
@@ -2676,6 +2679,47 @@
 	  }
 	},
 	"text": "Titan\n<Artifact/Trigger>\nYour next spell cast cost no action points"
+  },
+  "meteor": {
+    "name": "meteor",
+	"type": {
+	  "base": "artifact",
+	  "effect": {
+	    "aura": 1
+	  }
+	},
+	"effect": {
+	  "trigger": {
+	    "aura": {
+		  "mana_tide": {
+		    "personal": true
+		  }
+		}
+	  }
+	},
+	"judge": {
+	  "trigger": {
+	    "buff": {}
+	  }
+	},
+	"text": "Titan\n<Artifact/Trigger>\nYour next spell cast cost no action points"
+  },
+  
+  "blank": {
+    "name": "blank",
+	"type": {
+	  "base": "artifact",
+	  "effect": {
+	    "trigger": 1
+	  },
+	  "effect": {
+	    "trigger": {}
+	  },
+	  "judge": {
+	    "trigger": {}
+	  },
+	  "text": "Blank\n<Artifact/Trigger>\nIt does nothing"
+	}
   }
   
   

@@ -214,7 +214,7 @@ Game.prototype.buildPlayer = function (client) {
     precise : {}, // atk cant be vanish
     stamina : {}, // handcard limit + 2
     recycle : {}, // draw 1 card when an artifact send to grave
-    berserk : {},  // equip wont cost action point
+    berserk : {}  // equip wont cost action point
   }
   client.buff = { // next action trigger
     mana_tide : false, // next spell this turn won't cost action point
