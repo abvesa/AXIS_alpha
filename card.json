@@ -2652,6 +2652,30 @@
 	  }
 	},
 	"text": "asclepius\n<Artifact/Enchant>\n-1 hp, if your effect attack hits, draw 3 cards"
+  },
+  "titan": {
+    "name": "titan",
+	"type": {
+	  "base": "artifact",
+	  "effect": {
+	    "trigger": 1
+	  }
+	},
+	"effect": {
+	  "trigger": {
+	    "buff": {
+		  "mana_tide": {
+		    "personal": true
+		  }
+		}
+	  }
+	},
+	"judge": {
+	  "trigger": {
+	    "buff": {}
+	  }
+	},
+	"text": "Titan\n<Artifact/Trigger>\nYour next spell cast cost no action points"
   }
   
   
