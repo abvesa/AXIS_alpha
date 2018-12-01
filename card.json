@@ -73,28 +73,34 @@
     "type": {
       "base": "artifact",
       "effect": {
-        "enchant": 1
+        "trigger": 1
       }
     },
     "effect": {
-      "enchant": {
+      "trigger": {
         "heal": {
           "personal": 1
         }
-      }
+      },
+	  "stat": {
+	    "warcry": {
+		  "personal": true
+		}
+	  }
     },
     "judge": {
-      "enchant": {
+      "trigger": {
         "heal": {
 		  "personal": {
 		    "aura": {
 			  "disease": false
 			}
 		  }
-		}
+		},
+		"stat": {}
       }
     },
-    "text": "Chocolate Banana\n<Artifact/Enchant>\nHEAL 1 hp"
+    "text": "Chocolate Banana\n<Artifact/Trigger>\nHEAL 1 hp and can only attack rest of your turn"
   },
   "claymore": {
     "name": "claymore",
@@ -298,21 +304,26 @@
     "type": {
       "base": "artifact",
       "effect": {
-        "enchant": 1
+        "trigger": 1
       }
     },
     "effect": {
-      "enchant": {
+      "trigger": {
         "drain": {
           "personal": {
 		    "artifact": 1,
             "_target": ['opponent']
           }
-        }
+        },
+		"stat": {
+		  "warcry": {
+		    "personal": true
+		  }
+	    }
       }
     },
     "judge": {
-      "enchant": {
+      "trigger": {
         "drain": {
 		  "opponent": {
             "battle": {
@@ -322,10 +333,11 @@
 			  "fortify": false
 			}
 		  }
-		}
+		},
+		"stat": {}
       }
     },
-    "text": "Muse\n<Artifact/Enchant>\nDRAIN 1 opponent artifact on battlefield"
+    "text": "Muse\n<Artifact/Trigger>\nDRAIN 1 opponent artifact on battlefield\nand can only attack rest of your turn"
   },
   "shadow": {
     "name": "shadow",

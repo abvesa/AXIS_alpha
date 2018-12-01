@@ -127,6 +127,7 @@
 	"inferno": ".\\assets\\card\\inferno.jpg",
 	"asclepius": ".\\assets\\card\\asclepius.jpg",
 	"titan": ".\\assets\\card\\titan.jpg",
+	"blank": ".\\assets\\card\\blank.jpg",
 	
 	"berserk": ".\\assets\\stat\\berserk.png",
 	"charge": ".\\assets\\stat\\charge.png",
@@ -146,6 +147,7 @@
 	"stun": ".\\assets\\stat\\stun.png",
 	"unveil": ".\\assets\\stat\\unveil.png",
 	"triumph": ".\\assets\\stat\\triumph.png",
-	"decay": ".\\assets\\stat\\decay.png"
+	"decay": ".\\assets\\stat\\decay.png",
+	"warcry": ".\\assets\\stat\\warcry.png"
   }
 }

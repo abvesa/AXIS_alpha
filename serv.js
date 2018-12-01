@@ -222,10 +222,11 @@ Game.prototype.buildPlayer = function (client) {
     eagle_eye : false // next attack you perform can't be vanish
   }
   client.stat = {
-    charge   : false, // add one additional turn
-    stun     : false, // can only use item
-    petrify  : false, // can only draw card
-    freeze   : false  // can't attack and use item
+    charge : false, // add one additional turn
+    stun   : false, // can only use item
+    petrify: false, // can only draw card
+	warcry : false, // can only attack
+    freeze : false  // can't attack and use item
   }
   client.anti = { 
 	card: {},
@@ -242,8 +243,7 @@ Game.prototype.buildPlayer = function (client) {
     poopoo: {}	
   }
 
-  client.eff_todo = {} // current effect emit to client
-  
+  client.eff_todo = {} // current effect emit to client  
   client.dmg_blk = [] // effect damage only
   client.chanting = {}
 
@@ -272,7 +272,6 @@ rlt = {
   id: {
 
   },
-
 }
 */
 // personal >> who own this card currently
@@ -2456,6 +2455,7 @@ io.on('connection', client => {
   client.on('drawCard', cb => {
     let room = game.room[client._rid]
     if (Object.keys(client.aura.cripple).length) return cb({err: 'cant draw card when crippled'})
+	if (client.stat.warcry) return {err: 'cant draw card when warcry'}
     if (client.stat.stun) return cb({err: 'cant draw card when stunned'})
 
     if (typeof cb !== 'function') return
@@ -2479,13 +2479,14 @@ io.on('connection', client => {
     }
   })
 
-  client.on('clickCard', (it, cb) => {
+  client.on('clickCard', (it, cb) => {	
     let room = game.room[client._rid]
     let card = room.cards[it.id]
 
     if (it == null) return {err: 'it = null'}
     if (typeof cb !== 'function') {err: 'cb != function'}
     if (card == null) return {err: 'card = null'}
+	if (client.stat.warcry) return {err: 'cant use card when warcry'}
     //if (card.curr_own != client._pid) return
 
     //let type = ((card.field === 'battle' && !('counter' in game.default.all_card[card.name].effect)) || card.field === 'altar')? 'trigger' : 'use'
