@@ -901,14 +901,14 @@ Game.prototype.effectJudge = function (card_eff) {
 			  
             case 'hp':
               curr_val = player[target].hp
-			  curr_round_judge = checkValue(curr_val, judge[effect][target][condition])
+			  curr_round_judge = checkValue(curr_val, judge[effect][target][condition], player[target])
               break
 			
 			case 'battle':
 			case 'altar':
 			case 'socket':
 			  curr_val = player[target].card_amount[condition]
-			  curr_round_judge = checkValue(curr_val, judge[effect][target][condition])
+			  curr_round_judge = checkValue(curr_val, judge[effect][target][condition], player[target])
 			  break
 			
 			case 'grave':
@@ -924,7 +924,7 @@ Game.prototype.effectJudge = function (card_eff) {
                       curr_val += 1						
 				  }
 				}
-				curr_round_judge = curr_round_judge && checkValue(curr_val, judge[effect][target][condition][type]) 
+				curr_round_judge = curr_round_judge && checkValue(curr_val, judge[effect][target][condition][type], player[target]) 
 			  }
               break
 			  
@@ -1802,19 +1802,27 @@ Game.prototype.teleport = function (personal, param) {
 /////////////////////////////////////////////////////////////////////////////////
 
 // utility
-function checkValue (curr_val, condition) {
+function checkValue (curr_val, condition, target) {
   let operator = Object.keys(condition)[0]
+  let compare_value = condition[operator]
+  if (typeof(compare_value) === 'string') {
+	let player = {personal: target, opponent: target._foe}
+	let cv = compare_value.split('_')
+	if (cv[1] === 'hp') compare_value = player[cv[0]][cv[1]]
+	else compare_value = player[cv[0]].card_amount[cv[1]]
+  }
+  
   switch (operator) {
     case 'more':
-      return (curr_val > condition[operator])? true : false
+      return (curr_val > compare_value)? true : false
     case 'goe':
-      return (curr_val >= condition[operator])? true : false
+      return (curr_val >= compare_value)? true : false
     case 'less':
-      return (curr_val < condition[operator])? true : false
+      return (curr_val < compare_value)? true : false
     case 'loe':
-      return (curr_val <= condition[operator])? true : false
+      return (curr_val <= compare_value)? true : false
     case 'eql':
-      return (curr_val == condition[operator])? true : false
+      return (curr_val == compare_value)? true : false
 
     default: break
   }

@@ -2692,18 +2692,23 @@
 	},
 	"text": "Titan\n<Artifact/Trigger>\nYour next spell cast cost no action points"
   },
-  "meteor": {
-    "name": "meteor",
+  "joker": {
+    "name": "joker",
 	"type": {
 	  "base": "artifact",
 	  "effect": {
-	    "aura": 1
+	    "trigger": 1
 	  }
 	},
 	"effect": {
 	  "trigger": {
-	    "aura": {
-		  "mana_tide": {
+	    "discard": {
+		  "opponent": {
+		    "card": 1
+		  }
+		},
+		"stat": {
+		  "warcry": {
 		    "personal": true
 		  }
 		}
@@ -2711,11 +2716,18 @@
 	},
 	"judge": {
 	  "trigger": {
-	    "buff": {}
+	    "discard": {
+		  "personal": {
+		    "hand": {
+			  "less": "opponent_hand"
+			}
+		  }
+		},
+		"stat": {}
 	  }
-	},
-	"text": "Titan\n<Artifact/Trigger>\nYour next spell cast cost no action points"
+	}
   },
+  
   
   "blank": {
     "name": "blank",
@@ -2733,6 +2745,4 @@
 	  "text": "Blank\n<Artifact/Trigger>\nIt does nothing"
 	}
   }
-  
-  
 }
