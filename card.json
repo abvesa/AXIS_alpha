@@ -2728,6 +2728,49 @@
 	}
   },
   
+  "meteor": {
+    "name": "meteor",
+	"type": {
+	  "base": "artifact",
+	  "effect": ""
+	}
+  },
+  
+  "sin": {
+    "name": "sin",
+	"type": {
+	  "base": "artifact",
+	  "effect": "aura"
+	},
+	"effect": {
+	  "aura": {
+	    "discard": {
+		  "personal": {
+		    "card": 1
+		  }
+		}		
+	  },
+	  "enchant": {
+	    "discardOrDrain": {
+		  "personal": {}
+		}
+	  }
+	},
+	"judge": {
+	  "enchant": {
+	    "discardOrDrain": {}
+	  }
+	},
+	"aura": {
+	  "guilt": {
+	    "personal": true
+	  },
+	  "precise": {
+	    "personal": true
+	  }
+	},
+	"text": "Sin\n<Artifact/Aura>\nYou have precise\nbut discard 1 card or drain this artifact each time you attack"
+  }
   
   "blank": {
     "name": "blank",

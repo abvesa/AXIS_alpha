@@ -158,7 +158,8 @@ const Game = function () {
     receive : true, // card you flip for life loss
     retrieve: true,
     steal   : true,
-    teleport: true
+    teleport: true,
+	discardOrDrain: true
   }
   this.card_reveal_target = { //
     exchange: 'opponent',
@@ -208,7 +209,8 @@ Game.prototype.buildPlayer = function (client) {
     fear   : {}, // can't attack
 	unveil : {}, // show your hand cards to opponent
 	blur   : {}, // all your cards can become vanish
-
+    guilt  : {}, // every time you attack must discard 1 card or drain your artifact once
+	
     fortify : {}, // your artifacts can't be destroy or break or turn 
     triumph : {}, // atk cant be vanish when artifact > 3 on battle
     precise : {}, // atk cant be vanish
@@ -1258,6 +1260,26 @@ Game.prototype.discard = function (personal, param) {
   return {}
 }
 
+Game.prototype.discardOrDrain = function (personal, param) {
+	let room = this.room[personal._rid]
+	//let effect = Object.assign({}, game.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+	let card_pick = Object.keys(param.card_pick)
+    
+	if (card_pick.length > 1) return {err: 'only need to discard 1 card'}
+	else if (card_pick.length == 1) {
+	  param.tp = 'aura'
+	  param.eff = 'discard'
+	  param.tg = 'personal'
+	  this.discard(personal, param)		
+	}
+	else if (card_pick.length == 0) {
+      param.card_pick = {[param.id]: true}
+      this.drain(personal, param, use_vanish=true)	  
+	}
+	
+	return {}
+}
+
 Game.prototype.repair = function (personal, param) {
   let room = this.room[personal._rid]
   let player = {personal: personal, opponent: personal._foe}
@@ -2176,7 +2198,14 @@ io.on('connection', client => {
     }
     else
       if (client.atk_phase < 1) return cb( {err: 'not enough attack phase'} )
-
+	
+    if (Object.keys(client.aura.guilt).length) {
+	  let curr_atk_enchants = Object.assign({}, client.atk_enchant)	
+	  let added_atk_enchants = Object.assign({}, client.aura.guilt)
+	  let new_atk_enchants = Object.assign(added_atk_enchants, curr_atk_enchants)
+	  client.atk_enchant = new_atk_enchants
+	}		  
+	
     room.phase = 'attack'
     room.atk_status.attacker = client
     room.atk_status.defender = client._foe

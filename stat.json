@@ -78,5 +78,9 @@
   "blur": {
     "name": "blur",
 	"text": "<blur>\nall your cards can use as vanish"
+  },
+  "warcry": {
+    "name": "warcry",
+	"text": "<warcry>\nyou can only attack in the rest of your turn"
   }
 }
