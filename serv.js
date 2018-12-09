@@ -209,13 +209,14 @@ Game.prototype.buildPlayer = function (client) {
     fear   : {}, // can't attack
 	unveil : {}, // show your hand cards to opponent
 	blur   : {}, // all your cards can become vanish
-    guilt  : {}, // every time you attack must discard 1 card or drain your artifact once
+    guilt  : {}, // every time you attack must discard 1 card or drain your artifact once, stackable
+	strength: {}, // your attack damage +1, stackable
 	
     fortify : {}, // your artifacts can't be destroy or break or turn 
     triumph : {}, // atk cant be vanish when artifact > 3 on battle
     precise : {}, // atk cant be vanish
-    stamina : {}, // handcard limit + 2
-    recycle : {}, // draw 1 card when an artifact send to grave
+    stamina : {}, // handcard limit + 2, stackable
+    recycle : {}, // draw 1 card when an artifact send to grave, stackable
     berserk : {}  // equip wont cost action point
   }
   client.buff = { // next action trigger
@@ -1570,7 +1571,7 @@ Game.prototype.shuffle = function (personal, effect) {
 
 Game.prototype.receive = function (personal, param) {
   let room = this.room[personal._rid]
-  let dmg_taken = (param.id === 'attack')? ((personal._foe.atk_damage < 0)? 0 : personal._foe.atk_damage) : (personal.dmg_blk[0])
+  let dmg_taken = (param.id === 'attack')? ((personal._foe.atk_damage < 0)? 0 : personal._foe.atk_damage + Object.keys(personal._foe.aura.strength).length) : (personal.dmg_blk[0])
   let card_pick = Object.keys(param.card_pick)
   let rlt = { card: {receive: {personal: {}, opponent: {}}} }
 
