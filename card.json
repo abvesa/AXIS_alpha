@@ -1968,16 +1968,22 @@
 		  "stun": {
 		    "opponent": true
 		  }
+		},
+		"draw": {
+		  "personal": {
+		    "card": 1
+		  }
 		}
       }
     },
     "judge": {
       "instant": {
         "destroy": {},
-		"stun": {}
+		"stun": {},
+		"draw": {}
       }
     },
-    "text": "Dark Gust\n<Spell/Instant>\nDestroy all mosaic item on field and stun your opponent"
+    "text": "Dark Gust\n<Spell/Instant>\nDestroy all mosaic item on field, draw 1 card and stun your opponent"
   }
   "supernova_explosion": {
     "name": "supernova_explosion",
@@ -2566,11 +2572,15 @@
 			  "_to": "hand",
 			  "_target": ['personal', 'opponent']
 			}
+		  },
+		  "bleed": {
+		    "personal": 1
 		  }
 		}
 	  },
 	  "judge": {
 	    "normal": {
+		  "bleed": {},
 		  "teleport": {
 		    "_opap": true,
 		    "opponent": {
@@ -2583,10 +2593,10 @@
 				"goe": 1
 			  }
 			},
-		  }
+		  }		  
 		}
 	  },
-	  "text": "Magnet\n<Item/Normal>\nTeleport 1 artifact on battle to hand"
+	  "text": "Magnet\n<Item/Normal>\nhp -1, Teleport 1 artifact on battle to hand"
 	}
   },  
   "sniper_scope": {
