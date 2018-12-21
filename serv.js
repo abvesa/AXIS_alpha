@@ -1040,6 +1040,11 @@ Game.prototype.block = function (personal, param) {
   return {}
 }
 
+Game.prototype.specialAura = function () {
+	
+	
+}
+
 Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true, ...}
   let player = {personal: personal, opponent: personal._foe}
   let rlt = { stat: {personal: {}, opponent: {}} }
