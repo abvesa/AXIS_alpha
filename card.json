@@ -312,7 +312,7 @@
         "drain": {
           "personal": {
 		    "artifact": 1,
-            "_target": ['opponent']
+            "_target": ["opponent"]
           }
         },
 		"stat": {
@@ -1770,7 +1770,7 @@
       }
     },
     "text": "Financial Monopoly\n<Spell/Instant>\nDraw 3 cards if opponent handcard amount >= 5"
-  }
+  },
   "prime_cathedral": {
     "name": "prime_cathedral",
     "type": {
@@ -1984,7 +1984,7 @@
       }
     },
     "text": "Dark Gust\n<Spell/Instant>\nDestroy all mosaic item on field, draw 1 card and stun your opponent"
-  }
+  },
   "supernova_explosion": {
     "name": "supernova_explosion",
     "type": {
@@ -2006,7 +2006,7 @@
         "destroy_2": {
           "opponent": {
             "battle": true
-          },
+          }
 		},
 		"destroy_3": {
 		  "personal": {
@@ -2038,7 +2038,7 @@
 		"bleed": {}
       }
     },
-    "text": "Dark Gust\n<Spell/Instant>\nDestroy all mosaic item on field and stun your opponent"
+    "text": "Supernova Explosion\n<Spell/Instant>\nHP -1 and Destroy all artifact and spell on field"
   },
   "potion_master": {
     "name": "potion_master",
@@ -2082,7 +2082,7 @@
       }
     },
     "text": "Potion Master\n<Spell/Instant>\nDiscard 1 potion to heal 6 hp"
-  }
+  },
   "reverse_world": {
     "name": "reverse_world",
     "type": {
@@ -2152,7 +2152,7 @@
         },
 		"draw": {
 		  "personal": 2
-		}
+		},
 		"discard": {
 		  "personal": {
             "chocolate": 1
@@ -2163,7 +2163,7 @@
     "judge": {
       "instant": {
 	    "discard": {
-		  "_valve": true
+		  "_valve": true,
 		  "personal": {
             "hand": {
 			  "chocolate": {
@@ -2189,7 +2189,7 @@
       }
     },
     "text": "Chocolate Sundae\n<Spell/Instant>\nDiscard 1 chocolate to heal 3 hp and draw 2 cards"
-  }
+  },
   "entrance": {
     "name": "entrance",
 	"type": {
@@ -2226,7 +2226,7 @@
 			  "card": 1,
 			  "_from": "hand",
 			  "_to": "grave",
-			  "_target": ['opponent']
+			  "_target": ["opponent"]
 			}
 		  }
 		}
@@ -2302,7 +2302,7 @@
 	  "effect": {
 	    "enchant": 1
 	  }
-	}
+	},
 	"effect": {
 	  "enchant": {
 	    "teleport": {
@@ -2310,7 +2310,7 @@
 		    "artifact": 1,
 			"_from": "battle",
 			"_to": "deck",
-			"_target": ['opponent']
+			"_target": ["opponent"]
 		  }
 		}
 	  }
@@ -2338,7 +2338,7 @@
 	  "effect": {
 	    "enchant": 1
 	  }
-	}
+	},
 	"effect": {
 	  "enchant": {
 	    "teleport": {
@@ -2346,7 +2346,7 @@
 		    "card": 2,
 			"_from": "hand",
 			"_to": "deck",
-			"_target": ['opponent']
+			"_target": ["opponent"]
 		  }
 		}
 	  }
@@ -2376,7 +2376,7 @@
 	  "effect": {
 	    "enchant": 1
 	  }
-	}
+	},
 	"effect": {
 	  "enchant": {
 	    "draw": {
@@ -2570,7 +2570,7 @@
 			  "artifact": 1,
 			  "_from": "battle",
 			  "_to": "hand",
-			  "_target": ['personal', 'opponent']
+			  "_target": ["personal", "opponent"]
 			}
 		  },
 		  "bleed": {
@@ -2592,7 +2592,7 @@
 			  "battle": {
 				"goe": 1
 			  }
-			},
+			}
 		  }		  
 		}
 	  },
@@ -2622,7 +2622,7 @@
       }
     },
     "text": "Sniper Scope\n<Item/Normal>\nYour next attack can't be vanished"
-  }
+  },
   
   "inferno": {
     "name": "inferno",

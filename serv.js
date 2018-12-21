@@ -771,6 +771,8 @@ Game.prototype.buildEffectQueue = function (personal, card_list) {
   else {
 	this.checkEffectDone(personal)
   }
+  
+  //console.log(effect_queue)
 }
 
 // effectEmitter emits one effect at a time, stops at one card's effects
@@ -1451,13 +1453,15 @@ Game.prototype.draw = function (personal, effect) {
   let player = {personal: personal, opponent: personal._foe}
   let rlt = {personal: {}, opponent: {}}
 
+  //console.log(effect)
+  
   for (let target in effect) {
     for (let object in effect[target]) {
       let val = effect[target][object]
       let tmp = {}
       for (let id in room.cards) {
         let card = room.cards[id]
-        if (card.field === 'deck' && card.curr_own === player[target]._pid && card.type.base === object) {
+        if (card.field === 'deck' && card.curr_own === player[target]._pid && ((object === 'card')? true : (card.type.base === object)) ) {
           tmp[id] = {to: 'hand'}
           val --
         }

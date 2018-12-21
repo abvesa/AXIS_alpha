@@ -127,6 +127,9 @@
 	"inferno": ".\\assets\\card\\inferno.jpg",
 	"asclepius": ".\\assets\\card\\asclepius.jpg",
 	"titan": ".\\assets\\card\\titan.jpg",
+	"joker": ".\\assets\\card\\joker.jpg",
+	"sin": ".\\assets\\card\\sin.jpg",
+	"glutton": ".\\assets\\card\\glutton.jpg",
 	"blank": ".\\assets\\card\\blank.jpg",
 	
 	"berserk": ".\\assets\\stat\\berserk.png",
