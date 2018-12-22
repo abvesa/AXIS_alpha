@@ -424,6 +424,7 @@ Game.prototype.cardMove = function (rlt) {
 	  }
 	}
 	
+	//console.log(rlt[id].cover, card.name, id, card.img.key)
 	if ((rlt[id].cover && card.img.key !== 'cardback') || (!rlt[id].cover && card.img.key !== card.name)) {
 	  if (!(rlt[id].from === 'life' && (rlt[id].to === 'battle' || rlt[id].to === 'altar' || rlt[id].to !== 'socket'))) card.flip()
     }
@@ -1301,11 +1302,10 @@ socket.on('effectTrigger', effect => {
       case 'recall':
 	  case 'exchange':
       case 'steal':
-        if (type === 'steal' || type === 'exchange' || type === 'teleport') {
+        if (type === 'steal' || type === 'exchange') {
 		  if (Object.keys(effect.card[type].personal).length) {
             for (let card of opponent.hand)
-              if (!(card.id in effect.card[type].personal))
-                card.flip()
+              if (!(card.id in effect.card[type].personal)) card.flip()
               //card.img.loadTexture('cardback')
 		  }
         }
@@ -1313,6 +1313,16 @@ socket.on('effectTrigger', effect => {
 		  let field_panel = game.page.game.field_panel
           field_panel.removeChildren(begin = 0)
           field_panel.kill()
+		}
+		else if (type === 'teleport') {
+		  let _tmp = effect.card[type].personal
+		  if (Object.keys(_tmp).length) {
+			let first_card = _tmp[Object.keys(_tmp)[0]]
+			if (first_card.to !== 'hand' && first_card.from === 'hand') {
+              for (let card of opponent.hand)
+                if (!(card.id in effect.card[type].personal)) card.flip()
+		    }
+		  }			
 		}
 
       // card move or turn
