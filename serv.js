@@ -95,6 +95,7 @@ Card.prototype.checkMultiType = function () {
   if (this.name === 'vanish') return {}
 
   if (eff_tp.length == 1) eff_tp = [`${eff_tp[0]}_1`, `${eff_tp[0]}_2`]
+  console.log(game.default.all_card[this.name])
   let eff_str = game.default.all_card[this.name].text.split('\n')
   let rlt = {}
   for (let i of [0, 1]) rlt[eff_tp[i]] = eff_str[2*i+1] + '\n' + eff_str[2*i+2]
@@ -1308,7 +1309,7 @@ Game.prototype.repair = function (personal, param) {
     let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
     if (card == null) return {err: 'no card id'}
     if (card.field !== 'battle') return {err: 'please choose card on battle field'}
-    if (!(card_owner in effect._target)) return {err: 'error card owner'}
+    if (!effect._target.includes(card_owner)) return {err: 'error card owner'}
     if (!effect.artifact) return {err: 'error card length'}
     effect.artifact --
   }
@@ -1381,7 +1382,7 @@ Game.prototype.drain = function (personal, param, use_vanish = false) {
 	  let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
       if (card == null) return {err: 'no card id'}
       if (card.field !== 'battle') return {err: 'please choose card on battle field'}
-      if (!(card_owner in effect._target)) return {err: 'error card owner'}
+      if (!effect._target.includes(card_owner)) return {err: 'error card owner'}
 	  if (Object.keys(player[card_owner].aura.fortify).length) delete param.card_pick[id]
       if (!effect.artifact) return {err: 'error card length'}
       effect.artifact --
@@ -1809,7 +1810,8 @@ Game.prototype.teleport = function (personal, param) {
   for (let id in param.card_pick) {
     let card = room.cards[id]
     if (card == null) return {err: 'no card id'}
-    if (!(card.curr_own in effect[type]._target)) return {err: 'please choose opponent card'}
+	let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
+    if (!effect._target.includes(card_owner)) return {err: 'please choose opponent card'}
 
     if (card.field !== effect._from) return {err: 'error card field'}
     if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}

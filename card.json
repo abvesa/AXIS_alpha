@@ -2218,34 +2218,34 @@
 	  "base": "item",
 	  "effect": {
 	    "normal": 1
-	  },
-	  "effect": {
-	    "normal": {
-		  "teleport": {
-		    "personal": {
-			  "card": 1,
-			  "_from": "hand",
-			  "_to": "grave",
-			  "_target": ["opponent"]
-			}
+	  }  
+	},
+	"effect": {
+	  "normal": {
+		"teleport": {
+		  "personal": {
+			"card": 1,
+			"_from": "hand",
+			"_to": "grave",
+			"_target": ["opponent"]
 		  }
 		}
-	  },
-	  "judge": {
-	    "normal": {
-		  "teleport": {
-		    "opponent": {
-			  "hand": {
-			    "card": {
-				  "goe": 1
-				}
+	  }
+	},
+	"judge": {
+	  "normal": {
+		"teleport": {
+		  "opponent": {
+			"hand": {
+			  "card": {
+			    "goe": 1
 			  }
 			}
 		  }
 		}
-	  },
-	  "text": "Scary Box\n<Item/Normal>\nTeleport 1 opponent handcard to grave"
-	}
+	  }
+	},
+	"text": "Scary Box\n<Item/Normal>\nTeleport 1 opponent handcard to grave"
   },
   
   "anarchy": {
@@ -2562,42 +2562,42 @@
 	  "base": "item",
 	  "effect": {
 	    "normal": 1
-	  },
-	  "effect": {
-	    "normal": {
-		  "teleport": {
-		    "personal": {
-			  "artifact": 1,
-			  "_from": "battle",
-			  "_to": "hand",
-			  "_target": ["personal", "opponent"]
-			}
-		  },
-		  "bleed": {
-		    "personal": 1
+	  }
+	},
+    "effect": {
+	  "normal": {
+	    "teleport": {
+		  "personal": {
+		    "artifact": 1,
+		    "_from": "battle",
+		    "_to": "hand",
+		    "_target": ["personal", "opponent"]
 		  }
-		}
-	  },
-	  "judge": {
-	    "normal": {
-		  "bleed": {},
-		  "teleport": {
-		    "_opap": true,
-		    "opponent": {
-			  "battle": {
-				"goe": 1
-			  }
-			},
-			"personal": {
-			  "battle": {
-				"goe": 1
-			  }
-			}
-		  }		  
-		}
-	  },
-	  "text": "Magnet\n<Item/Normal>\nhp -1, Teleport 1 artifact on battle to hand"
-	}
+	    },
+	    "bleed": {
+		  "personal": 1
+	    }
+	  }
+    },
+    "judge": {
+	  "normal": {
+	    "bleed": {},
+	    "teleport": {
+		  "_opap": true,
+		  "opponent": {
+		    "battle": {
+			  "goe": 1
+		    }
+		  },
+		  "personal": {
+		    "battle": {
+			  "goe": 1
+		    }
+		  }
+	    }		  
+	  }
+    },
+    "text": "Magnet\n<Item/Normal>\nhp -1, Teleport 1 artifact on battle to hand"
   },  
   "sniper_scope": {
     "name": "sniper_scope",
