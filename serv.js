@@ -772,8 +772,6 @@ Game.prototype.buildEffectQueue = function (personal, card_list) {
   else {
 	this.checkEffectDone(personal)
   }
-  
-  //console.log(effect_queue)
 }
 
 // effectEmitter emits one effect at a time, stops at one card's effects
@@ -845,6 +843,8 @@ Game.prototype.effectEmitter = function (room) {
         
 		// effect emit
 	    player[target].emit('effectLoop', {rlt: tmp})
+		
+		console.log(player[target].eff_todo[card_eff.id])
 	  }	
 	}
   }
@@ -1248,9 +1248,10 @@ Game.prototype.destroy = function (personal, effect) {
 Game.prototype.discard = function (personal, param) {
   let room = this.room[personal._rid]
   let effect = (room.phase === 'end')
-               ? {card: personal.card_amount.hand + (((Object.keys(personal.aura.stamina).length)? 1 : 0)*2) - personal.hand_max}
+               ? {card: personal.card_amount.hand - (((Object.keys(personal.aura.stamina).length)? 1 : 0)*2) - personal.hand_max}
                : Object.assign({}, game.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
-
+  
+			   
   let card_pick = Object.keys(param.card_pick)
   let total_len = 0
   for (let tp in effect) {
@@ -1278,17 +1279,18 @@ Game.prototype.discardOrDrain = function (personal, param) {
 	let room = this.room[personal._rid]
 	//let effect = Object.assign({}, game.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
 	let card_pick = Object.keys(param.card_pick)
+	let new_param = Object.assign({}, param)
     
 	if (card_pick.length > 1) return {err: 'only need to discard 1 card'}
-	else if (card_pick.length == 1) {
-	  param.tp = 'aura'
-	  param.eff = 'discard'
-	  param.tg = 'personal'
-	  this.discard(personal, param)		
+	else if (card_pick.length == 1) {	  
+	  new_param.tp = 'aura'
+	  new_param.eff = 'discard'
+	  new_param.tg = 'personal'
+	  this.discard(personal, new_param)		
 	}
 	else if (card_pick.length == 0) {
-      param.card_pick = {[param.id]: true}
-      this.drain(personal, param, use_vanish=true)	  
+      new_param.card_pick = {[new_param.id]: true}
+      this.drain(personal, new_param, use_vanish=true)	  
 	}
 	
 	return {}
@@ -2240,6 +2242,7 @@ io.on('connection', client => {
       cb({msg: {phase: 'attack phase', action: 'attack hits'}})
 	  game.buff(client, {eagle_eye: {personal: false}})
       room.atk_status.hit = true
+	  
 	  game.buildEffectQueue(client, {enchant: client.atk_enchant})
       //let avail_effect = game.judge(client, client._foe, {enchant: client.atk_enchant})
       //game.effectTrigger(client, client._foe, avail_effect)
@@ -2582,7 +2585,7 @@ io.on('connection', client => {
     room.phase = 'end'
 
     // discard card request when turn ends
-    if (client.card_amount.hand > client.hand_max) {
+    if (client.card_amount.hand > client.hand_max + (((Object.keys(personal.aura.stamina).length)? 1 : 0)*2)) {
       client.eff_todo.end = {end: {discard: true}}
       client.emit('effectLoop', {rlt: {name: 'end', id: 'end', eff: 'discard', tp: 'end', tg: 'personal'}})
     }
@@ -2680,13 +2683,13 @@ io.on('connection', client => {
     let effect = (it.eff.split('_')[0] === 'damage')? (it.decision) : (it.eff.split('_')[0])
 
     // if can't find effect name return
-    if (!game[effect]) return {err: true}
+    if (!(effect in game)) return {err: true}
     // if eff_id is not in client.eff_todo return
-    if (!client.eff_todo[it.id]) return {err: true}
+    if (!(it.id in client.eff_todo)) return {err: true}
 
-    if (!client.eff_todo[it.id][it.tp]) return {err: true}
+    if (!(it.tp in client.eff_todo[it.id])) return {err: true}
     // if it.eff doesn't exist in client.eff_todo.your_id return
-    if (!client.eff_todo[it.id][it.tp][it.eff]) return {err: true}
+    if (!(it.eff in client.eff_todo[it.id][it.tp])) return {err: true}
 
     let rlt = game[effect](client, it)
     if (rlt.err) return cb(rlt)

@@ -151,6 +151,8 @@
 	"unveil": ".\\assets\\stat\\unveil.png",
 	"triumph": ".\\assets\\stat\\triumph.png",
 	"decay": ".\\assets\\stat\\decay.png",
-	"warcry": ".\\assets\\stat\\warcry.png"
+	"warcry": ".\\assets\\stat\\warcry.png",
+	"blur": ".\\assets\\stat\\blur.png",
+	"guilt": ".\\assets\\stat\\guilt.png"
   }
 }

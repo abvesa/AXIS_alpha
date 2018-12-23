@@ -2729,13 +2729,16 @@
 	    "discard": {
 		  "personal": {
 		    "hand": {
-			  "less": "opponent_hand"
+			  "card": {
+				"less": "opponent_hand"
+			  }
 			}
 		  }
 		},
 		"stat": {}
 	  }
-	}
+	},
+	"text": "Joker\n<Artifact/Trigger>\nYour opponent discard 1 card\nand you can only attack rest of your turn"
   },
   
   "sin": {

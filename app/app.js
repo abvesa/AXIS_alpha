@@ -220,7 +220,7 @@ Game.prototype.statPanel = function (param) {
     let nx = (target === 'personal')? -40 : 40
     let curr = game.player[target].stat
     for (let name in curr) {
-      if ((name) in param[target]) curr[name].status = param[target][name]
+      if (name in param[target]) curr[name].status = param[target][name]
       if (curr[name].status) {
         if (game.page.game.stat_panel.children.indexOf(curr[name].img) == -1) game.page.game.stat_panel.addChild(curr[name].img)
         curr[name].img.reset(0, st + nx*idx)
