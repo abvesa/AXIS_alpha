@@ -923,6 +923,10 @@ Game.prototype.effectJudge = function (card_eff) {
             case 'hand':
 			  for (let type in judge[effect][target][condition]) {
 				curr_val = (type === 'card')? player[target].card_amount[condition] : player[target].field_detail[condition][type]
+				
+				/*
+				console.log(curr_val)
+				
 				if (type in game.default.all_card) {
 				  curr_val = 0
 				  for (let id in room.cards) {
@@ -930,6 +934,7 @@ Game.prototype.effectJudge = function (card_eff) {
                       curr_val += 1						
 				  }
 				}
+				*/
 				curr_round_judge = curr_round_judge && checkValue(curr_val, judge[effect][target][condition][type], player[target]) 
 			  }
               break
@@ -1909,11 +1914,17 @@ function randomDeck () {
   let deck = []
 
   for (let card_name in game.default.all_card) {
-    for (let type in card)
+	if (card_name === 'blank') continue
+	card[game.default.all_card[card_name].type.base].push(card_name)  
+	  
+	/*
+    for (let type in card) {
       if (game.default.all_card[card_name].type.base === type) {
         card[type].push(card_name)
         break
       }
+    }
+	*/
   }
 
   for(let type in card){

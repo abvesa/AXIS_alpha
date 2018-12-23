@@ -2742,7 +2742,9 @@
     "name": "sin",
 	"type": {
 	  "base": "artifact",
-	  "effect": "aura"
+	  "effect": {
+		"aura": 1
+	  }
 	},
 	"effect": {
 	  "aura": {
@@ -2777,7 +2779,9 @@
     "name": "glutton",
 	"type": {
 	  "base": "artifact",
-	  "effect": "aura"
+	  "effect": {
+	    "aura": 1
+	  }
 	},
 	"effect": {
 	  "aura": {
