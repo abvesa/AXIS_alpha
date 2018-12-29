@@ -449,9 +449,10 @@ Game.prototype.cardMove = function (rlt) {
     }
 
     // move
-    game.player[rlt[id].new_own][rlt[id].to].push(card)
-    game.player[rlt[id].curr_own][rlt[id].from].splice(pos, 1)
-
+	if (rlt[id].to !== 'deck') game.player[rlt[id].new_own][rlt[id].to].push(card)
+	else card.body.destroy()	
+	game.player[rlt[id].curr_own][rlt[id].from].splice(pos, 1)
+	
     // field to fix
     fix_field[rlt[id].curr_own][rlt[id].from] = true
     fix_field[rlt[id].new_own][rlt[id].to] = true
@@ -473,6 +474,9 @@ Game.prototype.fixCardPos = function (rlt) {
       let tg_field = this.player[target][field]
       let init_x = 0
       switch (field) {
+		case 'deck':
+			break
+			
         case 'grave':
           for (let card of tg_field) {
             if (!card.body.alive) continue

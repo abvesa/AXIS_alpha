@@ -1892,7 +1892,7 @@
 	    "heal": {
 		  "personal": {
 		    "aura": {
-			  "dicease": false
+			  "disease": false
 			}
 		  }
 		}
@@ -2367,7 +2367,7 @@
 		}
 	  }
 	},
-	"text": "Spectrum\n<Artifact/Enchant>\nIf your effect attack hits, Teleport 2 opponent handcard to deck bottom"
+	"text": "Obelisk\n<Artifact/Enchant>\nIf your effect attack hits, Teleport 2 opponent handcard to deck bottom"
   },
   "rod_of_fate": {
     "name": "rod_of_fate",
@@ -2380,7 +2380,9 @@
 	"effect": {
 	  "enchant": {
 	    "draw": {
-		  "personal": 3
+		  "personal": {
+			"card": 3
+		  }
 		},
 		"discard": {
 		  "personal": {
