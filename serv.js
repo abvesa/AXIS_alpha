@@ -1233,6 +1233,7 @@ Game.prototype.destroy = function (personal, effect) {
 	  if (card.checkCrossProtection()) continue
     }
 	tmp[curr_own][id] = {from: card.field, to: 'grave'}
+	if (card.field === 'socket') tmp[curr_own][id].off = card.bond
   }
 
   for (let tg in mod_eff) {
@@ -2585,7 +2586,7 @@ io.on('connection', client => {
     room.phase = 'end'
 
     // discard card request when turn ends
-    if (client.card_amount.hand > client.hand_max + (((Object.keys(personal.aura.stamina).length)? 1 : 0)*2)) {
+    if (client.card_amount.hand > client.hand_max + (((Object.keys(client.aura.stamina).length)? 1 : 0)*2)) {
       client.eff_todo.end = {end: {discard: true}}
       client.emit('effectLoop', {rlt: {name: 'end', id: 'end', eff: 'discard', tp: 'end', tg: 'personal'}})
     }

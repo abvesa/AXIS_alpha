@@ -649,6 +649,7 @@ Game.prototype.resetPlayer = function () {
     if (opponent.stat[stat_name].status) opponent.stat[stat_name].status = false
   }
   
+  this.page.game.stat_panel.removeChildren()
   this.page.game.field_panel.removeChildren()
   this.page.game.personal_grave.loadTexture('emptySlot')
   this.page.game.opponent_grave.loadTexture('emptySlot')

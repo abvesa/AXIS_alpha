@@ -1979,7 +1979,7 @@
     "judge": {
       "instant": {
         "destroy": {},
-		"stun": {},
+		"stat": {},
 		"draw": {}
       }
     },
