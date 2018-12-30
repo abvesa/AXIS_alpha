@@ -536,8 +536,9 @@ Game.prototype.checkUse = function (client, it, cb) {
   let room = game.room[client._rid]
   let card = room.cards[it.id]
 
-  if (!client.card_pause.choose) {
+  if (!('choose' in client.card_pause)) {
     if (room.phase === 'effect' || room.phase === 'attack' || room.phase === 'end') return cb( { err: 'choose'} )
+	if (client.stat.warcry) return cb({err: 'cant use card when warcry'})
     if (card.field === 'socket' && room.phase === 'counter') return cb( {err: 'choose'} )
 
     if (room.curr_ply !== client._pid) return cb( {err: 'waiting for opponent' } )
@@ -559,7 +560,7 @@ Game.prototype.checkUse = function (client, it, cb) {
     else
       if(card.field === 'life') return cb( {err: 'its not a handcard'} )
   }
-
+  if (client.stat.warcry) return cb({err: 'cant use card when warcry'})
   // choose one check ... if true return else continue
   if (game.chooseOne(client, it, cb)) return
 
@@ -663,6 +664,7 @@ Game.prototype.triggerCard = function (client, it, cb) {
   let card = room.cards[it.id]
 
   if (room.phase === 'counter' || room.phase === 'effect' || room.phase === 'attack') return cb({err: 'choose'})
+  if (client.stat.warcry) return cb({err: 'cant trigger card when warcry'})
   if (room.curr_ply !== client._pid) return cb({err: 'waiting for opponent'})
   if (card.curr_own !== client._pid) return cb( {err: 'cant trigger opponent card'})
   if (room.phase === 'socket') {
@@ -2539,7 +2541,7 @@ io.on('connection', client => {
     if (it == null) return {err: 'it = null'}
     if (typeof cb !== 'function') {err: 'cb != function'}
     if (card == null) return {err: 'card = null'}
-	if (client.stat.warcry) return {err: 'cant use card when warcry'}
+	
     //if (card.curr_own != client._pid) return
 
     //let type = ((card.field === 'battle' && !('counter' in game.default.all_card[card.name].effect)) || card.field === 'altar')? 'trigger' : 'use'
