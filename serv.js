@@ -1173,7 +1173,7 @@ Game.prototype.control = function (personal, param) {
 Game.prototype.break = function (personal, param) {
   let room = this.room[personal._rid]
   let effect = Object.assign({}, game.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
-
+  
   let card_pick = Object.keys(param.card_pick)
   let total_len = 0
   for (let tp in effect) {
@@ -1181,6 +1181,7 @@ Game.prototype.break = function (personal, param) {
   }
   if (card_pick.length != total_len) return {err: 'error break length'}
 
+  let player = {personal: personal, opponent: personal._foe}
   for (let id of card_pick) {
     let card = room.cards[id]
     if (card == null) return {err: 'no card id'}
@@ -1197,6 +1198,7 @@ Game.prototype.break = function (personal, param) {
       }
 	}	
     param.card_pick[id] = {to: 'grave'}
+	if (id in player[card.curr_own].chanting) delete player[card.curr_own].chanting[id]
   }
 
   let rlt = this.cardMove(personal, param.card_pick)
@@ -1225,6 +1227,7 @@ Game.prototype.destroy = function (personal, effect) {
     }
 	tmp[curr_own][id] = {from: card.field, to: 'grave'}
 	if (card.field === 'socket') tmp[curr_own][id].off = card.bond
+	if (id in player[curr_own].chanting) delete player[curr_own].chanting[id]
   }
 
   for (let tg in mod_eff) {
@@ -1805,7 +1808,8 @@ Game.prototype.teleport = function (personal, param) {
     total_len += effect[type]
   }
   if ((card_pick.length < total_len && card_pick.length != personal.card_amount.hand) || (card_pick.length > total_len)) return {err: 'error teleport length'}
-
+  
+  let player = {personal: personal, opponent: personal._foe}
   for (let id in param.card_pick) {
     let card = room.cards[id]
     if (card == null) return {err: 'no card id'}
@@ -1820,6 +1824,7 @@ Game.prototype.teleport = function (personal, param) {
 	  if (card.checkCrossProtection()) continue
     }
 	param.card_pick[id] = {to: effect._to}
+	if (id in player[card_owner].chanting) delete player[card_owner].chanting[id]
   }
 
   let rlt = this.cardMove(personal, param.card_pick)
@@ -2465,7 +2470,7 @@ io.on('connection', client => {
         }
         else {
           room.phase = 'normal'
-          if (card.type.effect.chanting) {
+          if ('chanting' in card.type.effect) {
 			client._foe.chanting[card.id] = {to: 'grave', status: true}
 		  }
 		  if ('counter' in card) {
