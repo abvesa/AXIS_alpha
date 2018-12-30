@@ -1767,28 +1767,23 @@ Game.prototype.reverse = function (personal, effect) {
   
   // init reverse field
   let reverse_cards = {personal: {}, opponent: {}}
-  for (let field in mod_eff.personal) {
-	reverse_cards.personal[field] = {}
-    reverse_cards.opponent[field] = {}
-  }
   
   // find reverse cards
   for (let id in room.cards) {
     let card = room.cards[id]
 	if (!(card.field in mod_eff.personal)) continue
 	let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
-	let new_own = (card_owner === 'personal')? 'opponent' : 'personal'
 	
 	if (card.field === 'battle') { 
 	  if (card.checkCrossProtection()) continue
 	}
 	
-	reverse_cards[card_owner][card.id] = {new_own: new_own, to: card.field}
+	reverse_cards[card_owner][card.id] = {new_own: 'opponent', to: card.field}
   }
   
   // generate return object
   personal_reverse = this.cardMove(personal, reverse_cards.personal)
-  opponent_reverse = this.cardMove(perosnal._foe, reverse_cards.opponent)
+  opponent_reverse = this.cardMove(personal._foe, reverse_cards.opponent)
 
   personal.emit('effectTrigger', {card: {reverse: { personal: personal_reverse.personal, opponent: opponent_reverse.opponent }}})
   personal._foe.emit('effectTrigger', {card: {reverse: { personal: opponent_reverse.personal, opponent: personal_reverse.opponent }}})

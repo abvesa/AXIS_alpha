@@ -132,6 +132,7 @@
 	"glutton": ".\\assets\\card\\glutton.jpg",
 	"blank": ".\\assets\\card\\blank.jpg",
 	
+	"strength": ".\\assets\\stat\\strength.png",
 	"berserk": ".\\assets\\stat\\berserk.png",
 	"charge": ".\\assets\\stat\\charge.png",
 	"cripple": ".\\assets\\stat\\cripple.png",
