@@ -16,11 +16,11 @@ const io = socket(server)
 apps.use(express.static(path.join(__dirname, 'app')))
 
 const opt = {
-  mongo: JSON.parse(fs.readFileSync('option.json', 'utf-8')).mongo,
+  mongo: (fs.existsSync('option.json'))? JSON.parse(fs.readFileSync('option.json', 'utf-8')).mongo : null,
   serv_port: 1350
 }
 //opt.url = `mongodb://${opt.mongo.account}:${opt.mongo.passwd}@localhost/${opt.mongo.dbname}`
-opt.url = `mongodb://${opt.mongo.account}:${opt.mongo.passwd}@merry.ee.ncku.edu.tw:27017/${opt.mongo.dbname}`
+opt.url = `mongodb://${process.env.acc || opt.mongo.account}:${process.env.pwd || opt.mongo.passwd}@${process.env.srv || opt.mongo.server}/${process.env.dbn || opt.mongo.dbname}`
 
 const app = {
   db: null,
@@ -2729,7 +2729,7 @@ io.on('connection', client => {
 
 const game = new Game()
 
-server.listen(opt.serv_port, function(){
+server.listen(process.env.PORT || opt.serv_port, function(){
   console.log(`listen on port ${opt.serv_port}`)
 })
 
