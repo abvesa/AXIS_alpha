@@ -1468,7 +1468,8 @@ socket.emit('preload', res => {
     preload: () => {
       for (let type in res)
         for (let elem in res[type])
-          game.phaser.load[type](elem, res[type][elem])
+          break
+		  //game.phaser.load[type](elem, res[type][elem])
     },
     render: () => {},
     update: () => {}
