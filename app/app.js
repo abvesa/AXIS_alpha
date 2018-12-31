@@ -1,4 +1,4 @@
-const socket = io()
+const socket = io('https://axis-testing-ver1.herokuapp.com/')
 
 // global variables (default values)
 
@@ -1468,8 +1468,8 @@ socket.emit('preload', res => {
     preload: () => {
       for (let type in res)
         for (let elem in res[type])
-          break
-		  //game.phaser.load[type](elem, res[type][elem])
+          //break
+		  game.phaser.load[type](elem, res[type][elem])
     },
     render: () => {},
     update: () => {}

@@ -10,8 +10,8 @@ const path = require('path')
 const socket = require('socket.io')
 
 const apps = express()
-const server = apps.listen(process.env.PORT || 1350)//http.createServer(apps)
-const io = socket.listen(server)//socket(server)
+const server = http.createServer(apps)//apps.listen(process.env.PORT || 1350)//
+const io = socket(server)//socket.listen(server)//
 
 apps.use(express.static(path.join(__dirname, 'app')))
 
@@ -1952,6 +1952,7 @@ io.on('connection', client => {
 
   ///////////////////////////////////////////////////////////////////////////////
   // !-- init settings
+
   MongoClient.connect(opt.url, {useNewUrlParser: true}, (err, _db) => {
 	
     if (err) throw err
@@ -2729,8 +2730,8 @@ io.on('connection', client => {
 
 const game = new Game()
 
-/*
+
 server.listen(process.env.PORT || opt.serv_port, function(){
   console.log(`listen on port ${opt.serv_port}`)
 })
-*/
+
