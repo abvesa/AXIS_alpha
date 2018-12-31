@@ -2730,7 +2730,6 @@ io.on('connection', client => {
 
 const game = new Game()
 
-
 server.listen(process.env.PORT || opt.serv_port, function(){
   console.log(`listen on port ${opt.serv_port}`)
 })
