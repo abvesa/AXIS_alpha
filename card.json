@@ -1510,7 +1510,15 @@
     },
     "judge": {
       "instant": {
-        "modify": {}
+        "modify": {
+		  "personal": {
+			"deck": {
+			  "card": {
+			    "goe": 1
+			  }
+			}
+		  }
+		}
       }
     },
     "text": "Angle Incarnation\n<Spell/Instant>\nhp +1 and max hp +1"

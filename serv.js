@@ -926,6 +926,16 @@ Game.prototype.effectJudge = function (card_eff) {
             case 'hand':
 			  for (let type in judge[effect][target][condition]) {
 				curr_val = (type === 'card')? player[target].card_amount[condition] : player[target].field_detail[condition][type]
+				
+				if (type !== 'vanish' && type in game.default.all_card) {
+				  curr_val = 0
+				  for (let id in room.cards) {
+					let card = room.cards[id]
+					if (card.field !== condition) continue
+					if (card.name === type) curr_val += 1						
+				  }
+				}
+				
 				curr_round_judge = curr_round_judge && checkValue(curr_val, judge[effect][target][condition][type], player[target]) 
 			  }
               break
