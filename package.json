@@ -4,7 +4,7 @@
   "description": "",
   "main": "serv.js",
   "scripts": {
-    "start": "/usr/bin/node serv.js"
+    "start": "node serv.js"
   },
   "author": "",
   "license": "ISC",
