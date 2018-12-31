@@ -10,8 +10,8 @@ const path = require('path')
 const socket = require('socket.io')
 
 const apps = express()
-const server = http.createServer(apps)//apps.listen(process.env.PORT || 1350)//
-const io = socket(server)//socket.listen(server)//
+const server = http.createServer(apps)
+const io = socket(server)
 
 apps.use(express.static(path.join(__dirname, 'app')))
 
@@ -2730,7 +2730,7 @@ io.on('connection', client => {
 
 const game = new Game()
 
-server.listen(process.env.PORT || opt.serv_port, function(){
+server.listen(process.env.PORT || opt.serv_port, '0.0.0.0', function() {  
   console.log(`listen on port ${opt.serv_port}`)
 })
 
