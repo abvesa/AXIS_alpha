@@ -16,7 +16,7 @@ const io = socket(server)
 apps.use(express.static(path.join(__dirname, 'app')))
 
 const opt = {
-  mongo: (fs.existsSync('option.json'))? JSON.parse(fs.readFileSync('option.json', 'utf-8')).mongo : null,
+  mongo: (fs.existsSync('db.json'))? JSON.parse(fs.readFileSync('db.json', 'utf-8')).mongo : null,
   serv_port: 1350
 }
 //opt.url = `mongodb://${opt.mongo.account}:${opt.mongo.passwd}@localhost/${opt.mongo.dbname}`
