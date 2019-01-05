@@ -365,7 +365,15 @@ Game.prototype.cardMove = function (personal, rlt) {
     rlt[id].from = card.field
     player[rlt[id].curr_own].card_amount[rlt[id].from] -= 1
 	player[rlt[id].curr_own].field_detail[rlt[id].from][card.type.base] -= 1
-    card.field = rlt[id].to
+    
+	 
+	card.field = rlt[id].to
+	if (rlt[id].to === 'deck') {
+		let tmp_card = card
+		delete room.cards[id]
+		room.cards[id] = tmp_card
+	}
+	
     player[rlt[id].new_own].card_amount[rlt[id].to] += 1
 	player[rlt[id].new_own].field_detail[rlt[id].to][card.type.base] += 1
     card.curr_own = player[rlt[id].new_own]._pid
