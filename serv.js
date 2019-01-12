@@ -374,12 +374,18 @@ Game.prototype.cardMove = function (personal, rlt) {
 		room.cards[id] = tmp_card
 	}
 	
+	let pre_deck_empty = (player[rlt[id].curr_own].card_amount.deck == 0)? true : false
+	
     player[rlt[id].new_own].card_amount[rlt[id].to] += 1
 	player[rlt[id].new_own].field_detail[rlt[id].to][card.type.base] += 1
     card.curr_own = player[rlt[id].new_own]._pid
     //if (!personal.card_amount.deck) rlt[id].deck_empty = 'personal'
-	if (!player[rlt[id].curr_own].card_amount.deck) rlt[id].deck_empty = rlt[id].curr_own
-	    
+	
+	let post_deck_empty = (player[rlt[id].curr_own].card_amount.deck == 0)? true : false
+	
+	if (!pre_deck_empty && post_deck_empty) rlt[id].deck_empty = rlt[id].curr_own
+	else if (pre_deck_empty && !post_deck_empty) rlt[id].deck_refill = rlt[id].curr_own
+
 	if ((rlt[id].to === 'hand' || rlt[id].to === 'grave') || (rlt[id].to === 'life' && rlt[id].from === 'deck')) {
 	  card.cover = true
 	}
@@ -1202,8 +1208,9 @@ Game.prototype.break = function (personal, param) {
   let player = {personal: personal, opponent: personal._foe}
   for (let id of card_pick) {
     let card = room.cards[id]
+	let curr_own = (card.curr_own === personal._pid)? 'personal' : 'opponent'
     if (card == null) return {err: 'no card id'}
-    if (card.curr_own !== personal._foe._pid) return {err: 'please choose opponent card'}
+    if (curr_own !== 'opponent') return {err: 'please choose opponent card'}
     if (card.field !== 'battle' && card.field !== 'altar') return {err: 'error chosen card field'}
     if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
     if (!effect[('card' in effect)? 'card' : card.type.base]) return {err: 'error type length'}
@@ -1216,7 +1223,7 @@ Game.prototype.break = function (personal, param) {
       }
 	}	
     param.card_pick[id] = {to: 'grave'}
-	if (id in player[card.curr_own].chanting) delete player[card.curr_own].chanting[id]
+	if (id in player[curr_own].chanting) delete player[curr_own].chanting[id]
   }
 
   let rlt = this.cardMove(personal, param.card_pick)

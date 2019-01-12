@@ -82,7 +82,9 @@ const Game = function () {
       search: {type: 'button', x: this.default.game.width - 88, y: this.default.game.height - 43, img: 'search', func: this.player.personal.searchMatch, ext:{ next: 'loading'} },
       back: {type: 'button', x: 0, y: this.default.game.height - 43, img: 'back', func: this.changePage, ext: {next: 'lobby'} }
     },
-    loading: {},
+    loading: {
+	  //back: {type: 'button', x: 0, y: this.default.game.height - 43, img: 'back', func: this.changePage, ext: {next: 'lobby'} }		
+	},
     game: {
 	  bg_up: {type: 'sprite', x: 0, y: -34, img: 'bg_up'},
 	  bg_dn: {type: 'sprite', x: 0, y: 350, img: 'bg_dn'},
@@ -422,7 +424,7 @@ Game.prototype.cardMove = function (rlt) {
 		let img_name = (pos != 0)? game.player[rlt[id].curr_own].grave[pos-1].name : 'emptySlot'
 		game.page.game[`${rlt[id].curr_own}_grave`].loadTexture(img_name)  
 	  }
-	}
+	}	
 	
 	//console.log(rlt[id].cover, card.name, id, card.img.key)
 	if ((rlt[id].cover && card.img.key !== 'cardback') || (!rlt[id].cover && card.img.key !== card.name)) {
@@ -450,7 +452,10 @@ Game.prototype.cardMove = function (rlt) {
 
     // move
 	if (rlt[id].to !== 'deck') game.player[rlt[id].new_own][rlt[id].to].push(card)
-	else card.body.destroy()	
+	else {	
+		card.body.destroy()	
+		if (rlt[id].deck_refill) game.page.game[`${rlt[id].new_own}_deck`].reset(this.default.game.width*(1 - 1/13) + 32 + 20 + 10, this.default.player[`${rlt[id].new_own}`].y.deck)
+	}
 	game.player[rlt[id].curr_own][rlt[id].from].splice(pos, 1)
 	
     // field to fix
@@ -848,14 +853,14 @@ Player.prototype.endTurn = function () {
 
 Player.prototype.leaveMatch = function () {
   socket.emit('leaveMatch')
-  game.changePage({next: 'lobby'})
   game.resetPlayer()
+  game.changePage({next: 'lobby'})
 }
 
 Player.prototype.matchEnd = function () {
   socket.emit('matchEnd', it => {
-    game.changePage({next: 'lobby'})
-    game.resetPlayer()
+	game.resetPlayer()
+    game.changePage({next: 'lobby'})    
   })
 }
 
@@ -1327,7 +1332,7 @@ socket.on('effectTrigger', effect => {
               for (let card of opponent.hand)
                 if (!(card.id in effect.card[type].personal)) card.flip()
 		    }
-		  }			
+		  }				  
 		}
 
       // card move or turn
