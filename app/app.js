@@ -1004,6 +1004,7 @@ const Card = function (init) {
   this.curr_skt = 0
   this.bond = null
   this.owner = init.owner
+  this.show_mode = false
 
   this.body = game.phaser.add.sprite(
     game.page.game[`${this.owner}_deck`].x,
@@ -1014,7 +1015,7 @@ const Card = function (init) {
   //this.body = game.phaser.add.sprite(0, 0, null)
   this.body.anchor.setTo(0.5, 0.5)
 
-  this.img = game.phaser.add.sprite(0, 0, init.cover ? 'cardback' : init.name)
+  this.img = game.phaser.add.sprite(0, 0, (init.cover)? 'cardback' : init.name)
   this.img.anchor.setTo(0.5, 0.5)
   this.img.inputEnabled = true
 
@@ -1024,12 +1025,22 @@ const Card = function (init) {
   }, this)
   this.img.events.onInputOver.add( function(){
     game.textPanel({effect: this.name})
+	if (!this.show_mode && this.name !== 'cardback' && this.img.key === 'cardback') {
+		console.log('show', this, this.img)
+		this.img.loadTexture(this.name)	
+		this.show_mode = true
+	}	
     game.phaser.input.mouse._last_over_scroll = this
     game.phaser.input.mouse.mouseWheelCallback = this.overScroll
   }, this)
   this.img.events.onInputOut.add( function(){
     game.textPanel({effect: 'empty'})
-    this.curr_skt = 0
+	if (this.show_mode && this.name !== 'cardback' && this.img.key !== 'cardback') {
+		console.log('cover', this, this.img)
+		this.img.loadTexture('cardback')
+		this.show_mode = false
+	}
+	this.curr_skt = 0
     game.phaser.input.mouse.mouseWheelCallback = null
   }, this)
   this.body.addChild(this.img)
