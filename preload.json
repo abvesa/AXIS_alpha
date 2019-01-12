@@ -3,6 +3,7 @@
     "login": ".\\assets\\button\\login.png",
 	"signup": ".\\assets\\button\\sign.png",
 	"back": ".\\assets\\button\\back.png",
+	"cancel": ".\\assets\\button\\cancel.png",
 	"decks": ".\\assets\\button\\deck.png",
 	"battle": ".\\assets\\button\\battle.png",
 	"nextBtn": ".\\assets\\button\\nextBtn.png",

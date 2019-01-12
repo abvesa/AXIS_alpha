@@ -2131,7 +2131,7 @@ io.on('connection', client => {
       }
 
       // find opponent
-      if(game.queue.length){
+      if (game.queue.length) {
         let rid = idGenerate(16)
         let opponent = game.queue.shift()
         opponent._rid = rid
@@ -2195,6 +2195,12 @@ io.on('connection', client => {
         cb({msg: {cursor: 'searching for match...'}})
       }
     })
+  })
+  
+  client.on('cancelSearchMatch', (it, cb) => {
+	game.queue.splice(game.queue.findIndex((ply) => {return ply._pid === client._pid}), 1)
+	game.pool[client.pid] = client
+	cb({})
   })
 
   client.on('signUp', (it, cb) => {

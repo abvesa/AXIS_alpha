@@ -83,7 +83,7 @@ const Game = function () {
       back: {type: 'button', x: 0, y: this.default.game.height - 43, img: 'back', func: this.changePage, ext: {next: 'lobby'} }
     },
     loading: {
-	  //back: {type: 'button', x: 0, y: this.default.game.height - 43, img: 'back', func: this.changePage, ext: {next: 'lobby'} }		
+	  back: {type: 'button', x: 0, y: this.default.game.height - 43, img: 'cancel', func: this.cancelSearchMatch}		
 	},
     game: {
 	  bg_up: {type: 'sprite', x: 0, y: -34, img: 'bg_up'},
@@ -356,6 +356,13 @@ Game.prototype.showSetting = function () {
   }
 }
 
+Game.prototype.cancelSearchMatch = function () {
+  socket.emit('cancelSearchMatch', {}, it => {
+    game.textPanel({cursor: ''})
+	game.changePage({next: 'match_search'})
+  })  
+}
+
 Game.prototype.changePage = function (obj) {
   let old_page = this.page[this.curr_page]
   let new_page = this.page[obj.next]
@@ -387,7 +394,6 @@ Game.prototype.changePage = function (obj) {
   // variable reset due to page change
   if (this.curr_page !== 'game' && this.curr_page !== 'loading') personal.curr_deck = null
   game.textPanel({phase: ' ', action: ' ', cursor: ' ', end: ' '})
-
 }
 
 Game.prototype.cardMove = function (rlt) {
@@ -658,8 +664,8 @@ Game.prototype.resetPlayer = function () {
     if (opponent.stat[stat_name].status) opponent.stat[stat_name].status = false
   }
   
-  this.page.game.stat_panel.removeChildren()
-  this.page.game.field_panel.removeChildren()
+  this.page.game.stat_panel.removeChildren(begin = 0)
+  this.page.game.field_panel.removeChildren(begin = 0)
   this.page.game.personal_grave.loadTexture('emptySlot')
   this.page.game.opponent_grave.loadTexture('emptySlot')
 }
@@ -689,7 +695,7 @@ Game.prototype.showTexture = function (btn) {
 
   // change card texture
   let index = 1
-  for (let elem_name in this.page.deck_view){
+  for (let elem_name in this.page.deck_view) {
     if(elem_name === `card_${index}`){
       this.page.deck_view[elem_name].loadTexture( (card_list[index - 1])?card_list[index - 1]:(null)/*'emptySlot'*/ )
       this.page.deck_view[elem_name].describe.setText( (card_list[index - 1])?card_list[index - 1]:'' )
@@ -853,14 +859,14 @@ Player.prototype.endTurn = function () {
 
 Player.prototype.leaveMatch = function () {
   socket.emit('leaveMatch')
-  game.resetPlayer()
   game.changePage({next: 'lobby'})
+  game.resetPlayer()
 }
 
 Player.prototype.matchEnd = function () {
   socket.emit('matchEnd', it => {
+    game.changePage({next: 'lobby'})
 	game.resetPlayer()
-    game.changePage({next: 'lobby'})    
   })
 }
 
@@ -1240,8 +1246,8 @@ socket.on('plyUseCard', it => {
 
 socket.on('interrupt', it => {
   game.textPanel({phase: ' ', action: ' ', cursor: ' '})
-  game.resetPlayer()
   game.changePage({next: 'lobby'})
+  game.resetPlayer()
   alert(it.err)
 })
 
