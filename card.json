@@ -494,8 +494,10 @@
         "buff": {
           "personal": {
             "hand": {
-              "loe": 2
-            }
+			  "card": {
+			    "loe": 2
+              }
+			}
           }
         }
       }
@@ -2283,8 +2285,10 @@
         "modify": {
           "personal": {
             "hand": {
-              "loe": 2
-            }
+			  "card": {
+				"loe": 2
+              }
+			}
           }
         },
         "buff": {
@@ -2823,10 +2827,8 @@
 	    "personal": true
 	  }
 	},
-	"text": "Sin\n<Artifact/Aura>\nYou have strength\nbut discard 1 card or drain this artifact each time you attack"
-  },
-  
-  
+	"text": "Glutton\n<Artifact/Aura>\nYou have strength\nbut discard 1 card or drain this artifact each time you attack"
+  }, 
   
   "blank": {
     "name": "blank",
