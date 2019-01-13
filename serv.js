@@ -827,7 +827,7 @@ Game.prototype.effectEmitter = function (room) {
         else if (eff_name === 'heal') {        
 		  if (player[target].hp == player[target].life_max) continue 
 		}
-        else if (eff_name === 'steal' || eff_name === 'exchange' || (eff_name === 'teleport' && eff_core[target]._from === 'hand')) {
+        else if ((eff_name === 'steal' || eff_name === 'exchange' || (eff_name === 'teleport' && eff_core[target]._from === 'hand')) && Object.assign(opponent.aura.unveil).length) {
           if (!('ext' in tmp)) tmp.ext = {}
           tmp.ext.hand = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
             if (this.room[personal._rid].cards[curr].curr_own === opponent._pid && this.room[personal._rid].cards[curr].field === 'hand')
@@ -1079,16 +1079,7 @@ Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true
     let eff = game.default.all_card[room.cards[cid].name].aura
     for (let tp in eff) {
       for (let tg in eff[tp]) {
-        if (card_list[cid] == true) {
-          player[tg].aura[tp][cid] = true
-          rlt.stat[tg][tp] = true
-        }
-        else {
-          delete player[tg].aura[tp][cid]
-		  if (!Object.keys(player[tg].aura[tp]).length) rlt.stat[tg][tp] = false
-        }
-		
-		if (tp === 'unveil') {
+		if (tp === 'unveil' && card_list[cid] == true && !player[tg].aura[tp][cid]) {
 		  let cover = (card_list[cid])? false : true
   
           let tmp = Object.keys(room.cards).reduce( (last, curr) => {
@@ -1098,7 +1089,16 @@ Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true
           }, {})
 		  
 		  Object.assign(card_flip[tg], tmp)
-		}
+		}  
+		  
+        if (card_list[cid] == true) {
+          player[tg].aura[tp][cid] = true
+          rlt.stat[tg][tp] = true
+        }
+        else {
+          delete player[tg].aura[tp][cid]
+		  if (!Object.keys(player[tg].aura[tp]).length) rlt.stat[tg][tp] = false
+        }		
       }
     }
   }
@@ -2657,7 +2657,7 @@ io.on('connection', client => {
 
     // chanting spell trigger
     //if (Object.keys(nxt_ply.chanting).length && !nxt_ply.stat.stun) {
-	if (Object.keys(nxt_ply.chanting).length) {
+	if (Object.keys(nxt_ply.chanting).length && !nxt_ply.stat.stun) {
       let avail_chanting = Object.keys(nxt_ply.chanting).reduce( (last, curr) => {
         if (nxt_ply.chanting[curr].status == true) {
 		  last[curr] = nxt_ply.chanting[curr]
