@@ -2106,7 +2106,7 @@ io.on('connection', client => {
     if (it == null) return
     if (typeof cb !== 'function') return
 
-    if(!it.curr_deck) return cb({err: 'please choose a deck'})
+    if (!it.curr_deck) return cb({err: 'please choose a deck'})
     user.find({account: client._account}).toArray((err, rlt) => {
       if (!rlt[0].deck_slot[it.curr_deck] && it.curr_deck !== 'random') return
 
@@ -2116,7 +2116,7 @@ io.on('connection', client => {
       deck = shuffle((it.curr_deck === 'random')? randomDeck() : (rlt[0].deck_slot[it.curr_deck].card_list) )
       client.choose_deck[it.curr_deck] = deck
 
-      for(let card_name of deck){
+      for (let card_name of deck) {
         let curr_card = game.default.all_card[card_name]
         let init = {
           name: curr_card.name,
@@ -2199,6 +2199,7 @@ io.on('connection', client => {
   client.on('cancelSearchMatch', (it, cb) => {
 	game.queue.splice(game.queue.findIndex((ply) => {return ply._pid === client._pid}), 1)
 	game.pool[client.pid] = client
+	game.buildPlayer(client)
 	cb({})
   })
 
