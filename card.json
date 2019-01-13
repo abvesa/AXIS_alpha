@@ -234,8 +234,10 @@
         "modify_2": {
           "personal": {
             "hand": {
-              "goe": 5
-            }
+			  "card": {
+                "goe": 5
+              }
+			}
           }
         }
       }
