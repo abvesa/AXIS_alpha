@@ -2637,7 +2637,10 @@ io.on('connection', client => {
 
         case 'altar':
           if (card.type.effect.trigger && card.lock) card.lock = false
-		  if (card.id in client.chanting && !client.chanting[card.id].status) param[id] = {from: card.field}
+		  if (card.id in client.chanting && !client.chanting[card.id].status) {
+			param[id] = {from: card.field}
+		    delete client.chanting[card.id]
+		  }
 		  break
 
         default: break
@@ -2657,7 +2660,7 @@ io.on('connection', client => {
 
     // chanting spell trigger
     //if (Object.keys(nxt_ply.chanting).length && !nxt_ply.stat.stun) {
-	if (Object.keys(nxt_ply.chanting).length && !nxt_ply.stat.stun) {
+	if (Object.keys(nxt_ply.chanting).length) {
       let avail_chanting = Object.keys(nxt_ply.chanting).reduce( (last, curr) => {
         if (nxt_ply.chanting[curr].status == true) {
 		  last[curr] = nxt_ply.chanting[curr]
