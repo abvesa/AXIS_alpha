@@ -1609,6 +1609,8 @@ Game.prototype.shuffle = function (personal, effect) {
 Game.prototype.receive = function (personal, param) {
   let room = this.room[personal._rid]
   let dmg_taken = (param.id === 'attack')? ((personal._foe.atk_damage < 0)? 0 : personal._foe.atk_damage + Object.keys(personal._foe.aura.strength).length) : (personal.dmg_blk[0])
+  dmg_taken = ((personal.hp - dmg_taken) < 0)? personal.hp : dmg_taken
+  
   let card_pick = Object.keys(param.card_pick)
   let rlt = { card: {receive: {personal: {}, opponent: {}}} }
 
