@@ -362,29 +362,26 @@ Game.prototype.cardMove = function (personal, rlt) {
     }
 
     // move card
-    rlt[id].from = card.field
+    let pre_deck_empty = (player[rlt[id].curr_own].card_amount.deck == 0)? true : false
+	rlt[id].from = card.field
     player[rlt[id].curr_own].card_amount[rlt[id].from] -= 1
 	player[rlt[id].curr_own].field_detail[rlt[id].from][card.type.base] -= 1
-    
+	let post_deck_empty = (player[rlt[id].curr_own].card_amount.deck == 0)? true : false
+    if (!pre_deck_empty && post_deck_empty) rlt[id].deck_empty = rlt[id].curr_own
 	 
 	card.field = rlt[id].to
 	if (rlt[id].to === 'deck') {
 		let tmp_card = card
 		delete room.cards[id]
 		room.cards[id] = tmp_card
-	}
+	}	
 	
-	let pre_deck_empty = (player[rlt[id].curr_own].card_amount.deck == 0)? true : false
-	
+	pre_deck_empty = (player[rlt[id].curr_own].card_amount.deck == 0)? true : false
     player[rlt[id].new_own].card_amount[rlt[id].to] += 1
 	player[rlt[id].new_own].field_detail[rlt[id].to][card.type.base] += 1
     card.curr_own = player[rlt[id].new_own]._pid
-    //if (!personal.card_amount.deck) rlt[id].deck_empty = 'personal'
-	
-	let post_deck_empty = (player[rlt[id].curr_own].card_amount.deck == 0)? true : false
-	
-	if (!pre_deck_empty && post_deck_empty) rlt[id].deck_empty = rlt[id].curr_own
-	else if (pre_deck_empty && !post_deck_empty) rlt[id].deck_refill = rlt[id].curr_own
+    post_deck_empty = (player[rlt[id].curr_own].card_amount.deck == 0)? true : false
+    if (pre_deck_empty && !post_deck_empty) rlt[id].deck_refill = rlt[id].curr_own
 
 	if ((rlt[id].to === 'hand' || rlt[id].to === 'grave') || (rlt[id].to === 'life' && rlt[id].from === 'deck')) {
 	  card.cover = true
