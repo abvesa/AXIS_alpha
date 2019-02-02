@@ -209,7 +209,6 @@ Game.prototype.buildPlayer = function (client) {
     wither : {}, // can't use life field card
     fear   : {}, // can't attack
 	unveil : {}, // show your hand cards to opponent
-	blur   : {}, // all your cards can become vanish
     guilt  : {}, // every time you attack must discard 1 card or drain your artifact once, stackable
 	strength: {}, // your attack damage +1, stackable
 	
@@ -232,6 +231,12 @@ Game.prototype.buildPlayer = function (client) {
 	warcry : false, // can only attack
     freeze : false  // can't attack and use item
   }
+  client.special = {
+	poopoo     : {},  // foe can't attack and discard when attack
+	avenger	   : {}, // negate card effect
+	meteor	   : {},   // all your cards can become vanish
+    laevantine : {}
+  }
   client.anti = { 
 	card: {},
 	spell: {},
@@ -243,8 +248,7 @@ Game.prototype.buildPlayer = function (client) {
 	attack: {},
     
     // special
-    cross: {},
-    poopoo: {}	
+    cross: {}
   }
 
   client.eff_todo = {} // current effect emit to client  
@@ -985,6 +989,36 @@ Game.prototype.effectJudge = function (card_eff) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////
+// !-- special aura
+Game.prototype.checkSpecSwitch = function (personal, param) {
+	let room = this.room[personal._rid]
+	
+	switch (param.eff_type) {
+	  case 'laevantine':
+	    //if 
+	    //personal.special.meteor[param.card_id]
+	    break
+		
+	  case 'meteor':
+		personal.special.meteor[param.card_id] = (personal.hp <= 3)? true : false		
+		break
+		
+	  case 'poopoo':
+	    personal.special.poopoo[param.card_id] = (personal._foe.card_amount.hand <= 1)? true : false
+	    break
+		
+	  case 'avenger':
+	    break
+	  
+	  default:
+	    break
+	}
+}
+
+Game.prototype.triggerSpecEffect = function () {
+	
+}
+
 // !-- card effects
 Game.prototype.bleed = function (personal, param) {
   let room = this.room[personal._rid]
@@ -1058,11 +1092,6 @@ Game.prototype.block = function (personal, param) {
   personal.emit('effectTrigger', {card:{block:{ personal: tmp.personal, opponent: {} }}})
   personal._foe.emit('effectTrigger', {card:{block:{ personal: {}, opponent: tmp.opponent }}})
   return {}
-}
-
-Game.prototype.specialAura = function () {
-	
-	
 }
 
 Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true, ...}
@@ -1945,8 +1974,8 @@ function randomDeck () {
 	*/
   }
 
-  for(let type in card){
-    if(type !== 'vanish'){
+  for (let type in card) {
+    if (type !== 'vanish') {
       let random = (shuffle(card[type])).slice(0, game.default[`${type}_max`])
       deck = deck.concat(random)
     }
@@ -1954,9 +1983,10 @@ function randomDeck () {
       for(let i = 0; i < game.default[`${type}_max`]; i++)
         deck.push(card.vanish[0])
   }
-
+  
   return deck
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -2114,9 +2144,47 @@ io.on('connection', client => {
 
       // player can choose random deck
       deck = shuffle((it.curr_deck === 'random')? randomDeck() : (rlt[0].deck_slot[it.curr_deck].card_list) )
-      client.choose_deck[it.curr_deck] = deck
-
+	  
+      if (it.curr_deck === 'slot_1') {
+		deck = [
+		  'vanish',
+		  'vanish',
+		  'vanish',
+		  'vanish',
+		  'vanish',
+		  'vanish',
+		  'vanish',
+		  'vanish',
+		  'giga',
+		  'epoch',
+		  'plasma_wave',
+		  'laser_beam'
+		]
+	  }
+	  else if (it.curr_deck === 'slot_2') {
+		deck = [
+		  'vanish',
+		  'vanish',
+		  'vanish',
+		  'vanish',
+		  'vanish',
+		  'havok',
+		  'observer',
+		  'vanish',
+		  'vanish',
+		  'equip_breaker',
+		  'dragon_orb',
+		  'heros_hymn',
+		  'beer',
+		  'pillow',
+		  'espresso'
+		]  
+	  }
+	  
+	  client.choose_deck[it.curr_deck] = deck
+	  
       for (let card_name of deck) {
+		console.log(card_name)
         let curr_card = game.default.all_card[card_name]
         let init = {
           name: curr_card.name,
