@@ -1139,11 +1139,10 @@ Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true
 }
 
 Game.prototype.buff = function (personal, effect) {
-  console.log(personal)
   let player = {personal: personal, opponent: personal._foe}
   let rlt = { stat: {personal: {}, opponent: {}} }
   for (let name in effect) {
-    for (let target in effect[name]) {
+    for (let target in effect[name]) {	  
       player[target].buff[name] = effect[name][target]
       rlt.stat[target][name] = effect[name][target]
     }

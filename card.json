@@ -1318,8 +1318,8 @@
 	"effect": {
 	  "chanting": {
 	    "buff": {
-		  "personal": {
-		    "eagle_eye": true
+		  "eagle_eye": {
+		    "personal": true
 		  }
 		},
 		"modify": {
