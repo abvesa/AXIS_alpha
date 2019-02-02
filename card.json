@@ -396,14 +396,14 @@
           }
         }
       }
-    },
+    },	
     "judge": {
       "enchant": {
         "recall": {
           "personal": {
             "hit": true,
 			"grave": {
-			  "artifact": {
+			  "card": {
 			    "goe": 1
 			  }
 			}
