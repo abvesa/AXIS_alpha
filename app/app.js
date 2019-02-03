@@ -22,8 +22,8 @@ const Game = function () {
     },
     card: {
       height: 91,
-	    width: 64,
-	    describe: {}
+	  width: 64,
+	  describe: {}
     },
     text: {
       phase: -75,
@@ -40,7 +40,7 @@ const Game = function () {
         y: { altar: 603, battle: 493, deck: 713, grave: 603, hand: 713, life: 713, socket: 389}
       }
     },
-    scale: 768*(opt.screen.width/opt.screen.height)/1366
+    scale: 1//768*(opt.screen.width/opt.screen.height)/1366
   }
 
   for (let field in this.default.player.personal.y) {
@@ -1433,9 +1433,8 @@ const setting_panel = {leave: null}
 socket.emit('preload', res => {
   game.phaser = new Phaser.Game(game.default.game.width, game.default.game.height, Phaser.HEADLESS/*Phaser.Canvas*/, 'game', {
     create: () => {
-      let top = (100*(1 - game.default.game.width/opt.screen.width)/2).toString()+'%'
-      let left = (100*(1 - game.default.game.height/opt.screen.height)/2).toString()+'%'
-      $('#game').css({top: top, left: left})
+	  let fixed_position = `${Math.round(window.devicePixelRatio * 100)}%`
+      $('#game').css({width: fixed_position, height: fixed_position})
       game.phaser.add.sprite(0, -34, 'background')
 	  
       // init text
@@ -1497,3 +1496,10 @@ socket.emit('preload', res => {
   })
 })
 
+// scroll event
+$(document).ready(() => {
+  $(window).resize((event) => {
+	let fixed_position = `${Math.round(window.devicePixelRatio * 100)}%`
+    $('#game').css({width: fixed_position, height: fixed_position})
+  })
+})
