@@ -57,20 +57,6 @@ const Card = function (init) {
   }
   
   if (this.type.base !== 'vanish') { 
-    /*  
-    this.counter = {}
-    let effect = game.default.all_card[this.name].effect
-    //console.log(effect)
-    
-	tp_tg = ('eff_choice' in this)? this.eff_choice : this.type.effect
-    for (let eff_tp in tp_tg) {
-	  if ('counter' in effect[eff_tp])
-	    this.counter[eff_tp] = effect[eff_tp].counter
-    }
-	
-	if (!Object.keys(this.counter).length) 
-	  delete this.counter
-    */
 	this.counter = {}
 	if ('counter' in game.default.all_card[this.name]) {
 	  for (let type in game.default.all_card[this.name].counter) {
@@ -472,7 +458,6 @@ Game.prototype.effectEnd = function (room) {
     room.phase = 'normal'
     if (room.player[room.curr_ply].interrupt) {
       // end turn immediately
-      //game.endTurn(room.player[room.curr_ply])
       game.frontEnd(room.player[room.curr_ply])
     }
     else {
@@ -566,7 +551,6 @@ Game.prototype.checkUse = function (client, it, cb) {
     if (!game.phase_rule.use.normal[room.phase]) return cb( { err: `not allowed in ${room.phase} phase`} )
 
     if (!Object.keys(client.card_pause).length) {
-      //if (Object.keys(client.aura.dicease).length && game.default.all_card[card.name].effect.heal) return cb({err: 'cant use heal effect cards when diceased'})
       if (room.cards[it.id].type.base === 'vanish') return cb( {err: 'only available in atk phase'} )
       if ((client.stat.stun || client.action_point <= 0) && room.cards[it.id].type.base !== 'item') return cb( {err: 'not enough action point'} )
       if (card.field === 'life' && client.card_amount.hand == 0) return cb( {err: 'no handcard to replace'} )
@@ -660,10 +644,7 @@ Game.prototype.useCard = function (client) {
 
   let rlt = game.cardMove(client, param)
   let msg = `${param[use_id].action} ${room.cards[use_id].name}${(swp_id != null)? ` by ${room.cards[swp_id].name}` : ''}`
-  /*
-  client.emit('plyUseCard', { msg: {phase: 'normal phase', action: msg}, card: rlt.personal })
-  client._foe.emit('plyUseCard', { msg: {phase: 'normal phase', action: `foe ${msg}`}, card: rlt.opponent, foe: true })
-  */
+
   client.emit('plyUseCard', { msg: {phase: 'counter phase', action: msg}, card: rlt.personal })
   client._foe.emit('plyUseCard', { msg: {phase: 'counter phase', action: `foe ${msg}`}, card: rlt.opponent, foe: true })
 
@@ -729,8 +710,6 @@ Game.prototype.triggerCard = function (client, it, cb) {
       param = {trigger: {}}
       param.trigger[it.id] = {}
 	  game.buildEffectQueue(client, param)
-      //let avail_effect = game.judge(client, client._foe, param)
-      //game.effectTrigger(client, client._foe, avail_effect)
     }
   }
 }
@@ -2563,8 +2542,6 @@ io.on('connection', client => {
           param[(card.type.base === 'item')? 'normal' : 'instant'] = room.counter_status.use_id
           //param.counter = room.counter_status.counter_id
 		  game.buildEffectQueue(client._foe, param)
-          //let avail_effect = game.judge(client._foe, client, param)
-          //game.effectTrigger(client._foe, client, avail_effect)
         }
         else {
           room.phase = 'normal'
@@ -2572,12 +2549,6 @@ io.on('connection', client => {
 			client._foe.chanting[card.id] = {to: 'grave', status: true}
 		  }
 		  if ('counter' in card) {
-			/*
-			let eff_tp = Object.keys(card.counter)[0]
-			let target = Object.keys(card.counter[eff_tp])[0]
-			client._foe.anti[target][card.id] = true
-			console.log(`counter in ${card.name}`)
-			*/
 			for (let counter_type in card.counter) {
 			  client._foe.anti[counter_type][card.id] = true
 			}
@@ -2598,8 +2569,6 @@ io.on('connection', client => {
           if (curr_tp.enchant) Object.assign(client._foe.atk_enchant, room.counter_status.use_id)
           if (curr_tp.trigger) {
 			game.buildEffectQueue(client._foe, Object.assign({trigger: room.counter_status.use_id}, {counter: room.counter_status.counter_id}))
-            //let avail_effect = game.judge(client._foe, client, Object.assign({trigger: room.counter_status.use_id}, {counter: room.counter_status.counter_id}) )
-            //game.effectTrigger(client._foe, client, avail_effect)
           }
         }
       }
@@ -2723,12 +2692,8 @@ io.on('connection', client => {
     client._foe.emit('turnShift', { msg: {phase: 'normal phase', action: `${act_msg[1]} turn`, cursor: ' '}, card: rlt.opponent, start: (act_msg[1] == 'your')? true : false })
 
     // !-- start next player turn
-    // attr check
     let nxt_ply = (room.curr_ply === client._pid)? client : (client._foe)
-    //if (nxt_ply.stat.stun) nxt_ply.action_point -= 1
 
-    // chanting spell trigger
-    //if (Object.keys(nxt_ply.chanting).length && !nxt_ply.stat.stun) {
 	if (Object.keys(nxt_ply.chanting).length) {
       let avail_chanting = Object.keys(nxt_ply.chanting).reduce( (last, curr) => {
         if (nxt_ply.chanting[curr].status == true) {
@@ -2743,19 +2708,6 @@ io.on('connection', client => {
         nxt_ply._foe.emit('chantingTrigger', {card: rlt.opponent})
 		game.buildEffectQueue(nxt_ply, {chanting: avail_chanting})
       }
-	  /*
-	  // card move  
-      rlt = game.cardMove(nxt_ply, nxt_ply.chanting)
-      nxt_ply.emit('chantingTrigger', {card: rlt.personal})
-      nxt_ply._foe.emit('chantingTrigger', {card: rlt.opponent})
-      
-	  // effect
-	  game.buildEffectQueue(nxt_ply, {chanting: nxt_ply.chanting})
-	  nxt_ply.chanting = {}
-	  */
-	  
-	  //let avail_effect = game.judge(nxt_ply, nxt_ply._foe, {chanting: nxt_ply.chanting})
-      //game.effectTrigger(nxt_ply, nxt_ply._foe, avail_effect)
     }
   }
 
