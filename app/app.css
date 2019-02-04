@@ -1,6 +1,8 @@
 body {
   margin: 0;
   overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif; 
+  user-select: none
 }
 
 .panel {
@@ -15,18 +17,36 @@ body {
 
 .attr {
   margin: 0 auto;
+  background: #5C5C5C;
+  height: 5%;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
 }
-/*
-#game {
-  z-index: 0;
-  position: absolute;
+
+.attr_ele {
+  display:flex;
+  flex-direction: row;
+}
+
+.attr_name {
+  padding: 0 0.5rem;
+  height: 1.5rem;
+  background: pink;
+  margin: auto 0rem auto 1rem;
+  color: darkslategrey;
+  line-height: 1.5rem;
+}
+
+.attr_value {
+  color: darkslategrey;
+  background: silver;
+  padding: 0 0.5rem;
+  height: 1.5rem;
   margin: auto;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  line-height: 1.5rem;
 }
-*/
+
 #login {
   z-index: -1;
   position: absolute;
