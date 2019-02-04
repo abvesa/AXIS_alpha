@@ -8,14 +8,16 @@
 	</head>
 
 	<body>
-		<div style="vertical-align: middle; display: inline-block;">
-			<div id="game"></div>
-			
-			<div id = "login">
-				<input id="logAcc" autocomplete="off" placeholder="account" required><br>
-				<input id="logPswd" autocomplete="off" type = "password" placeholder="password" required><br>
-				<button id="emit" onclick = "personal.login()"> Login </button>
-			</div>
+		<div style="display: flex; flex-direction: column;">
+			<div class="attr panel" id="foe" style="background: red; height: 5%;"></div>
+			<div class="panel" id="game"></div>
+			<div class="attr panel" id="self" style="background: red; height: 5%;"></div>
+		</div>
+		
+		<div id = "login">
+			<input id="logAcc" autocomplete="off" placeholder="account" required><br>
+			<input id="logPswd" autocomplete="off" type = "password" placeholder="password" required><br>
+			<button id="emit" onclick = "personal.login()"> Login </button>
 		</div>
     </body>
 </html>

@@ -3,7 +3,7 @@ body {
   overflow: hidden;
 }
 
-#game {
+.panel {
   z-index: 0;
   position: absolute;
   margin: auto;
@@ -13,6 +13,20 @@ body {
   bottom: 0;
 }
 
+.attr {
+  margin: 0 auto;
+}
+/*
+#game {
+  z-index: 0;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+*/
 #login {
   z-index: -1;
   position: absolute;

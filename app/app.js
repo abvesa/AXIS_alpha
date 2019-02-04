@@ -40,7 +40,7 @@ const Game = function () {
         y: { altar: 603, battle: 493, deck: 713, grave: 603, hand: 713, life: 713, socket: 389}
       }
     },
-    scale: 1//768*(opt.screen.width/opt.screen.height)/1366
+    scale: 768*(opt.screen.width/opt.screen.height)/1366
   }
 
   for (let field in this.default.player.personal.y) {
@@ -1433,8 +1433,12 @@ const setting_panel = {leave: null}
 socket.emit('preload', res => {
   game.phaser = new Phaser.Game(game.default.game.width, game.default.game.height, Phaser.HEADLESS/*Phaser.Canvas*/, 'game', {
     create: () => {
-	  let fixed_position = `${Math.round(window.devicePixelRatio * 100)}%`
+	  let percentage = Math.round(window.devicePixelRatio * 100)
+	  let fixed_position = `${percentage}%`
       $('#game').css({width: fixed_position, height: fixed_position})
+	  $('#foe').css({width: fixed_position, top: `${(100-percentage)/2 - 5}%`})
+	  $('#self').css({width: fixed_position, top: `${percentage + (100-percentage)/2 + 0.5}%`})
+	  
       game.phaser.add.sprite(0, -34, 'background')
 	  
       // init text
@@ -1499,7 +1503,10 @@ socket.emit('preload', res => {
 // scroll event
 $(document).ready(() => {
   $(window).resize((event) => {
-	let fixed_position = `${Math.round(window.devicePixelRatio * 100)}%`
+	let percentage = Math.round(window.devicePixelRatio * 100)
+	let fixed_position = `${percentage}%`
     $('#game').css({width: fixed_position, height: fixed_position})
+	$('#foe').css({width: fixed_position, top: `${(100-percentage)/2 - 5}%`})
+	$('#self').css({width: fixed_position, top: `${percentage + (100-percentage)/2 + 0.5}%`})
   })
 })

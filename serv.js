@@ -2043,7 +2043,7 @@ io.on('connection', client => {
     console.log(`${client._pid} disconnect`)
 
     // if client is in a match
-    if(client._rid){
+    if('_rid' in client && '_foe' in client){
       client._foe.emit('interrupt', {err: 'opponent disconnect'})
       game.buildPlayer(client._foe)
       game.pool[client._foe._pid] = client._foe
@@ -2067,6 +2067,7 @@ io.on('connection', client => {
     for (let pid in room.player) {
       let player = room.player[pid]
       if (pid !== client._pid) player.emit('interrupt', {err: 'opponent leave'})
+	  delete player._foe
       game.buildPlayer(player)
       game.pool[pid] = player
       console.log(`reset player ${pid}`)
@@ -2078,6 +2079,8 @@ io.on('connection', client => {
 
   client.on('matchEnd', cb => {
     if (client.hp == 0 || client._foe.hp == 0) {
+	  delete client._foe._foe
+	  delete client._foe
       game.buildPlayer(client)
       game.pool[client._pid] = client
       delete game.room[client._rid].player[client._pid]
