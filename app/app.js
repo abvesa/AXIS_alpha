@@ -1436,7 +1436,7 @@ socket.emit('preload', res => {
 	  let percentage = Math.round(window.devicePixelRatio * 100)
 	  let fixed_position = `${percentage}%`
       $('#game').css({width: fixed_position, height: fixed_position})
-	  $('#foe').css({width: fixed_position, top: `${(100-percentage)/2 - 10}%`})
+	  $('#foe').css({width: fixed_position, top: `${(100-percentage)/2 - 5.75}%`})
 	  $('#self').css({width: fixed_position, top: `${percentage + (100-percentage)/2 + 0.5}%`})
 	  
       game.phaser.add.sprite(0, -34, 'background')
@@ -1508,7 +1508,7 @@ $(document).ready(() => {
 	let percentage = Math.round(window.devicePixelRatio * 100)
 	let fixed_position = `${percentage}%`
     $('#game').css({width: fixed_position, height: fixed_position})
-	$('#foe').css({width: fixed_position, top: `${(100-percentage)/2 - 10}%`})
+	$('#foe').css({width: fixed_position, top: `${(100-percentage)/2 - 5.75}%`})
 	$('#self').css({width: fixed_position, top: `${percentage + (100-percentage)/2 + 0.5}%`})
   })
 })
