@@ -1612,7 +1612,7 @@
 	    "personal": true
 	  }
     },
-    "text": "Twilight Zone\n<Spell/Trigger>\nlose 1 action point when trigger<Aura>\npersonal Wither\n<Aura>\npersonal Berserk"
+    "text": "Twilight Zone\n<Spell/Trigger>\nlose 1 action point when trigger\n<Aura>\npersonal Wither\n<Aura>\npersonal Berserk"
   },
   "undead_recall": {
     "name": "undead_recall",

@@ -34,7 +34,7 @@ const Game = function () {
     },
     player: {
       personal: {
-        y: { altar: 175, battle: 285, deck: 65, grave: 175, hand: 65, life: 65, socket: 389}
+        y: { altar: 167, battle: 277, deck: 57, grave: 167, hand: 57, life: 57, socket: 381}
       },
       opponent: {
         y: { altar: 603, battle: 493, deck: 713, grave: 603, hand: 713, life: 713, socket: 389}
@@ -133,13 +133,19 @@ Game.prototype.textPanel = function (text) {
   if (text.phase) game.text.phase.setText(text.phase)
   if (text.action) game.text.action.setText(text.action)
   if (text.cursor) game.text.cursor.setText(text.cursor)
-  if (text.effect) game.text.effect.setText(game.card_eff[text.effect])
-  if (text.stat) game.text.effect.setText(text.stat)
+  if (text.effect) {
+	game.text.effect.setText(game.card_eff[text.effect])
+    game.phaser.world.bringToTop(game.text_group)	
+  }
+  if (text.stat) {
+	game.text.effect.setText(text.stat)
+    game.phaser.world.bringToTop(game.text_group)
+  }
   if (text.end) {
     game.text.end.setText(text.end)
     game.phaser.world.bringToTop(game.text.end)
   }
-  game.phaser.world.bringToTop(game.page.game.stat_panel)
+  //game.phaser.world.bringToTop(game.page.game.stat_panel)
 }
 
 Game.prototype.backgroundPanel = function (your_turn) {
@@ -1025,8 +1031,17 @@ const Card = function (init) {
   }, this)
   this.img.events.onInputOver.add( function(){
     game.textPanel({effect: this.name})
+	let x = this.body.x 
+	if (this.body.x < game.default.game.width/3) x -= game.default.card.width/2
+	else {
+	  if (this.body.x <= game.default.game.width*2/3) x -= game.text.effect.width/2
+	  else x -= (game.text.effect.width - game.default.card.width/2)
+	}	
+	let y = this.body.y + ((this.body.y >= game.default.game.height/2)? -1*(game.text.effect.height + game.default.card.height/2 + 5) : (game.default.card.height/2 + 5)) 
+	game.text.effect.reset(x, y)	
+	
 	if (!this.show_mode && this.name !== 'cardback' && this.img.key === 'cardback') {
-		console.log('show', this, this.img)
+		//console.log('show', this, this.img)
 		this.img.loadTexture(this.name)	
 		this.show_mode = true
 	}	
@@ -1036,7 +1051,7 @@ const Card = function (init) {
   this.img.events.onInputOut.add( function(){
     game.textPanel({effect: 'empty'})
 	if (this.show_mode && this.name !== 'cardback' && this.img.key !== 'cardback') {
-		console.log('cover', this, this.img)
+		//console.log('cover', this, this.img)
 		this.img.loadTexture('cardback')
 		this.show_mode = false
 	}
@@ -1474,7 +1489,12 @@ socket.emit('preload', res => {
             game.player[ply].stat[name] = {img: game.phaser.add.sprite(0, 0, name), text: it.stat[name], status: false}
             game.player[ply].stat[name].img.anchor.setTo(0.5, 0.5)
             game.player[ply].stat[name].img.inputEnabled = true
-            game.player[ply].stat[name].img.events.onInputOver.add(function(){game.textPanel({stat: game.player[ply].stat[name].text})}, this)
+            game.player[ply].stat[name].img.events.onInputOver.add(function(){
+			  game.textPanel({stat: game.player[ply].stat[name].text})
+			  let x = game.player[ply].stat[name].img.x + 10
+			  let y = game.player[ply].stat[name].img.y + 350 + ((game.player[ply].stat[name].img.y + 350 >= game.default.game.height/2)? -1*(game.text.effect.height+20) : 20)
+			  game.text.effect.reset(x, y)
+			}, this)
             game.player[ply].stat[name].img.events.onInputOut.add(function(){game.textPanel({effect: 'empty'})}, this)
             game.player[ply].stat[name].img.kill()
           }
@@ -1489,7 +1509,7 @@ socket.emit('preload', res => {
 	  game.page.game.stat_panel = game.phaser.add.sprite(25, game.default.game.height/2, 'stat')
       game.page.game.stat_panel.inputEnabled = true
       //game.page.game.stat_panel.events.onInputDown.add(function(){ game.showStat() }, this)
-      game.page.game.stat_panel.addChild(game.text_group)
+      //game.page.game.stat_panel.addChild(game.text_group)
 
     },
     preload: () => {
