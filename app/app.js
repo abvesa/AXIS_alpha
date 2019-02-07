@@ -129,6 +129,14 @@ const Game = function () {
   this.card_eff = {empty: '', cardback: 'covered'}
 }
 
+Game.prototype.attrPanel = function (param) {
+  for (let player in param) {
+    for (let attr in param[player]) {
+	  $(`#${player} .attr_ele.${attr} .attr_value`).text(param[player][attr])
+    }
+  }
+}
+
 Game.prototype.textPanel = function (text) {
   if (text.phase) game.text.phase.setText(text.phase)
   if (text.action) game.text.action.setText(text.action)
@@ -1181,6 +1189,7 @@ socket.on('gameStart', it => {
   game.fixCardPos({personal: {life: true}, opponent: {life: true}})
   game.changePage({next: 'game'})
   game.textPanel(it.msg)
+  game.attrPanel(it.attr)
   
   for (let type in game.text) {
 	game.phaser.world.bringToTop(game.text[type])  
@@ -1213,6 +1222,8 @@ socket.on('playerPass', it => {
 socket.on('playerAttack', it => {
   game.textPanel(it.msg)
   game.attackPanel(it.rlt)
+  game.attrPanel(it.attr)
+  console.log(it)
 })
 
 socket.on('playerGiveUp', it => {
@@ -1248,6 +1259,7 @@ socket.on('playerTrigger', it => {
 
 socket.on('plyDrawCard', it => {
   game.textPanel(it.msg)
+  game.attrPanel(it.attr)
 
   let fix_field = {}
   for (let id in it.card) {
@@ -1263,11 +1275,16 @@ socket.on('plyUseCard', it => {
   console.log(it)
   game.cardMove(it.card)
   game.textPanel(it.msg)
+  game.attrPanel(it.attr)
   if (it.foe) {
     personal.pass()
     //game.page.game.counter.reset(game.page.game.counter.x, game.page.game.counter.y)
     //game.page.game.pass.reset(game.page.game.pass.x, game.page.game.pass.y)
   }
+})
+
+socket.on('attrAdjust', it => {
+  game.attrPanel(it.attr)
 })
 
 socket.on('interrupt', it => {
@@ -1280,6 +1297,7 @@ socket.on('interrupt', it => {
 socket.on('turnShift', it => {
   console.log(it.card)
   game.textPanel(it.msg)
+  game.attrPanel(it.attr)
   if (Object.keys(it.card).length) game.cardMove(it.card)
 	  
   game.backgroundPanel(it.start)
@@ -1291,7 +1309,8 @@ socket.on('effectTrigger', effect => {
   console.log(effect)
 
   // attr
-
+  game.attrPanel(effect.attr)  
+  
   // card
   for (let type in effect.card) {
     switch (type) {
@@ -1451,8 +1470,8 @@ socket.emit('preload', res => {
 	  let percentage = Math.round(window.devicePixelRatio * 100)
 	  let fixed_position = `${percentage}%`
       $('#game').css({width: fixed_position, height: fixed_position})
-	  $('#foe').css({width: fixed_position, top: `${(100-percentage)/2 - 5.75}%`})
-	  $('#self').css({width: fixed_position, top: `${percentage + (100-percentage)/2 + 0.5}%`})
+	  $('#opponent').css({width: fixed_position, top: `${(100-percentage)/2 - 5.75}%`})
+	  $('#personal').css({width: fixed_position, top: `${percentage + (100-percentage)/2 + 0.5}%`})
 	  
       game.phaser.add.sprite(0, -34, 'background')
 	  game.phaser.scale.setGameSize(window.screen.width, window.screen.width/game.default.game.width*game.default.game.height)
@@ -1528,7 +1547,7 @@ $(document).ready(() => {
 	let percentage = Math.round(window.devicePixelRatio * 100)
 	let fixed_position = `${percentage}%`
     $('#game').css({width: fixed_position, height: fixed_position})
-	$('#foe').css({width: fixed_position, top: `${(100-percentage)/2 - 5.75}%`})
-	$('#self').css({width: fixed_position, top: `${percentage + (100-percentage)/2 + 0.5}%`})
+	$('#opponent').css({width: fixed_position, top: `${(100-percentage)/2 - 5.75}%`})
+	$('#personal').css({width: fixed_position, top: `${percentage + (100-percentage)/2 + 0.5}%`})
   })
 })

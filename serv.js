@@ -380,6 +380,18 @@ Game.prototype.cardMove = function (personal, rlt) {
 	  card.cover = false	
 	}
 	
+	if (rlt[id].to === 'deck' || rlt[id].from === 'deck' || rlt[id].to === 'hand' || rlt[id].from === 'hand') {
+	  personal.emit('attrAdjust', {attr: {
+		personal: {hand: `${personal.card_amount.hand}/${personal.hand_max + Object.keys(personal.aura.stamina).length}`, deck: personal.card_amount.deck}, 
+		opponent: {hand: `${personal._foe.card_amount.hand}/${personal._foe.hand_max + Object.keys(personal._foe.aura.stamina).length}`, deck: personal._foe.card_amount.deck}
+	  }})
+	  
+	  personal._foe.emit('attrAdjust', {attr: {
+		opponent: {hand: `${personal.card_amount.hand}/${personal.hand_max + Object.keys(personal.aura.stamina).length}`, deck: personal.card_amount.deck}, 
+		personal: {hand: `${personal._foe.card_amount.hand}/${personal._foe.hand_max + Object.keys(personal._foe.aura.stamina).length}`, deck: personal._foe.card_amount.deck}
+	  }})
+	}
+	
     // build return object
     param.personal[id] = {}
 	if (rlt[id].to === 'hand' && rlt[id].new_own === 'opponent' && !Object.keys(player[rlt[id].new_own].aura.unveil).length) {
@@ -645,8 +657,8 @@ Game.prototype.useCard = function (client) {
   let rlt = game.cardMove(client, param)
   let msg = `${param[use_id].action} ${room.cards[use_id].name}${(swp_id != null)? ` by ${room.cards[swp_id].name}` : ''}`
 
-  client.emit('plyUseCard', { msg: {phase: 'counter phase', action: msg}, card: rlt.personal })
-  client._foe.emit('plyUseCard', { msg: {phase: 'counter phase', action: `foe ${msg}`}, card: rlt.opponent, foe: true })
+  client.emit('plyUseCard', { msg: {phase: 'counter phase', action: msg}, card: rlt.personal, attr: {personal: {action_point: client.action_point}}})
+  client._foe.emit('plyUseCard', { msg: {phase: 'counter phase', action: `foe ${msg}`}, card: rlt.opponent, attr: {opponent: {action_point: client.action_point}}, foe: true })
 
   room.phase = 'counter'
   room.counter_status.type = room.cards[use_id].type.base
@@ -1003,7 +1015,7 @@ Game.prototype.bleed = function (personal, param) {
   let room = this.room[personal._rid]
   let effect = game.default.all_card[param.name].effect[param.tp][param.eff]
   let card_pick = Object.keys(param.card_pick)
-  let rlt = { card: {bleed: {personal: {}, opponent: {}}} }
+  let rlt = { card: {bleed: {personal: {}, opponent: {}}}}
   let bleed = ((personal.hp - effect[param.tg]) < 0)? personal.hp : (effect[param.tg])//effect[Object.keys(effect)[0]]
   if (card_pick.length != bleed) return {err: 'error length of card pick'}
 
@@ -1024,8 +1036,8 @@ Game.prototype.bleed = function (personal, param) {
   }
 
   personal.hp -= bleed
-  personal.emit('effectTrigger', rlt)
-  personal._foe.emit('effectTrigger', {card: genFoeRlt(rlt.card)})
+  personal.emit('effectTrigger', Object.assign(rlt, {attr: {personal: {hp: personal.hp}, opponent: {hp: personal._foe.hp}}}))
+  personal._foe.emit('effectTrigger', {card: genFoeRlt(rlt.card), attr: {opponent: {hp: personal.hp}, personal: {hp: personal._foe.hp}}})
   return {}
 }
 
@@ -1552,8 +1564,9 @@ Game.prototype.heal = function (personal, param) {
   }
 
   personal.hp += heal
-  personal.emit('effectTrigger', rlt)
-  personal._foe.emit('effectTrigger', {card: genFoeRlt(rlt.card)})
+  personal.emit('effectTrigger', Object.assign(rlt, {attr: {personal: {hp: personal.hp}, opponent: {hp: personal._foe.hp}}}))
+  personal._foe.emit('effectTrigger', {card: genFoeRlt(rlt.card), attr: {opponent: {hp: personal.hp}, personal: {hp: personal._foe.hp}}})
+ 
   return {}
 }
 
@@ -1638,8 +1651,8 @@ Game.prototype.receive = function (personal, param) {
 
   personal.dmg_blk.shift()
   personal.hp -= dmg_taken
-  personal.emit('effectTrigger', rlt)
-  personal._foe.emit('effectTrigger', {card: genFoeRlt(rlt.card)})
+  personal.emit('effectTrigger', Object.assign(rlt, {attr: {personal: {hp: personal.hp}, opponent: {hp: personal._foe.hp}}}))
+  personal._foe.emit('effectTrigger', {card: genFoeRlt(rlt.card), attr: {opponent: {hp: personal.hp}, personal: {hp: personal._foe.hp}}})
 
   return {}
 }
@@ -2126,7 +2139,7 @@ io.on('connection', client => {
 
       // player can choose random deck
       deck = shuffle((it.curr_deck === 'random')? randomDeck() : (rlt[0].deck_slot[it.curr_deck].card_list) )
-	  
+	  /*
       if (it.curr_deck === 'slot_1') {
 		deck = [
 		  'vanish',
@@ -2162,7 +2175,7 @@ io.on('connection', client => {
 		  'espresso'
 		]  
 	  }
-	  
+	  */
 	  client.choose_deck[it.curr_deck] = deck
 	  
       for (let card_name of deck) {
@@ -2232,8 +2245,24 @@ io.on('connection', client => {
         cb({})
 
         // game start
-        opponent.emit('gameStart', {card_list: {life: life[opponent._pid], deck: record_deck[opponent._pid]}, msg: {phase: 'normal phase', action: 'your turn', cursor: ' '}, start: true })
-        client.emit('gameStart', {card_list: {life: life[client._pid], deck: record_deck[client._pid]}, msg: {phase: 'normal phase', action: 'opponent turn', cursor: ' '}, start: false })
+        opponent.emit('gameStart', {
+		  card_list: {life: life[opponent._pid], deck: record_deck[opponent._pid]}, 
+		  msg: {phase: 'normal phase', action: 'your turn', cursor: ' '}, 
+		  attr: {
+			personal: {deck: opponent.card_amount.deck, atk_damage: opponent.atk_damage, atk_phase: opponent.atk_phase, action_point: opponent.action_point, hp: opponent.hp, hand: `${opponent.card_amount.hand}/${opponent.hand_max + Object.keys(opponent.aura.stamina).length}`}, 
+			opponent: {deck: client.card_amount.deck, atk_damage: client.atk_damage, atk_phase: client.atk_phase, action_point: client.action_point, hp: client.hp, hand: `${client.card_amount.hand}/${client.hand_max + Object.keys(client.aura.stamina).length}`}
+		  }, 
+		  start: true 
+		})
+        client.emit('gameStart', {
+		  card_list: {life: life[client._pid], deck: record_deck[client._pid]}, 
+		  msg: {phase: 'normal phase', action: 'opponent turn', cursor: ' '}, 
+		  attr: {
+			opponent: {deck: opponent.card_amount.deck, atk_damage: opponent.atk_damage, atk_phase: opponent.atk_phase, action_point: opponent.action_point, hp: opponent.hp, hand: `${opponent.card_amount.hand}/${opponent.hand_max + Object.keys(opponent.aura.stamina).length}`}, 
+			personal: {deck: client.card_amount.deck, atk_damage: client.atk_damage, atk_phase: client.atk_phase, action_point: client.action_point, hp: client.hp, hand: `${client.card_amount.hand}/${client.hand_max + Object.keys(client.aura.stamina).length}`}
+		  }, 
+		  start: false
+		})
 	  
 	    //console.log(opponent._pid, opponent.field_detail)
 		//console.log(client._pid, client.field_detail)
@@ -2309,7 +2338,7 @@ io.on('connection', client => {
     room.atk_status.attacker = client
     room.atk_status.defender = client._foe
     room.atk_status.curr = room.atk_status.defender
-    client.action_point -= 1
+	if (room.atk_status.first_atk) client.action_point -= 1    
     client.atk_phase -= 1
 
     if ((Object.keys(client.aura.triumph).length && client.card_amount.battle >= 3) || Object.keys(client.aura.precise).length || client.buff.eagle_eye) {
@@ -2330,8 +2359,8 @@ io.on('connection', client => {
 		client.emit('plyUseVanish', { msg: {action: 'foe conceal'}, rlt: {opponent: true, conceal: true} })
 	  }
 	  else { 
-	    client.emit('playerAttack', { msg: {phase: 'attack phase', action: 'attack... waiting opponent'}, rlt: {personal: true, attack: true} })
-        client._foe.emit('playerAttack', { msg: {phase: 'attack phase', action: 'foe attack'}, rlt: {opponent: true, attack: true} })
+	    client.emit('playerAttack', { msg: {phase: 'attack phase', action: 'attack... waiting opponent'}, rlt: {personal: true, attack: true}, attr: {personal: {atk_phase: client.atk_phase, action_point: client.action_point}} })
+        client._foe.emit('playerAttack', { msg: {phase: 'attack phase', action: 'foe attack'}, rlt: {opponent: true, attack: true}, attr: {opponent: {atk_phase: client.atk_phase, action_point: client.action_point}} })
       }
 	}
   })
@@ -2599,8 +2628,8 @@ io.on('connection', client => {
       let param = {}
       param[id] = {to: 'hand'}
       let rlt = game.cardMove(client, param)
-      client.emit('plyDrawCard', {msg: {action: `draw ${card.name}`}, card: rlt.personal})
-      client._foe.emit('plyDrawCard', {msg: {action: 'foe draw card'}, card: rlt.opponent})
+      client.emit('plyDrawCard', {msg: {action: `draw ${card.name}`}, card: rlt.personal, attr: {personal: {action_point: client.action_point}}})
+      client._foe.emit('plyDrawCard', {msg: {action: 'foe draw card'}, card: rlt.opponent, attr: {opponent: {action_point: client.action_point}}})
 
       break
     }
@@ -2688,8 +2717,18 @@ io.on('connection', client => {
     if (Object.keys(param).length) rlt = game.cardMove(client, param)
 
     let act_msg = (room.curr_ply === client._pid)? ['your', 'opponent'] : (['opponent', 'your'])
-    client.emit('turnShift', { msg: {phase: 'normal phase', action: `${act_msg[0]} turn`, cursor: ' '}, card: rlt.personal, start: (act_msg[0] == 'your')? true : false })
-    client._foe.emit('turnShift', { msg: {phase: 'normal phase', action: `${act_msg[1]} turn`, cursor: ' '}, card: rlt.opponent, start: (act_msg[1] == 'your')? true : false })
+    client.emit('turnShift', { 
+	  msg: {phase: 'normal phase', action: `${act_msg[0]} turn`, cursor: ' '}, 
+	  card: rlt.personal, 
+	  attr: {personal: {atk_damage: client.atk_damage, atk_phase: client.atk_phase, action_point: client.action_point}}, 
+	  start: (act_msg[0] == 'your')? true : false 
+	})	
+    client._foe.emit('turnShift', {
+	  msg: {phase: 'normal phase', action: `${act_msg[1]} turn`, cursor: ' '}, 
+	  card: rlt.opponent, 
+	  attr: {opponent: {atk_damage: client.atk_damage, atk_phase: client.atk_phase, action_point: client.action_point}}, 
+	  start: (act_msg[1] == 'your')? true : false 
+	})
 
     // !-- start next player turn
     let nxt_ply = (room.curr_ply === client._pid)? client : (client._foe)
