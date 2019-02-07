@@ -90,8 +90,8 @@ const Game = function () {
 	  bg_dn: {type: 'sprite', x: 0, y: 350, img: 'bg_dn'},
       personal_deck: { type: 'sprite', x: this.default.game.width*(1 - 1/13) + 32 + 20 + 10, y: this.default.player.personal.y.deck, img: 'cardback', func: {onInputDown: this.player.personal.drawCard} },
       opponent_deck: { type: 'button', x: this.default.game.width*(1 - 1/13) + 32 + 20 + 10, y: this.default.player.opponent.y.deck, img: 'cardback', func: null },
-      personal_grave: { type: 'button', x: this.default.game.width*(1 - 1/13) + 32 + 20 + 10, y: this.default.player.personal.y.grave, img: 'emptySlot', func: null },
-      opponent_grave: { type: 'button', x: this.default.game.width*(1 - 1/13) + 32 + 20 + 10, y: this.default.player.opponent.y.grave, img: 'emptySlot', func: null },
+      personal_grave: { type: 'button', x: this.default.game.width*(1 - 1/13) + 32 + 20 + 10, y: this.default.player.personal.y.grave, img: 'emptySlot', func: this.showGraveCards, ext: {owner: 'personal', show: false} },
+      opponent_grave: { type: 'button', x: this.default.game.width*(1 - 1/13) + 32 + 20 + 10, y: this.default.player.opponent.y.grave, img: 'emptySlot', func: this.showGraveCards, ext: {owner: 'opponent', show: false} },
       end_turn: {type: 'button', x: this.default.game.width - 121 + 44 + 12 + 9, y: this.default.game.height/2 - 44/this.default.scale + 21, img: 'endTurn', func: this.player.personal.endTurn},
       leave: {type: 'button', x: this.default.game.width/2 + 12, y: this.default.game.height/2, img: 'leave', func: this.player.personal.leaveMatch, ext: {next: 'lobby', req: true} },
       setting_panel: {type: 'sprite', x: this.default.game.width/2 + 12, y: this.default.game.height/2, img: 'setting', ext: {req: true} },
@@ -180,7 +180,7 @@ Game.prototype.backgroundPanel = function (your_turn) {
 
 Game.prototype.buildFieldPanel = function (card_list, width = 7, height = 3, indent = 20, scaler = 1.3) {
   let field_panel = this.page.game.field_panel
-  //field_panel.removeChildren()
+  if (Object.keys(card_list).length == 0) field_panel.removeChildren(begin = 0)
 
   let init_x = -1 * (parseInt(width/2)) * (this.default.card.width + indent) * scaler
   let init_y = -1 * (parseInt(height/2)) * (this.default.card.height + indent) * scaler
@@ -198,6 +198,13 @@ Game.prototype.buildFieldPanel = function (card_list, width = 7, height = 3, ind
     curr.inputEnabled = true
     curr.events.onInputOver.add( function () {
       game.textPanel({effect: card_list[key]})//ele.name})
+	  let mod_x = field_panel.x + curr.x
+	  if (mod_x < game.default.game.width/3) mod_x -= game.default.card.width/2*scaler
+	  else {
+	    if (mod_x <= game.default.game.width*2/3) mod_x -= game.text.effect.width/2
+	    else mod_x -= (game.text.effect.width - game.default.card.width/2*scaler)
+	  }	
+	  game.text.effect.reset(mod_x, field_panel.y + curr.y + game.default.card.height/2*scaler + 10)
     })
     curr.events.onInputOut.add( function () {
       game.textPanel({effect: 'empty'})
@@ -225,6 +232,30 @@ Game.prototype.viewFieldCards = function () {
     for (let card of field.children) {
       card.y += 45
     }
+  }
+}
+
+Game.prototype.showGraveCards = function (obj) {
+  let owner = obj.owner
+  let show = obj.show
+  let opponent = (owner === 'personal')? 'opponent' : 'personal'
+  console.log(obj)
+  
+  if (show) {
+	let field_panel = this.page.game.field_panel
+    field_panel.removeChildren(begin = 0)
+    field_panel.kill()    
+	obj.show = false
+  }
+  else {
+	let card_list = {}
+	for (let card of this.player[owner].grave) {
+	  card_list[card.id] = card.name 	
+	}	
+	console.log(card_list)
+	this.buildFieldPanel(card_list)  
+	obj.show = true
+	this.page.game[`${opponent}_grave`].show = false
   }
 }
 
@@ -382,6 +413,10 @@ Game.prototype.changePage = function (obj) {
   let new_page = this.page[obj.next]
 
   if (old_page) {
+	if (this.curr_page === 'game') {
+	  $('.attr.panel').children().css({visibility: 'hidden'})
+	}  
+	  
     for (let elem in old_page) {
       if (Array.isArray(old_page[elem])) old_page[elem] = []
       else {
@@ -394,6 +429,10 @@ Game.prototype.changePage = function (obj) {
   }
   this.curr_page = obj.next
   if (new_page) {
+	if (obj.next === 'game') {
+	  $('.attr.panel').children().css({visibility: 'visible'})
+	}  
+	  
     for (let elem in new_page) {
       if(!('req' in new_page[elem])){
         if ('html' === new_page[elem].type)
