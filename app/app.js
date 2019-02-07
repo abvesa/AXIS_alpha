@@ -846,6 +846,8 @@ Player.prototype.effectLoop = function () {
   if (personal.eff_queue.length) {
     let curr_eff = personal.eff_queue[0].eff.split('_')[0]
 
+	console.log(personal.eff_queue[0])
+	
     if (curr_eff === 'damage') game.blockPanel({damage: true})
     else {
       if (curr_eff === 'steal' || curr_eff === 'exchange' || (curr_eff === 'teleport' && ('hand' in personal.eff_queue[0].ext))) {

@@ -799,6 +799,7 @@ Game.prototype.effectEmitter = function (room) {
   for (let avail_eff of card_eff.eff) {
 	let eff_name = avail_eff.split('_')[0]	
 	let eff_core = Object.assign({}, this.default.all_card[card_eff.name].effect[card_eff.tp][avail_eff])
+
     if (!(eff_name in this.choose_eff)) {
 	  this[eff_name](personal, eff_core)	
 	}
@@ -819,8 +820,8 @@ Game.prototype.effectEmitter = function (room) {
         else if (eff_name === 'heal') {        
 		  if (player[target].hp == player[target].life_max) continue 
 		}
-        else if ((eff_name === 'steal' || eff_name === 'exchange' || (eff_name === 'teleport' && eff_core[target]._from === 'hand')) && Object.assign(opponent.aura.unveil).length) {
-          if (!('ext' in tmp)) tmp.ext = {}
+        else if ((eff_name === 'steal' || eff_name === 'exchange' || (eff_name === 'teleport' && eff_core[target]._from === 'hand')) && !Object.assign(opponent.aura.unveil).length) {
+		  if (!('ext' in tmp)) tmp.ext = {}
           tmp.ext.hand = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
             if (this.room[personal._rid].cards[curr].curr_own === opponent._pid && this.room[personal._rid].cards[curr].field === 'hand')
               last[curr] = this.room[personal._rid].cards[curr].name
