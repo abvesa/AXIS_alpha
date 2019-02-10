@@ -156,5 +156,8 @@
 	"warcry": ".\\assets\\stat\\warcry.png",
 	"blur": ".\\assets\\stat\\blur.png",
 	"guilt": ".\\assets\\stat\\guilt.png"
+  },
+  "audio": {
+    "attack_start": ".\\assets\\audio\\war_horn.wav"
   }
 }

@@ -2224,6 +2224,10 @@ io.on('connection', client => {
             [opponent._pid]: {personal: [], opponent: []},
             [client._pid]: {personal: [], opponent: []}
         }
+		let hand = {
+			[opponent._pid]: {personal: [], opponent: []},
+            [client._pid]: {personal: [], opponent: []}
+		}
         for (let pid in room.player) {
           for (let [index, card] of room.player[pid].curr_deck.entries()) {
             let id = `card_${game.room[rid].card_id}`
@@ -2239,15 +2243,26 @@ io.on('connection', client => {
 			  room.player[pid].field_detail.deck[card.type.base] -= 1
 			  room.player[pid].field_detail.life[card.type.base] += 1
             }
-            else record_deck[pid].push({id: id, name: card.name})
-            room.card_id ++
+            else {
+			  if (index < room.player[pid].life_max + ((pid === client._pid)? 4 : 3)) {
+				card.field = 'hand'
+                hand[pid].personal.push({id: id, name: card.name})
+                hand[room.player[pid]._foe._pid].opponent.push({id: id})
+                room.player[pid].card_amount.deck -= 1
+                room.player[pid].card_amount.hand += 1
+			    room.player[pid].field_detail.deck[card.type.base] -= 1
+			    room.player[pid].field_detail.hand[card.type.base] += 1
+			  }
+			  else record_deck[pid].push({id: id, name: card.name})
+            }
+			room.card_id ++
           }
         }
         cb({})
 
         // game start
         opponent.emit('gameStart', {
-		  card_list: {life: life[opponent._pid], deck: record_deck[opponent._pid]}, 
+		  card_list: {life: life[opponent._pid], deck: record_deck[opponent._pid], hand: hand[opponent._pid]}, 
 		  msg: {phase: 'normal phase', action: 'your turn', cursor: ' '}, 
 		  attr: {
 			personal: {deck: opponent.card_amount.deck, atk_damage: opponent.atk_damage, atk_phase: opponent.atk_phase, action_point: opponent.action_point, hp: opponent.hp, hand: `${opponent.card_amount.hand}/${opponent.hand_max + Object.keys(opponent.aura.stamina).length}`}, 
@@ -2256,7 +2271,7 @@ io.on('connection', client => {
 		  start: true 
 		})
         client.emit('gameStart', {
-		  card_list: {life: life[client._pid], deck: record_deck[client._pid]}, 
+		  card_list: {life: life[client._pid], deck: record_deck[client._pid], hand: hand[client._pid]}, 
 		  msg: {phase: 'normal phase', action: 'opponent turn', cursor: ' '}, 
 		  attr: {
 			opponent: {deck: opponent.card_amount.deck, atk_damage: opponent.atk_damage, atk_phase: opponent.atk_phase, action_point: opponent.action_point, hp: opponent.hp, hand: `${opponent.card_amount.hand}/${opponent.hand_max + Object.keys(opponent.aura.stamina).length}`}, 

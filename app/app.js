@@ -127,6 +127,11 @@ const Game = function () {
   }
   this.text_group = null
   this.card_eff = {empty: '', cardback: 'covered'}
+  this.sfx = {
+	attack_start: null, 
+	conceal_tracking: null, 
+	shift_turn: null  
+  }
 }
 
 Game.prototype.attrPanel = function (param) {
@@ -154,6 +159,27 @@ Game.prototype.textPanel = function (text) {
     game.phaser.world.bringToTop(game.text.end)
   }
   //game.phaser.world.bringToTop(game.page.game.stat_panel)
+}
+
+Game.prototype.actionReminder = function (type) {
+  switch (type) {
+	case 'attack_start':
+	  /*
+	  this.music[name].volume = 0
+	  this.music[name].play()	  
+	  game.add.tween(this.music[name]).to({volume:1}, 1000).start()
+      */
+	  break
+	  
+    case 'conceal_tracking':
+      break
+	  
+    case 'turn_shift':
+      break
+	  
+    default: 
+	  break	
+  }
 }
 
 Game.prototype.backgroundPanel = function (your_turn) {
@@ -590,6 +616,26 @@ Game.prototype.fixCardPos = function (rlt) {
   }
 }
 
+Game.prototype.soundInit = function () {
+  for (let type in game.sfx) {    
+	game.sfx[type] = game.phaser.add.audio(type)
+	switch (type) {
+      case 'attack_start':
+	    //game.sfx[type].addMarker(marker_key, start_time, end_time, volume, loop)
+	    break 
+	  
+	  case 'conceal_tracking':
+        break
+		
+	  case 'shift_turn':
+	    break
+		
+	  default:
+	    break
+	}
+  }
+}
+
 Game.prototype.pageInit = function () {
   // add general items
   for (let page_name in this.page) {
@@ -845,8 +891,6 @@ Player.prototype.effectChoose = function () {
 Player.prototype.effectLoop = function () {
   if (personal.eff_queue.length) {
     let curr_eff = personal.eff_queue[0].eff.split('_')[0]
-
-	console.log(personal.eff_queue[0])
 	
     if (curr_eff === 'damage') game.blockPanel({damage: true})
     else {
@@ -1226,8 +1270,17 @@ socket.on('gameStart', it => {
       game.player[target].life.push(new Card({name: name, id: card.id, cover: true, field: 'life', owner: target}))
     }
   }
+  
+  // build hand
+  for (let target in it.card_list.hand){
+    for(let card of it.card_list.hand[target]){
+      let name = (card.name)? card.name : 'cardback'
+      let input = (target === 'personal')? true : false
+      game.player[target].hand.push(new Card({name: name, id: card.id, cover: (input)? false : true, field: 'hand', owner: target}))
+    }
+  }
 
-  game.fixCardPos({personal: {life: true}, opponent: {life: true}})
+  game.fixCardPos({personal: {life: true, hand: true}, opponent: {life: true, hand: true}})
   game.changePage({next: 'game'})
   game.textPanel(it.msg)
   game.attrPanel(it.attr)
@@ -1562,6 +1615,9 @@ socket.emit('preload', res => {
 
         // page init
         game.pageInit()
+		
+		// sound init
+		game.soundInit()
       })
 
       // stat panel
@@ -1573,10 +1629,12 @@ socket.emit('preload', res => {
 
     },
     preload: () => {
-      for (let type in res)
-        for (let elem in res[type])
+      for (let type in res) {
+        for (let elem in res[type]) {
 		  game.phaser.load[type](elem, res[type][elem])
-    },
+        }
+	  }
+	},
     render: () => {},
     update: () => {}
   })
