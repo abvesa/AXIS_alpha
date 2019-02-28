@@ -158,35 +158,20 @@ Game.prototype.textPanel = function (text) {
 }
 
 Game.prototype.actionReminder = function (type) {
-  switch (type) {
-	case 'attack_start':
-	  /*
-	  this.music[name].volume = 0
-	  this.music[name].play()	  
-	  game.add.tween(this.music[name]).to({volume:1}, 1000).start()
-      */
-	  
-	  break
-	
-	case 'attack_end':
-	  break
-	  
-	case 'damage_hit':
-	  break
-	
-    case 'conceal_tracking':
-	  //this.sfx[type].volume = 0.3
-      break
-	  
-    case 'turn_shift':
-	  //this.sfx[type].volume = 0.5
-      break
-	  
-    default: 
-	  break	
-  }
+  /* 
+  *** Phaser method ***
+  this.music[name].volume = 0
+  this.music[name].play()	  
+  game.add.tween(this.music[name]).to({volume:1}, 1000).start()
+  */
   
-  this.sfx[type].play()
+  let curr_src = this.sfx[type]
+  let curr_type = `audio/${curr_src.split('.')[curr_src.split('.').length - 1]}`
+  
+  $('audio source').attr({src: curr_src, type: curr_type})
+  $('audio')[0].load()
+  
+  $('audio')[0].play()
 }
 
 Game.prototype.backgroundPanel = function (your_turn) {
@@ -1618,8 +1603,8 @@ socket.emit('preload', res => {
         // page init
         game.pageInit()
 		
-		// sound init
-		game.soundInit()
+		// sound init -- phaser method
+		//game.soundInit()
       })
 
       // stat panel
@@ -1633,11 +1618,12 @@ socket.emit('preload', res => {
     preload: () => {
       for (let type in res) {
         for (let elem in res[type]) {
-		  game.phaser.load[type](elem, res[type][elem])
-		  if (type === 'audio') {
-			game.sfx[elem] = null			  
-		  }
-        }
+		  if (type !== 'audio') game.phaser.load[type](elem, res[type][elem])
+		  else {
+			console.log(res[type][elem])
+			game.sfx[elem] = res[type][elem]
+          }
+		}
 	  }
 	},
     render: () => {},

@@ -10,8 +10,14 @@
 	<body>
 		<div class="attr panel" id="opponent">
 		    <div style="background:lightgray;width: 6rem;height: 6rem;position: absolute;left: 4rem;z-index: 3; visibility: hidden;"></div>
-		
-			<div style="float: right; display: flex; padding: 0.9rem 1rem 0rem 0rem; visibility: hidden;">							
+			
+			<div style="float: left; display: flex; padding: 0.9rem 1rem 0rem 0rem; visibility: hidden;">
+			    <div class="attr_ele player_name">
+					<div class="attr_value" style="margin: 0rem 0rem 0rem 11rem;">opponent</div>
+				</div>
+			</div>
+			
+			<div style="float: right; display: flex; padding: 0.9rem 1rem 0rem 0rem; visibility: hidden;">
 				<div class="attr_ele atk_damage">
 					<div class="attr_name">ATK DMG</div>
 					<div class="attr_value">1</div>
@@ -42,7 +48,13 @@
 		<div class="attr panel" id="personal">
 		    <div style="background:lightgray;width: 6rem;height: 6rem;position: absolute; bottom: 0rem; left: 4rem;z-index: 3; visibility: hidden;"></div>
 			
-			<div style="float: right; display: flex; padding: 0.9rem 1rem 0rem 0rem; visibility: hidden;">							
+			<div style="float: left; display: flex; padding: 0.9rem 1rem 0rem 0rem; visibility: hidden;">
+			    <div class="attr_ele player_name">
+					<div class="attr_value" style="margin: 0rem 0rem 0rem 11rem;">player1</div>
+				</div>
+			</div>
+			
+			<div style="float: right; display: flex; padding: 0.9rem 1rem 0rem 0rem; visibility: hidden;">	
 				<div class="attr_ele atk_damage">
 					<div class="attr_name">ATK DMG</div>
 					<div class="attr_value">1</div>
@@ -75,5 +87,12 @@
 			<input id="logPswd" autocomplete="off" type = "password" placeholder="password" required><br>
 			<button id="emit" onclick = "personal.login()"> Login </button>
 		</div>
-    </body>
+		
+		<div id = "game_se"> 
+		    <audio>
+				<source src=".\\assets\\audio\\war_horn.mp3" type="audio/mpeg">
+			</audio>
+		</div>
+    
+	</body>
 </html>
