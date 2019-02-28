@@ -1553,6 +1553,7 @@ socket.emit('preload', res => {
       $('#game').css({width: fixed_position, height: fixed_position})
 	  $('#opponent').css({width: fixed_position, top: `${(100-percentage)/2 - 5.75}%`})
 	  $('#personal').css({width: fixed_position, top: `${percentage + (100-percentage)/2 + 0.5}%`})
+	  $('#chat_input input').css({width: fixed_position, top: `calc(${percentage + (100-percentage)/2 + 0.5}% + 3.5rem)`})
 	  
       game.phaser.add.sprite(0, -34, 'background')
 	  game.phaser.scale.setGameSize(window.screen.width, window.screen.width/game.default.game.width*game.default.game.height)
@@ -1619,10 +1620,7 @@ socket.emit('preload', res => {
       for (let type in res) {
         for (let elem in res[type]) {
 		  if (type !== 'audio') game.phaser.load[type](elem, res[type][elem])
-		  else {
-			console.log(res[type][elem])
-			game.sfx[elem] = res[type][elem]
-          }
+		  else game.sfx[elem] = res[type][elem]
 		}
 	  }
 	},
@@ -1631,13 +1629,50 @@ socket.emit('preload', res => {
   })
 })
 
-// scroll event
 $(document).ready(() => {
+  // scroll event
   $(window).resize((event) => {
 	let percentage = Math.round(window.devicePixelRatio * 100)
 	let fixed_position = `${percentage}%`
     $('#game').css({width: fixed_position, height: fixed_position})
 	$('#opponent').css({width: fixed_position, top: `${(100-percentage)/2 - 5.75}%`})
 	$('#personal').css({width: fixed_position, top: `${percentage + (100-percentage)/2 + 0.5}%`})
+	$('#chat_input input').css({width: fixed_position, top: `calc(${percentage + (100-percentage)/2 + 0.5}% + 3.5rem)`})
+  })
+  
+  // keydown event
+  $('body').keydown( () => {		
+	let key_number = event.which
+	//console.log(key_number, event.ctrlKey)
+	
+	// ENTER keydown
+	if (key_number == 13) {			
+	  event.preventDefault()
+	  
+	  /*
+	  if (event.ctrlKey) { // show hide text area
+		if ($('#chat_input input').css('visibility') === 'hidden') {
+		  $('#chat_input input').css({visibility: 'visible'})
+		  $('#chat_input input')[0].focus()
+		}
+		else {
+		  $('#chat_input input')[0].blur()
+		  $('#chat_input input').css({visibility: 'hidden'})
+	    }
+	  }
+	  else { // send msg
+		if ($('#chat_input input').css('visibility') !== 'hidden') {
+		  $('#chat_input input')[0].value = ''
+		  $('#chat_input input')[0].focus()
+	    }
+	  }
+	  */
+	  if ($('#chat_input input').is(':focus')) {
+		$('#chat_input input')[0].value = ''  
+	  }
+	  else {
+		$('#chat_input input')[0].focus()
+	  }
+	}
   })
 })
