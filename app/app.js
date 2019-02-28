@@ -127,11 +127,7 @@ const Game = function () {
   }
   this.text_group = null
   this.card_eff = {empty: '', cardback: 'covered'}
-  this.sfx = {
-	attack_start: null, 
-	conceal_tracking: null, 
-	shift_turn: null  
-  }
+  this.sfx = {}
 }
 
 Game.prototype.attrPanel = function (param) {
@@ -169,17 +165,28 @@ Game.prototype.actionReminder = function (type) {
 	  this.music[name].play()	  
 	  game.add.tween(this.music[name]).to({volume:1}, 1000).start()
       */
+	  
+	  break
+	
+	case 'attack_end':
 	  break
 	  
+	case 'damage_hit':
+	  break
+	
     case 'conceal_tracking':
+	  //this.sfx[type].volume = 0.3
       break
 	  
     case 'turn_shift':
+	  //this.sfx[type].volume = 0.5
       break
 	  
     default: 
 	  break	
   }
+  
+  this.sfx[type].play()
 }
 
 Game.prototype.backgroundPanel = function (your_turn) {
@@ -617,22 +624,11 @@ Game.prototype.fixCardPos = function (rlt) {
 }
 
 Game.prototype.soundInit = function () {
-  for (let type in game.sfx) {    
+  for (let type in game.sfx) {
 	game.sfx[type] = game.phaser.add.audio(type)
-	switch (type) {
-      case 'attack_start':
-	    //game.sfx[type].addMarker(marker_key, start_time, end_time, volume, loop)
-	    break 
-	  
-	  case 'conceal_tracking':
-        break
-		
-	  case 'shift_turn':
-	    break
-		
-	  default:
-	    break
-	}
+    
+	// you can add sound marker here
+	
   }
 }
 
@@ -892,8 +888,11 @@ Player.prototype.effectLoop = function () {
   if (personal.eff_queue.length) {
     let curr_eff = personal.eff_queue[0].eff.split('_')[0]
 	
-    if (curr_eff === 'damage') game.blockPanel({damage: true})
-    else {
+    if (curr_eff === 'damage') {
+	  game.blockPanel({damage: true})
+      game.actionReminder('damage_hit')
+	}
+	else {
       if (curr_eff === 'steal' || curr_eff === 'exchange' || (curr_eff === 'teleport' && ('hand' in personal.eff_queue[0].ext))) {
         // flip opponent hand card
         for (let card of opponent.hand)
@@ -1318,6 +1317,7 @@ socket.on('playerAttack', it => {
   game.attackPanel(it.rlt)
   game.attrPanel(it.attr)
   console.log(it)
+  if (it.rlt.opponent) game.actionReminder('attack_start')
 })
 
 socket.on('playerGiveUp', it => {
@@ -1331,6 +1331,7 @@ socket.on('plyUseVanish', it => {
   game.textPanel(it.msg)
   game.cardMove(it.card)
   game.attackPanel(it.rlt)
+  if (it.rlt.opponent) game.actionReminder('conceal_tracking')
 })
 
 socket.on('playerTrigger', it => {
@@ -1389,13 +1390,14 @@ socket.on('interrupt', it => {
 })
 
 socket.on('turnShift', it => {
-  console.log(it.card)
+  //console.log(it.card)
   game.textPanel(it.msg)
   game.attrPanel(it.attr)
   if (Object.keys(it.card).length) game.cardMove(it.card)
 	  
   game.backgroundPanel(it.start)
   game.resetCardPick()
+  if (it.start) game.actionReminder('turn_shift')
 })
 
 // card effects
@@ -1632,6 +1634,9 @@ socket.emit('preload', res => {
       for (let type in res) {
         for (let elem in res[type]) {
 		  game.phaser.load[type](elem, res[type][elem])
+		  if (type === 'audio') {
+			game.sfx[elem] = null			  
+		  }
         }
 	  }
 	},

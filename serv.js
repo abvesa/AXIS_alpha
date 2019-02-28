@@ -2283,7 +2283,7 @@ io.on('connection', client => {
 	    //console.log(opponent._pid, opponent.field_detail)
 		//console.log(client._pid, client.field_detail)
 	  }
-      else{
+      else {
         game.queue.push(client)
         delete game.pool[client._pid]
         cb({msg: {cursor: 'searching for match...'}})
