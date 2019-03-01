@@ -1697,8 +1697,10 @@ $(document).ready(() => {
 	  }
 	  */
 	  if ($('#chat_input input').is(':focus')) {
-		socket.emit('chatMode', {msg: $('#chat_input input').val()})
-		$('#chat_input input').val('') 
+		if ($('#chat_input input').val() !== '') {
+		  socket.emit('chatMode', {msg: $('#chat_input input').val()})
+		  $('#chat_input input').val('') 
+	    }
 	  }
 	  else {
 		$('#chat_input input')[0].focus()
