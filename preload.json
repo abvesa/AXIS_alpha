@@ -161,6 +161,9 @@
     "attack_start": ".\\assets\\audio\\war_horn.mp3",
 	"conceal_tracking": ".\\assets\\audio\\miss.ogg",
 	"turn_shift": ".\\assets\\audio\\cursor_click.ogg",
-	"damage_hit": ".\\assets\\audio\\damage.ogg"
+	"damage_hit": ".\\assets\\audio\\damage.ogg",
+	"game_over": ".\\assets\\audio\\gameover.ogg",
+	"give_up": ".\\assets\\audio\\level_down.mp3",
+	"game_start": ".\\assets\\audio\\war_drum.mp3"
   }
 }

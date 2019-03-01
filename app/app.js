@@ -975,10 +975,11 @@ Player.prototype.login = function () {
       }
       game.page.match_search[`${slot}_img`] = personal.deck_slot[slot].img
       game.page.match_search[`${slot}_text`] = personal.deck_slot[slot].text
+	  game.page.match_search[`${slot}_frame`] = personal.deck_slot[slot].frame
       game.page.deck_build[`${slot}_img`] = personal.deck_slot[slot].img
       game.page.deck_build[`${slot}_text`] = personal.deck_slot[slot].text
       game.page.deck_build[`${slot}_btn`] = personal.deck_slot[slot].rdm_btn
-    }
+	}
 
     // build match search page random deck
 
@@ -986,13 +987,14 @@ Player.prototype.login = function () {
     rdm.img.loadTexture('random')
     rdm.img.inputEnabled = true
     game.page.match_search.random_deck = rdm.img
+	game.page.match_search.random_deck_frame = rdm.frame
 
     game.changePage({ next: 'lobby' })
   })
 }
 
 Player.prototype.searchMatch = function () {
-  socket.emit('searchMatch', {curr_deck: personal.curr_deck}, it => {
+  socket.emit('searchMatch', {curr_deck: personal.curr_deck.slot}, it => {
     if (it.err) return game.textPanel({cursor: it.err})
     if (it.msg) {
       game.changePage({next:'loading'})
@@ -1046,7 +1048,10 @@ const Deck = function (init) {
 
   this.rdm_btn = game.phaser.add.button((game.default.game.width-232)/2 + 84*(this.index-1), game.default.game.height/2 + 110, 'new', this.randomDeck, this)
   this.rdm_btn.kill()
-
+  
+  this.frame = game.phaser.add.sprite(this.img.x, this.img.y, 'frame')
+  this.frame.req = true
+  this.frame.kill()
 }
 
 Deck.prototype.click = function (){
@@ -1059,7 +1064,9 @@ Deck.prototype.click = function (){
       break
 
     case 'match_search':
-      personal.curr_deck = this.slot
+	  if (personal.curr_deck != null) personal.curr_deck.frame.kill()	
+	  this.frame.reset(this.img.x, this.img.y)
+      personal.curr_deck = this//this.slot
       game.textPanel({cursor: `${this.name}`})
       break
 
