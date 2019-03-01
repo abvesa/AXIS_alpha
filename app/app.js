@@ -170,7 +170,6 @@ Game.prototype.actionReminder = function (type) {
   
   $('audio source').attr({src: curr_src, type: curr_type})
   $('audio')[0].load()
-  
   $('audio')[0].play()
 }
 
@@ -1245,6 +1244,20 @@ function buildList (obj) {
   return rlt
 }
 
+function fadeVolIn (last_percent, max_volume_percent, total_time, step) {
+  if (last_percent < max_volume_percent) {
+	$('audio')[0].volume = last_percent/100
+    setTimeout(`fadeVolIn((${last_percent + step}, ${max_volume_percent}, ${total_time}, ${step}))`, total_time/max_volume_percent)
+  }
+}
+
+function fadeVolOut (last_percent, min_volume_percent, total_time, step) {
+  if (last_percent > min_volume_percent) {
+	$('audio')[0].volume = last_percent/100
+    setTimeout(`fadeVolOut((${last_percent - step}, ${min_volume_percent}, ${total_time}, ${step}))`, total_time/last_percent)
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 
 // socket server
@@ -1252,7 +1265,6 @@ function buildList (obj) {
 socket.on('gameStart', it => {
   // record deck
   // personal.record_deck = it.card_list.deck
-  game.actionReminder('game_start')
   game.backgroundPanel(it.start)
   
   // build life
@@ -1282,6 +1294,7 @@ socket.on('gameStart', it => {
 	game.phaser.world.bringToTop(game.text[type])  
   }
   game.phaser.world.bringToTop(game.page.game.stat_panel)
+  game.actionReminder('game_start')
 })
 
 socket.on('playerCounter', it => {
@@ -1549,6 +1562,10 @@ socket.on('gameOver', it => {
   game.textPanel(it.msg)
 })
 
+socket.on('chatMode', it => {
+  alert(it.msg)
+})
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 // game initialization
@@ -1680,7 +1697,8 @@ $(document).ready(() => {
 	  }
 	  */
 	  if ($('#chat_input input').is(':focus')) {
-		$('#chat_input input')[0].value = ''  
+		socket.emit('chatMode', {msg: $('#chat_input input').val()})
+		$('#chat_input input').val('') 
 	  }
 	  else {
 		$('#chat_input input')[0].focus()

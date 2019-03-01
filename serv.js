@@ -2018,6 +2018,10 @@ io.on('connection', client => {
   }
   //
   
+  client.on('chatMode', it => {
+	if ('_foe' in client && '_rid' in client) client._foe.emit('chatMode', it)  
+  })
+  
   client.on('preload', (cb) => {
     cb(app.file.preload)
   })
