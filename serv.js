@@ -1092,12 +1092,14 @@ Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true
   let card_flip = {personal: {}, opponent: {}}
 
   let room = this.room[personal._rid]
-
+  
   for (let cid in card_list) {
     let eff = game.default.all_card[room.cards[cid].name].aura
     for (let tp in eff) {
       for (let tg in eff[tp]) {
-		if (tp === 'unveil' && card_list[cid] == true){// && !player[tg].aura[tp][cid]) {
+		//if (tp === 'unveil') {
+		//if (tp === 'unveil' && card_list[cid] && !player[tg].aura[tp][cid]) {
+		if (tp === 'unveil' && ((card_list[cid] && !Object.keys(player[tg].aura[tp]).length) || (!card_list[cid] && Object.keys(player[tg].aura[tp]).length == 1 && cid in player[tg].aura[tp]))) {
 		  let cover = (card_list[cid])? false : true
   
           let tmp = Object.keys(room.cards).reduce( (last, curr) => {

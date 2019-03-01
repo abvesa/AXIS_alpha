@@ -1480,6 +1480,7 @@ socket.on('effectTrigger', effect => {
           field_panel.kill()
 		}
 		else if (type === 'teleport') {
+		  // flip back all choosable cards
 		  let _tmp = effect.card[type].personal
 		  if (Object.keys(_tmp).length) {
 			let first_card = _tmp[Object.keys(_tmp)[0]]
@@ -1487,7 +1488,7 @@ socket.on('effectTrigger', effect => {
               for (let card of opponent.hand)
                 if (!(card.id in effect.card[type].personal)) card.flip()
 		    }
-		  }				  
+		  }		
 		}
 
       // card move or turn
@@ -1495,10 +1496,16 @@ socket.on('effectTrigger', effect => {
         for (let target in effect.card[type]) {
           for (let id in effect.card[type][target]) {
             let curr = effect.card[type][target][id]
-            if ('turn' in curr) {
-              let pos = game.findCard({id: id, curr_own: target, from: 'battle'})
-              //game.player[target].battle[pos].body.angle += 90
-              card = game.player[target].battle[pos]
+			let pos = game.findCard({id: id, curr_own: target, from: 'battle'})
+			card = game.player[target].battle[pos]
+            
+			if (curr.new_own === 'opponent') {
+			  if (!opponent.stat.unveil.status && curr.to === 'hand') card.flip()	
+			}
+			
+			if ('turn' in curr) {
+              
+              //game.player[target].battle[pos].body.angle += 90              
               card.turn(curr.turn)
 			  //game.tween = game.phaser.add.tween(card.body).to(
               //  {angle: card.body.angle + 90}, 500, Phaser.Easing.Sinusoidal.InOut, true
