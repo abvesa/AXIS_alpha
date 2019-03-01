@@ -801,7 +801,7 @@ Game.prototype.effectEmitter = function (room) {
 	let eff_core = Object.assign({}, this.default.all_card[card_eff.name].effect[card_eff.tp][avail_eff])
 
     if (!(eff_name in this.choose_eff)) {
-	  this[eff_name](personal, eff_core)	
+	  this[eff_name](personal, eff_core, card_eff)	
 	}
 	else {
 	  for (let target in eff_core) {
@@ -1130,7 +1130,7 @@ Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true
   return {}
 }
 
-Game.prototype.buff = function (personal, effect) {
+Game.prototype.buff = function (personal, effect, info = {}) {
   let player = {personal: personal, opponent: personal._foe}
   let rlt = { stat: {personal: {}, opponent: {}} }
   for (let name in effect) {
@@ -1144,7 +1144,7 @@ Game.prototype.buff = function (personal, effect) {
   return {}
 }
 
-Game.prototype.stat = function (personal, effect) {
+Game.prototype.stat = function (personal, effect, info = {}) {
   let player = {personal: personal, opponent: personal._foe}
   let rlt = { stat: {personal: {}, opponent: {}} }
 
@@ -1253,7 +1253,7 @@ Game.prototype.break = function (personal, param) {
 }
 
 // destroy = send all cards in specific field to grave
-Game.prototype.destroy = function (personal, effect) {
+Game.prototype.destroy = function (personal, effect, info = {}) {
   let room = this.room[personal._rid]
   let player = {personal: personal, opponent: personal._foe}
   let mod_eff = Object.assign({}, effect)
@@ -1378,7 +1378,7 @@ Game.prototype.repair = function (personal, param) {
   return {}
 }
 
-Game.prototype.repairAll = function (personal, effect) {
+Game.prototype.repairAll = function (personal, effect, info = {}) {
   let room = this.room[personal._rid]
   let player = {personal: personal, opponent: personal._foe}
   let mod_eff = Object.assign({}, effect)
@@ -1386,6 +1386,7 @@ Game.prototype.repairAll = function (personal, effect) {
   
   let aura_modify = {personal: {}, opponent: {}}
   for (let id in room.cards) {
+	if (info.name === 'entrance' && id === info.id) continue
     let card = room.cards[id]
 	if (card.field !== 'battle') continue
     let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
@@ -1463,7 +1464,7 @@ Game.prototype.drain = function (personal, param, use_vanish = false) {
   return {}
 }
 
-Game.prototype.drainAll = function (personal, effect) {
+Game.prototype.drainAll = function (personal, effect, info = {}) {
   let room = this.room[personal._rid]
   let player = {personal: personal, opponent: personal._foe}
   let mod_eff = Object.assign({}, effect)
@@ -1494,7 +1495,7 @@ Game.prototype.drainAll = function (personal, effect) {
   return {}
 }
 
-Game.prototype.draw = function (personal, effect) {
+Game.prototype.draw = function (personal, effect, info = {}) {
   let room = this.room[personal._rid]
   let player = {personal: personal, opponent: personal._foe}
   let rlt = {personal: {}, opponent: {}}
@@ -1580,7 +1581,7 @@ Game.prototype.modify = function(personal, effect) {
   for (let target in effect) {
     for (let object in effect[target]) {
       player[target][object] += effect[target][object]
-      rlt.attr[target][object] = effect[target][object]
+      rlt.attr[target][object] = player[target][object]
 	  
 	  if (object === 'life_max' && player[target].card_amount.deck > 0) {
 	    let tmp = {}
@@ -1596,14 +1597,14 @@ Game.prototype.modify = function(personal, effect) {
     }
   }
   personal_rlt = (Object.keys(card_move).length)? Object.assign({}, rlt, {card: {modify: {personal: card_move.personal, opponent: {}}}}) : rlt  
-  personal.emit('effectTrigger',  personal_rlt)
+  personal.emit('effectTrigger', personal_rlt)
   
   opponent_rlt = (Object.keys(card_move).length)? Object.assign({}, genFoeRlt(rlt), {card: {modify: {opponent: card_move.opponent, personal: {}}}}) : genFoeRlt(rlt)
   personal._foe.emit('effectTrigger', opponent_rlt)
   return {}
 }
 
-Game.prototype.shuffle = function (personal, effect) {
+Game.prototype.shuffle = function (personal, effect, info = {}) {
   let room = this.room[personal._rid] 
   let player = {personal: personal, opponent: personal._foe}
   
@@ -1721,7 +1722,7 @@ Game.prototype.recall = function (personal, param) {
   return {}
 }
 
-Game.prototype.set = function (personal, effect) {
+Game.prototype.set = function (personal, effect, info = {}) {
   let player = {personal: personal, opponent: personal._foe}
   let rlt = { attr: { personal: {}, opponent: {} } }
   for (let target in effect) {
@@ -1806,7 +1807,7 @@ Game.prototype.exchange = function (personal, param) {
   return {}
 }
 
-Game.prototype.reverse = function (personal, effect) {
+Game.prototype.reverse = function (personal, effect, info = {}) {
   let room = this.room[personal._rid]
   let player = {personal: personal, opponent: personal._foe}
   let mod_eff = Object.assign({}, effect)
@@ -2072,7 +2073,7 @@ io.on('connection', client => {
 
   client.on('matchEnd', cb => {
     if (client.hp == 0 || client._foe.hp == 0) {
-	  delete client._foe._foe
+	  //delete client._foe._foe
 	  delete client._foe
       game.buildPlayer(client)
       game.pool[client._pid] = client

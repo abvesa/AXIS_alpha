@@ -465,6 +465,7 @@ Game.prototype.changePage = function (obj) {
   // variable reset due to page change
   if (this.curr_page !== 'game' && this.curr_page !== 'loading') personal.curr_deck = null
   game.textPanel({phase: ' ', action: ' ', cursor: ' ', end: ' '})
+  $('audio')[0].pause()
 }
 
 Game.prototype.cardMove = function (rlt) {
@@ -874,8 +875,8 @@ Player.prototype.effectLoop = function () {
     let curr_eff = personal.eff_queue[0].eff.split('_')[0]
 	
     if (curr_eff === 'damage') {
+	  game.actionReminder('damage_hit')
 	  game.blockPanel({damage: true})
-      game.actionReminder('damage_hit')
 	}
 	else {
       if (curr_eff === 'steal' || curr_eff === 'exchange' || (curr_eff === 'teleport' && ('hand' in personal.eff_queue[0].ext))) {
@@ -1251,6 +1252,7 @@ function buildList (obj) {
 socket.on('gameStart', it => {
   // record deck
   // personal.record_deck = it.card_list.deck
+  game.actionReminder('game_start')
   game.backgroundPanel(it.start)
   
   // build life
@@ -1305,14 +1307,15 @@ socket.on('playerPass', it => {
 })
 
 socket.on('playerAttack', it => {
+  if (it.rlt.opponent) game.actionReminder('attack_start')
   game.textPanel(it.msg)
   game.attackPanel(it.rlt)
   game.attrPanel(it.attr)
   console.log(it)
-  if (it.rlt.opponent) game.actionReminder('attack_start')
 })
 
 socket.on('playerGiveUp', it => {
+  if (it.rlt.opponent) game.actionReminder('give_up')
   game.resetCardPick()
   game.textPanel(it.msg)
   if ('card' in it) game.cardMove(it.card)
@@ -1320,10 +1323,10 @@ socket.on('playerGiveUp', it => {
 })
 
 socket.on('plyUseVanish', it => {
+  if (it.rlt.opponent) game.actionReminder('conceal_tracking')
   game.textPanel(it.msg)
   game.cardMove(it.card)
   game.attackPanel(it.rlt)
-  if (it.rlt.opponent) game.actionReminder('conceal_tracking')
 })
 
 socket.on('playerTrigger', it => {
@@ -1383,13 +1386,13 @@ socket.on('interrupt', it => {
 
 socket.on('turnShift', it => {
   //console.log(it.card)
+  if (it.start) game.actionReminder('turn_shift')
   game.textPanel(it.msg)
   game.attrPanel(it.attr)
   if (Object.keys(it.card).length) game.cardMove(it.card)
 	  
   game.backgroundPanel(it.start)
   game.resetCardPick()
-  if (it.start) game.actionReminder('turn_shift')
 })
 
 // card effects
@@ -1536,6 +1539,8 @@ socket.on('chantingTrigger', it => {
 
 socket.on('gameOver', it => {
   // game over panel
+  game.actionReminder('game_over')
+  
   let end_panel = game.page.game.end_match
   end_panel.reset(game.default.game.width/2, game.default.game.height/2)
   game.phaser.world.bringToTop(end_panel)
