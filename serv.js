@@ -113,7 +113,7 @@ const Game = function () {
     // player attribute
     atk_damage  : 1,
     atk_phase   : 1,
-    action_point: 100,//1,//
+    action_point: 1,//100,//
     deck_max    : 22,//14, // 50
     hand_max    : 7,
     life_max    : 6
