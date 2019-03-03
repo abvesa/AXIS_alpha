@@ -2863,7 +2863,39 @@
     },
     "text": "Phoenix Feather\n<Spell/Instant>\nReuse a spell in grave"
   },
-
+  "fantasy": {
+    "name": "fantasy",
+    "type": {
+      "base": "artifact",
+      "effect": {
+        "enchant": 1
+      }
+    },
+    "effect": {
+      "enchant": {
+        "reuse": {
+          "personal": {
+            "spell": 1
+          }
+        }
+      }
+    },
+    "judge": {
+      "enchant": {
+        "reuse": {
+          "personal": {
+		    "hit": true,
+			"grave": {
+			  "spell": {
+			    "goe": 1
+			  }
+			}
+          }
+        }
+      }
+    },
+    "text": "Fantasy\n<Artifact/Enchant>\nIf your effect attack hits, reuse a spell in grave"
+  },
   
   
   "blank": {
