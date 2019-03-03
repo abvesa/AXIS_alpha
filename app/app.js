@@ -885,7 +885,7 @@ Player.prototype.effectLoop = function () {
           //card.flip(card.name)
           //card.img.loadTexture(card.name)
       }
-      if (curr_eff === 'retrieve' || curr_eff === 'recall') {
+      if (curr_eff === 'retrieve' || curr_eff === 'recall' || curr_eff === 'reuse') {
         // buildFieldPanel >> record deck or grave
         for (let field in personal.eff_queue[0].ext) {
           let card_list = personal.eff_queue[0].ext[field]
@@ -1464,6 +1464,7 @@ socket.on('effectTrigger', effect => {
 
       // flip hand card back
 	  case 'teleport':
+	  case 'reuse':
       case 'recall':
 	  case 'exchange':
       case 'steal':
@@ -1474,7 +1475,7 @@ socket.on('effectTrigger', effect => {
               //card.img.loadTexture('cardback')
 		  }
         }
-		else if (type === 'recall') {
+		else if (type === 'recall' || type === 'reuse') {
 		  let field_panel = game.page.game.field_panel
           field_panel.removeChildren(begin = 0)
           field_panel.kill()

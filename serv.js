@@ -836,11 +836,12 @@ Game.prototype.effectEmitter = function (room) {
             return last
           }, {})
         }
-		else if (eff_name === 'recall') {
+		else if (eff_name === 'recall' || eff_name === 'reuse') {
           if (!('ext' in tmp)) tmp.ext = {}
           tmp.ext.deck = Object.keys(this.room[personal._rid].cards).reduce( (last, curr) => {
             if (this.room[personal._rid].cards[curr].curr_own === personal._pid && this.room[personal._rid].cards[curr].field === 'grave')
-              last[curr] = this.room[personal._rid].cards[curr].name
+              if (eff_name !== 'reuse' || (eff_name === 'reuse' && this.room[personal._rid].cards[curr].type.base === 'spell'))
+		        last[curr] = this.room[personal._rid].cards[curr].name
             return last
           }, {})
 		}
@@ -1625,6 +1626,71 @@ Game.prototype.shuffle = function (personal, effect, info = {}) {
 	}
   }
   
+  return {}
+}
+
+// the simple version of reuse, can't handle multitype cards
+// reuse is now only for spell type cards in grave
+Game.prototype.reuse = function (personal, param) {
+  let room = this.room[personal._rid]
+  let effect = Object.assign({}, game.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+
+  let card_pick = Object.keys(param.card_pick)
+  let total_len = 0
+  for (let type in effect) {
+	if (type[0] == '_') continue
+    total_len += effect[type]
+  }
+  if (card_pick.length != total_len) return {err: 'error reuse length'}
+
+  // check
+  for (let id in param.card_pick) {
+    let card = room.cards[id]
+    if (card == null) return {err: 'no card id'}
+    if (card.curr_own !== personal._pid) return {err: 'please choose personal card'}
+
+    if (card.field !== 'grave') return {err: 'error card field'}
+    if (!(card.type.base in effect)) return {err: 'error card type'}
+    if (!effect[card.type.base]) return {err: 'error type length'}
+    effect[card.type.base] --
+  }
+  
+  // push effect to effect_queue
+  for (let id in param.card_pick) {
+    let card = room.cards[id]
+	let type = Object.keys(card.type.effect)[0]
+	switch (type) {
+	  case 'instant':
+		let effect_queue = []
+		let judge = this.default.all_card[card.name].judge[type]
+		let card_eff = {tp: type, id: id, name: card.name, eff: [], initiator: personal}
+		
+		for (let effect in judge) 
+		  card_eff.eff.push(effect)
+		
+		if (card_eff.eff.length) effect_queue.push(card_eff)		
+	    if (effect_queue.length) room.effect_queue.unshift(effect_queue)	  
+		break
+	  
+	  case 'trigger':
+	  case 'counter':
+	  case 'chanting':
+	  case 'permanent':
+	    param.card_pick[id] = {to: 'altar'}
+	    if (type === 'chanting') {
+		  personal.chanting[card.id] = {to: 'grave', status: true}
+		}	  
+		break
+		
+	  default:
+		break
+	}	
+  }	
+	
+  let rlt = this.cardMove(personal, param.card_pick)
+
+  personal.emit('effectTrigger', {card: {reuse: { personal: rlt.personal, opponent: {} }}})
+  personal._foe.emit('effectTrigger', {card: {reuse: { personal: {}, opponent: rlt.opponent }}})
   return {}
 }
 

@@ -2831,7 +2831,38 @@
 	},
 	"text": "Glutton\n<Artifact/Aura>\nYou have strength\nbut discard 1 card or drain this artifact each time you attack"
   }, 
-  
+  "phoenix_feather": {
+    "name": "phoenix_feather",
+    "type": {
+      "base": "spell",
+      "effect": {
+        "instant": 1
+      }
+    },
+    "effect": {
+      "instant": {
+        "reuse": {
+          "personal": {
+            "spell": 1
+          }
+        }
+      }
+    },
+    "judge": {
+      "instant": {
+        "reuse": {
+          "personal": {
+			"grave": {
+			  "spell": {
+			    "goe": 1
+			  }
+			}
+          }
+        }
+      }
+    },
+    "text": "Phoenix Feather\n<Spell/Instant>\nReuse a spell in grave"
+  },
 
   
   
