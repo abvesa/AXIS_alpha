@@ -113,7 +113,7 @@ const Game = function () {
     // player attribute
     atk_damage  : 1,
     atk_phase   : 1,
-    action_point: 1,//100,//
+    action_point: 100,//1,//
     deck_max    : 22,//14, // 50
     hand_max    : 7,
     life_max    : 6
@@ -144,15 +144,10 @@ const Game = function () {
     heal    : true,
     receive : true, // card you flip for life loss
     retrieve: true,
+	reuse   : true,
     steal   : true,
     teleport: true,
 	discardOrDrain: true
-  }
-  this.card_reveal_target = { //
-    exchange: 'opponent',
-    steal: 'opponent',
-    retrieve: 'personal',
-    recall: 'personal'
   }
 
   this.pool = {}
@@ -450,21 +445,23 @@ Game.prototype.attackEnd = function (room) {
 
 Game.prototype.effectEnd = function (room) {
   if (room.phase === 'attack') {
-    if (room.atk_status.hit) {
-	  if (this.checkCounter(room.atk_status.defender, 'damage')) {	
-		room.phase = 'counter_attack'
-        this.emitCounter(room.atk_status.defender, 'damage')
-		this.attackEnd(room)
+	if (!room.atk_status.in_progress) {
+	  if (room.atk_status.hit) {
+	    if (this.checkCounter(room.atk_status.defender, 'damage')) {	
+		  room.phase = 'counter_attack'
+		  this.emitCounter(room.atk_status.defender, 'damage')
+		  this.attackEnd(room)
+	    }
+	    else {
+		  if (room.atk_status.attacker.atk_damage > 0) { 		  
+		    room.atk_status.defender.eff_todo.attack = {attack: {damage: true}}
+		    room.atk_status.defender.emit('effectLoop', {rlt: {name: 'attack', id: 'attack', eff: 'damage', tp: 'attack'}})
+		  }
+		  else this.attackEnd(room)
+	    }
 	  }
-      else {
-        if (room.atk_status.attacker.atk_damage > 0) { 		  
-		  room.atk_status.defender.eff_todo.attack = {attack: {damage: true}}
-          room.atk_status.defender.emit('effectLoop', {rlt: {name: 'attack', id: 'attack', eff: 'damage', tp: 'attack'}})
-        }
-		else this.attackEnd(room)
-	  }
-	}
-    else this.attackEnd(room)
+	  else this.attackEnd(room)
+    }
   }
   else {
     room.phase = 'normal'
@@ -490,7 +487,6 @@ Game.prototype.emitCounter = function (personal, type = null, spec_id = null) {
   let cnt_type = (type == null)? room.counter_status.type : type
   let anti_queue = Object.keys(personal.anti[cnt_type])
   let card_id = (spec_id == null)? anti_queue[0] : spec_id
- 
   let card = room.cards[card_id]
   if ('counter' in card && card.type.base === 'artifact') {
     card.energy -= 1
@@ -507,7 +503,7 @@ Game.prototype.emitCounter = function (personal, type = null, spec_id = null) {
     //personal.anti[cnt_type].shift()
     delete personal.anti[cnt_type][card_id]
   }
-	  
+    
   this.buildEffectQueue( personal, {counter: {[card_id]: true}} )
 }
 
@@ -756,7 +752,6 @@ Game.prototype.chooseOne = function (client, it, cb) {
 Game.prototype.buildEffectQueue = function (personal, card_list) {
   let room = this.room[personal._rid]
   let effect_queue = []
-
   for (let tp in card_list) {
     for (let id in card_list[tp]) {
       let card = room.cards[id]
@@ -792,7 +787,7 @@ Game.prototype.effectEmitter = function (room) {
   let player = {personal: personal, opponent: opponent}
 
   // effect phase of attack enchant will count as attack phase
-  if(room.phase !== 'attack') room.phase = 'effect'
+  if (room.phase !== 'attack') room.phase = 'effect'
   personal.emit('phaseShift', {msg: {phase: `${room.phase} phase`}})
   opponent.emit('phaseShift', {msg: {phase: `${room.phase} phase`}})
   
@@ -809,7 +804,7 @@ Game.prototype.effectEmitter = function (room) {
         
         if (eff_name === 'damage') {
 		  if (this.checkCounter(player[target], 'damage')) {
-		    room.phase = 'counter_effect'
+		    if (room.phase !== 'attack') room.phase = 'counter_effect'
 			this.emitCounter(player[target], 'damage')
 			continue
 		  }
@@ -865,6 +860,7 @@ Game.prototype.effectEmitter = function (room) {
 Game.prototype.checkEffectDone = function (personal) {
   let room = this.room[personal._rid]
   let curr_phase = room.phase.split('_')
+  console.log(6, room.phase)
   if (!Object.keys(personal.eff_todo).length && !Object.keys(personal._foe.eff_todo).length) {
 	if (room.effect_queue.length) {
       this.effectEmitter(room)
@@ -886,6 +882,7 @@ Game.prototype.checkEffectDone = function (personal) {
 }
 
 Game.prototype.effectJudge = function (card_eff) {
+  //console.log(card_eff)
   let personal = card_eff.initiator
   let opponent = personal._foe	
   
@@ -1661,15 +1658,13 @@ Game.prototype.reuse = function (personal, param) {
 	let type = Object.keys(card.type.effect)[0]
 	switch (type) {
 	  case 'instant':
-		let effect_queue = []
 		let judge = this.default.all_card[card.name].judge[type]
 		let card_eff = {tp: type, id: id, name: card.name, eff: [], initiator: personal}
 		
 		for (let effect in judge) 
 		  card_eff.eff.push(effect)
-		
-		if (card_eff.eff.length) effect_queue.push(card_eff)		
-	    if (effect_queue.length) room.effect_queue.unshift(effect_queue)	  
+	  
+	    if (card_eff.eff.length) room.effect_queue.unshift(card_eff)	  
 		break
 	  
 	  case 'trigger':
@@ -2424,6 +2419,8 @@ io.on('connection', client => {
 	}		  
 	
     room.phase = 'attack'
+	
+	room.atk_status.in_progress = true
     room.atk_status.attacker = client
     room.atk_status.defender = client._foe
     room.atk_status.curr = room.atk_status.defender
@@ -2433,6 +2430,7 @@ io.on('connection', client => {
     if ((Object.keys(client.aura.triumph).length && client.card_amount.battle >= 3) || Object.keys(client.aura.precise).length || client.buff.eagle_eye) {
       cb({msg: {phase: 'attack phase', action: 'attack hits'}})
 	  game.buff(client, {eagle_eye: {personal: false}})
+	  room.atk_status.in_progress = false
       room.atk_status.hit = true
 	  
 	  game.buildEffectQueue(client, {enchant: client.atk_enchant})
@@ -2440,9 +2438,11 @@ io.on('connection', client => {
       //game.effectTrigger(client, client._foe, avail_effect)
     }
     else {
+		
       client._foe.first_conceal = true
 	  if (game.checkCounter(client._foe, 'attack')) {
 		game.emitCounter(client._foe, type='attack')  
+		
 		room.atk_status.curr = room.atk_status.attacker
 		client._foe.emit('plyUseVanish', { msg: {action: 'conceal... waiting opponent'}, rlt: {personal: true, conceal: true} })
 		client.emit('plyUseVanish', { msg: {action: 'foe conceal'}, rlt: {opponent: true, conceal: true} })
@@ -2547,9 +2547,9 @@ io.on('connection', client => {
 
   client.on('giveUp', () => {
     let room = game.room[client._rid]
-
     if (room.phase !== 'attack') return
 
+	room.atk_status.in_progress = false
     let action = (client == room.atk_status.attacker)? 'tracking' : 'conceal'
     let msg = {personal: '', opponent: ''}
     msg.personal = (action === 'conceal')? 'be hit... waiting opponent' : 'attack miss... your turn'
@@ -2887,9 +2887,11 @@ io.on('connection', client => {
 
     if (!Object.keys(client.eff_todo).length && !Object.keys(client._foe.eff_todo).length) {
 	  if (room.effect_queue.length) {
+		console.log(1, room.effect_queue, client.eff_todo)
 		game.effectEmitter(room)  
 	  }	
 	  else {	
+	    console.log(2, room.effect_queue, client.eff_todo)
         if (it.decision && room.phase === 'attack') game.attackEnd(room)
         else {
           if (room.phase === 'end') game.backEnd(client)
