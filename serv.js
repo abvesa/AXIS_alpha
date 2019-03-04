@@ -1655,7 +1655,7 @@ Game.prototype.reuse = function (personal, param) {
     effect[card.type.base] --
   }
   
-  // push effect to effect_queue
+  // push effect to effect_queue, or move card field
   for (let id in param.card_pick) {
     let card = room.cards[id]
 	let type = Object.keys(card.type.effect)[0]
