@@ -2887,12 +2887,10 @@ io.on('connection', client => {
 
     if (!Object.keys(client.eff_todo).length && !Object.keys(client._foe.eff_todo).length) {
 	  if (room.effect_queue.length) {
-		console.log(1, room.effect_queue, client.eff_todo)
 		game.effectEmitter(room)  
 	  }	
 	  else {	
-	    console.log(2, room.effect_queue, client.eff_todo)
-        if (it.decision && room.phase === 'attack') game.attackEnd(room)
+        if (it.decision && room.phase === 'attack' && it.name === 'attack' && it.tp === 'attack' && it.id === 'attack') game.attackEnd(room)		
         else {
           if (room.phase === 'end') game.backEnd(client)
           else game.effectEnd(room)
