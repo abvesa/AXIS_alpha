@@ -1590,7 +1590,7 @@ socket.emit('preload', res => {
       $('#game').css({width: fixed_position, height: fixed_position})
 	  $('#opponent').css({width: fixed_position, top: `${(100-percentage)/2 - 6}%`})
 	  $('#personal').css({width: fixed_position, top: `${percentage + (100-percentage)/2}%`})// + 0.5}%`})
-	  $('#chat_input input').css({width: fixed_position, top: `calc(${percentage + (100-percentage)/2 + 0.5}% + 3.5rem)`})
+	  $('#chat_input input').css({width: fixed_position, top: `calc(${percentage + (100-percentage)/2 + 6}%)`})
 	  
       game.phaser.add.sprite(0, 0, 'background')
 	  game.phaser.scale.setGameSize(window.screen.width, window.screen.width/game.default.game.width*game.default.game.height)
@@ -1674,7 +1674,7 @@ $(document).ready(() => {
     $('#game').css({width: fixed_position, height: fixed_position})
 	$('#opponent').css({width: fixed_position, top: `${(100-percentage)/2 - 6}%`})
 	$('#personal').css({width: fixed_position, top: `${percentage + (100-percentage)/2}%`})// + 0.5}%`})
-	$('#chat_input input').css({width: fixed_position, top: `calc(${percentage + (100-percentage)/2 + 0.5}% + 3.5rem)`})
+	$('#chat_input input').css({width: fixed_position, top: `calc(${percentage + (100-percentage)/2 + 6}%)`})
   })
   
   // keydown event
