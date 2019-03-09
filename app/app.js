@@ -40,7 +40,7 @@ const Game = function () {
         y: { altar: 603, battle: 493, deck: 713, grave: 603, hand: 713, life: 713, socket: 389}
       }
     },
-    scale: 768*(opt.screen.width/opt.screen.height)/1366
+    scale: 768*(window.screen.width/window.screen.height)/1366//768*(opt.screen.width/opt.screen.height)/1366
   }
 
   for (let field in this.default.player.personal.y) {
