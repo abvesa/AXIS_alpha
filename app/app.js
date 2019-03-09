@@ -13,7 +13,7 @@ const Game = function () {
   this.curr_page = 'start'
   this.default = {
     game: {
-      height: 700,
+      height: 768,
       width: 1366
     },
     button: {
@@ -86,8 +86,8 @@ const Game = function () {
 	  back: {type: 'button', x: 0, y: this.default.game.height - 43, img: 'cancel', func: this.cancelSearchMatch}		
 	},
     game: {
-	  bg_up: {type: 'sprite', x: 0, y: -34, img: 'bg_up'},
-	  bg_dn: {type: 'sprite', x: 0, y: 350, img: 'bg_dn'},
+	  bg_up: {type: 'sprite', x: 0, y: 0, img: 'bg_up'},
+	  bg_dn: {type: 'sprite', x: 0, y: 384, img: 'bg_dn'},
       personal_deck: { type: 'sprite', x: this.default.game.width*(1 - 1/13) + 32 + 20 + 10, y: this.default.player.personal.y.deck, img: 'cardback', func: {onInputDown: this.player.personal.drawCard} },
       opponent_deck: { type: 'button', x: this.default.game.width*(1 - 1/13) + 32 + 20 + 10, y: this.default.player.opponent.y.deck, img: 'cardback', func: null },
       personal_grave: { type: 'button', x: this.default.game.width*(1 - 1/13) + 32 + 20 + 10, y: this.default.player.personal.y.grave, img: 'emptySlot', func: this.showGraveCards, ext: {owner: 'personal', show: false} },
@@ -1588,11 +1588,11 @@ socket.emit('preload', res => {
 	  let percentage = Math.round(window.devicePixelRatio * 100)
 	  let fixed_position = `${percentage}%`
       $('#game').css({width: fixed_position, height: fixed_position})
-	  $('#opponent').css({width: fixed_position, top: `${(100-percentage)/2 - 5.75}%`})
-	  $('#personal').css({width: fixed_position, top: `${percentage + (100-percentage)/2 + 0.5}%`})
+	  $('#opponent').css({width: fixed_position, top: `${(100-percentage)/2 - 6}%`})
+	  $('#personal').css({width: fixed_position, top: `${percentage + (100-percentage)/2}%`})// + 0.5}%`})
 	  $('#chat_input input').css({width: fixed_position, top: `calc(${percentage + (100-percentage)/2 + 0.5}% + 3.5rem)`})
 	  
-      game.phaser.add.sprite(0, -34, 'background')
+      game.phaser.add.sprite(0, 0, 'background')
 	  game.phaser.scale.setGameSize(window.screen.width, window.screen.width/game.default.game.width*game.default.game.height)
 	  game.phaser.world.scale.setTo(window.screen.width/game.default.game.width, window.screen.width/game.default.game.width)	  
 	  
@@ -1672,8 +1672,8 @@ $(document).ready(() => {
 	let percentage = Math.round(window.devicePixelRatio * 100)
 	let fixed_position = `${percentage}%`
     $('#game').css({width: fixed_position, height: fixed_position})
-	$('#opponent').css({width: fixed_position, top: `${(100-percentage)/2 - 5.75}%`})
-	$('#personal').css({width: fixed_position, top: `${percentage + (100-percentage)/2 + 0.5}%`})
+	$('#opponent').css({width: fixed_position, top: `${(100-percentage)/2 - 6}%`})
+	$('#personal').css({width: fixed_position, top: `${percentage + (100-percentage)/2}%`})// + 0.5}%`})
 	$('#chat_input input').css({width: fixed_position, top: `calc(${percentage + (100-percentage)/2 + 0.5}% + 3.5rem)`})
   })
   
