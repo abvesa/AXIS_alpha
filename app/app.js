@@ -1588,8 +1588,8 @@ socket.emit('preload', res => {
 	  let percentage = Math.round(window.devicePixelRatio * 100)
 	  let fixed_position = `${percentage}%`
       $('#game').css({width: fixed_position, height: fixed_position})
-	  $('#opponent').css({width: fixed_position, top: `${(100-percentage)/2 - 6}%`})
-	  $('#personal').css({width: fixed_position, top: `${percentage + (100-percentage)/2}%`})// + 0.5}%`})
+	  $('#opponent').css({width: fixed_position})//, top: `${(100-percentage)/2 - 6}%`})
+	  $('#personal').css({width: fixed_position})//, top: `${percentage + (100-percentage)/2}%`})// + 0.5}%`})
 	  $('#chat_input input').css({width: fixed_position, top: `calc(${percentage + (100-percentage)/2 + 6}%)`})
 	  
       game.phaser.add.sprite(0, 0, 'background')
@@ -1672,8 +1672,8 @@ $(document).ready(() => {
 	let percentage = Math.round(window.devicePixelRatio * 100)
 	let fixed_position = `${percentage}%`
     $('#game').css({width: fixed_position, height: fixed_position})
-	$('#opponent').css({width: fixed_position, top: `${(100-percentage)/2 - 6}%`})
-	$('#personal').css({width: fixed_position, top: `${percentage + (100-percentage)/2}%`})// + 0.5}%`})
+	$('#opponent').css({width: fixed_position})//, top: `${(100-percentage)/2 - 6}%`})
+	$('#personal').css({width: fixed_position})//, top: `${percentage + (100-percentage)/2}%`})// + 0.5}%`})
 	$('#chat_input input').css({width: fixed_position, top: `calc(${percentage + (100-percentage)/2 + 6}%)`})
   })
   
