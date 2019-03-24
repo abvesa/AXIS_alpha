@@ -377,12 +377,12 @@ Game.prototype.cardMove = function (personal, rlt) {
 	
 	if (rlt[id].to === 'deck' || rlt[id].from === 'deck' || rlt[id].to === 'hand' || rlt[id].from === 'hand') {
 	  personal.emit('attrAdjust', {attr: {
-		personal: {hand: `${personal.card_amount.hand}/${personal.hand_max + Object.keys(personal.aura.stamina).length}`, deck: personal.card_amount.deck}, 
+		personal: {hand: `${personal.card_amount.hand}/${personal.hand_max + Object.keys(personal.aura.stamina).length*2}`, deck: personal.card_amount.deck}, 
 		opponent: {hand: `${personal._foe.card_amount.hand}/${personal._foe.hand_max + Object.keys(personal._foe.aura.stamina).length}`, deck: personal._foe.card_amount.deck}
 	  }})
 	  
 	  personal._foe.emit('attrAdjust', {attr: {
-		opponent: {hand: `${personal.card_amount.hand}/${personal.hand_max + Object.keys(personal.aura.stamina).length}`, deck: personal.card_amount.deck}, 
+		opponent: {hand: `${personal.card_amount.hand}/${personal.hand_max + Object.keys(personal.aura.stamina).length*2}`, deck: personal.card_amount.deck}, 
 		personal: {hand: `${personal._foe.card_amount.hand}/${personal._foe.hand_max + Object.keys(personal._foe.aura.stamina).length}`, deck: personal._foe.card_amount.deck}
 	  }})
 	}
@@ -2333,7 +2333,7 @@ io.on('connection', client => {
 		  card_list: {life: life[opponent._pid], deck: record_deck[opponent._pid], hand: hand[opponent._pid]}, 
 		  msg: {phase: 'normal phase', action: 'your turn', cursor: ' '}, 
 		  attr: {
-			personal: {deck: opponent.card_amount.deck, atk_damage: opponent.atk_damage, atk_phase: opponent.atk_phase, action_point: opponent.action_point, hp: opponent.hp, hand: `${opponent.card_amount.hand}/${opponent.hand_max + Object.keys(opponent.aura.stamina).length}`}, 
+			personal: {deck: opponent.card_amount.deck, atk_damage: opponent.atk_damage, atk_phase: opponent.atk_phase, action_point: opponent.action_point, hp: opponent.hp, hand: `${opponent.card_amount.hand}/${opponent.hand_max + Object.keys(opponent.aura.stamina).length*2}`}, 
 			opponent: {deck: client.card_amount.deck, atk_damage: client.atk_damage, atk_phase: client.atk_phase, action_point: client.action_point, hp: client.hp, hand: `${client.card_amount.hand}/${client.hand_max + Object.keys(client.aura.stamina).length}`}
 		  }, 
 		  start: true 
@@ -2342,7 +2342,7 @@ io.on('connection', client => {
 		  card_list: {life: life[client._pid], deck: record_deck[client._pid], hand: hand[client._pid]}, 
 		  msg: {phase: 'normal phase', action: 'opponent turn', cursor: ' '}, 
 		  attr: {
-			opponent: {deck: opponent.card_amount.deck, atk_damage: opponent.atk_damage, atk_phase: opponent.atk_phase, action_point: opponent.action_point, hp: opponent.hp, hand: `${opponent.card_amount.hand}/${opponent.hand_max + Object.keys(opponent.aura.stamina).length}`}, 
+			opponent: {deck: opponent.card_amount.deck, atk_damage: opponent.atk_damage, atk_phase: opponent.atk_phase, action_point: opponent.action_point, hp: opponent.hp, hand: `${opponent.card_amount.hand}/${opponent.hand_max + Object.keys(opponent.aura.stamina).length*2}`}, 
 			personal: {deck: client.card_amount.deck, atk_damage: client.atk_damage, atk_phase: client.atk_phase, action_point: client.action_point, hp: client.hp, hand: `${client.card_amount.hand}/${client.hand_max + Object.keys(client.aura.stamina).length}`}
 		  }, 
 		  start: false
@@ -2442,7 +2442,7 @@ io.on('connection', client => {
       client._foe.first_conceal = true
 	  if (game.checkCounter(client._foe, 'attack')) {
 		game.emitCounter(client._foe, type='attack')  
-		
+		client._foe.first_conceal = false
 		room.atk_status.curr = room.atk_status.attacker
 		client._foe.emit('plyUseVanish', { msg: {action: 'conceal... waiting opponent'}, rlt: {personal: true, conceal: true} })
 		client.emit('plyUseVanish', { msg: {action: 'foe conceal'}, rlt: {opponent: true, conceal: true} })

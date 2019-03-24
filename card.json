@@ -2398,9 +2398,12 @@
 			"card": 3
 		  }
 		},
-		"discard": {
+		"teleport": {
 		  "personal": {
-		    "card": 2
+		    "card": 2,
+			"_from": "hand",
+			"_to": "deck",
+			"_target": ["personal"]
 		  }
 		}
 	  }
@@ -2413,10 +2416,10 @@
 		    "hit": true
 		  }
 		},
-		"discard": {}
+		"teleport": {}
 	  }
 	},
-	"text": "Rod of Fate\n<Artifact/Enchant>\nIf your effect attack hits, draw 3 cards and discard 2 cards"
+	"text": "Rod of Fate\n<Artifact/Enchant>\nIf your effect attack hits, draw 3 cards and\nteleport 2 handcards to deck bottom"
   },
   "capsule": {
     "name": "capsule",
@@ -2754,7 +2757,7 @@
 		"stat": {}
 	  }
 	},
-	"text": "Joker\n<Artifact/Trigger>\nYour opponent discard 1 card\nand you can only attack rest of your turn"
+	"text": "Joker\n<Artifact/Trigger>\nYour opponent discard 1 card if your hand amount < opponent's\nand you can only attack rest of your turn"
   },
   
   "sin": {
