@@ -12,7 +12,6 @@ const socket = require('socket.io')
 const apps = express()
 const server = http.createServer(apps)
 const io = socket(server)
-
 apps.use(express.static(path.join(__dirname, 'app')))
 
 const opt = {
@@ -30,6 +29,8 @@ const app = {
 	backup_statlist: JSON.parse(fs.readFileSync('stat.json', 'utf-8'))
   }
 }
+
+const effect = require('./effect.js')
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -1010,6 +1011,8 @@ Game.prototype.triggerSpecEffect = function () {
 }
 
 // !-- card effects
+Game.prototype.bleed = effect.bleed
+/*
 Game.prototype.bleed = function (personal, param) {
   let room = this.room[personal._rid]
   let effect = game.default.all_card[param.name].effect[param.tp][param.eff]
@@ -1035,11 +1038,17 @@ Game.prototype.bleed = function (personal, param) {
   }
 
   personal.hp -= bleed
-  personal.emit('effectTrigger', Object.assign(rlt, {attr: {personal: {hp: personal.hp}, opponent: {hp: personal._foe.hp}}}))
-  personal._foe.emit('effectTrigger', {card: genFoeRlt(rlt.card), attr: {opponent: {hp: personal.hp}, personal: {hp: personal._foe.hp}}})
-  return {}
+  //personal.emit('effectTrigger', Object.assign(rlt, {attr: {personal: {hp: personal.hp}, opponent: {hp: personal._foe.hp}}}))
+  //personal._foe.emit('effectTrigger', {card: genFoeRlt(rlt.card), attr: {opponent: {hp: personal.hp}, personal: {hp: personal._foe.hp}}})
+  
+  return {
+	eff: {
+	  personal: Object.assign(rlt, {attr: {personal: {hp: personal.hp}, opponent: {hp: personal._foe.hp}}}),
+      opponent: {card: genFoeRlt(rlt.card), attr: {opponent: {hp: personal.hp}, personal: {hp: personal._foe.hp}}}
+	}
+  }
 }
-
+*/
 Game.prototype.block = function (personal, param) {
   let room = this.room[personal._rid]
   let card_pick = Object.keys(param.card_pick)
@@ -1079,9 +1088,14 @@ Game.prototype.block = function (personal, param) {
     personal.dmg_blk.shift()
   }
 
-  personal.emit('effectTrigger', {card:{block:{ personal: tmp.personal, opponent: {} }}})
-  personal._foe.emit('effectTrigger', {card:{block:{ personal: {}, opponent: tmp.opponent }}})
-  return {}
+  //personal.emit('effectTrigger', {card:{block:{ personal: tmp.personal, opponent: {} }}})
+  //personal._foe.emit('effectTrigger', {card:{block:{ personal: {}, opponent: tmp.opponent }}})
+  return {
+	eff: {
+	  personal: {card:{block:{ personal: tmp.personal, opponent: {} }}}, 
+	  opponent:	{card:{block:{ personal: {}, opponent: tmp.opponent }}}	
+	}    
+  }
 }
 
 Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true, ...}
@@ -1128,6 +1142,13 @@ Game.prototype.aura = function (personal, card_list) { // card_list = {cid: true
   personal._foe.emit('effectTrigger', opponent_rlt)
 
   return {}
+  /*
+	eff: {
+	  personal: personal_rlt,
+	  opponent: opponent_rlt
+	}    
+  }
+  */
 }
 
 Game.prototype.buff = function (personal, effect, info = {}) {
@@ -1139,9 +1160,14 @@ Game.prototype.buff = function (personal, effect, info = {}) {
       rlt.stat[target][name] = effect[name][target]
     }
   }
-  personal.emit('effectTrigger', rlt)
-  personal._foe.emit('effectTrigger', genFoeRlt(rlt))
-  return {}
+  //personal.emit('effectTrigger', rlt)
+  //personal._foe.emit('effectTrigger', genFoeRlt(rlt))
+  return {
+	eff: {
+	  personal: rlt,
+	  opponent: genFoeRlt(rlt)
+	}  
+  }
 }
 
 Game.prototype.stat = function (personal, effect, info = {}) {
@@ -1179,9 +1205,14 @@ Game.prototype.stat = function (personal, effect, info = {}) {
       }
     }
   }
-  personal.emit('effectTrigger', rlt)
-  personal._foe.emit('effectTrigger', genFoeRlt(rlt))
-  return {}
+  //personal.emit('effectTrigger', rlt)
+  //personal._foe.emit('effectTrigger', genFoeRlt(rlt))
+  return {
+	eff: {
+	  personal: rlt,
+	  opponent: genFoeRlt(rlt)
+	}    
+  }
 }
 
 Game.prototype.control = function (personal, param) {
@@ -1206,9 +1237,14 @@ Game.prototype.control = function (personal, param) {
 	rlt = this.cardMove(personal, param)
   }
 
-  personal.emit('effectTrigger', {card:{control:{ personal: rlt.personal, opponent: {} }}})
-  personal._foe.emit('effectTrigger', {card:{control:{ personal: {}, opponent: rlt.opponent }}})
-  return {}
+  //personal.emit('effectTrigger', {card:{control:{ personal: rlt.personal, opponent: {} }}})
+  //personal._foe.emit('effectTrigger', {card:{control:{ personal: {}, opponent: rlt.opponent }}})
+  return {
+	eff: {
+	  personal: {card:{control:{ personal: rlt.personal, opponent: {} }}},	
+	  opponent: {card:{control:{ personal: {}, opponent: rlt.opponent }}}
+	}  
+  }
 }
 
 // break = choose card to send to grave
@@ -1246,10 +1282,15 @@ Game.prototype.break = function (personal, param) {
 
   let rlt = this.cardMove(personal, param.card_pick)
 
-  personal.emit('effectTrigger', {card: {break: { personal: rlt.personal, opponent: {} }}})
-  personal._foe.emit('effectTrigger', {card: {break: { personal: {}, opponent: rlt.opponent }}})
+  //personal.emit('effectTrigger', {card: {break: { personal: rlt.personal, opponent: {} }}})
+  //personal._foe.emit('effectTrigger', {card: {break: { personal: {}, opponent: rlt.opponent }}})
   
-  return {}
+  return {
+	eff: {
+	  personal: {card: {break: { personal: rlt.personal, opponent: {} }}},
+      opponent: {card: {break: { personal: {}, opponent: rlt.opponent }}}	  
+	}  
+  }
 }
 
 // destroy = send all cards in specific field to grave
@@ -1272,15 +1313,26 @@ Game.prototype.destroy = function (personal, effect, info = {}) {
 	if (card.field === 'socket') tmp[curr_own][id].off = card.bond
 	if (id in player[curr_own].chanting) delete player[curr_own].chanting[id]
   }
-
+  
+  /* origin destroy, able to destroy two player's field in one effect
   for (let tg in mod_eff) {
     if (!Object.keys(mod_eff[tg]).length) continue
     rlt = this.cardMove(player[tg], tmp[tg])
     player[tg].emit('effectTrigger', {card: {destroy: { personal: rlt.personal, opponent: {} }}})
     player[tg]._foe.emit('effectTrigger', {card: {destroy: { personal: {}, opponent: rlt.opponent }}})
   }
-
-  return {}
+  */
+  
+  rlt = this.cardMove(personal, tmp.personal)
+  //personal.emit('effectTrigger', {card: {destroy: { personal: rlt.personal, opponent: {} }}})
+  //personal._foe.emit('effectTrigger', {card: {destroy: { personal: {}, opponent: rlt.opponent }}})
+  
+  return {
+	eff: {
+	  personal: {card: {destroy: { personal: rlt.personal, opponent: {} }}},
+	  opponent: {card: {destroy: { personal: {}, opponent: rlt.opponent }}}
+	}  
+  }
 }
 
 Game.prototype.discard = function (personal, param) {
@@ -1308,9 +1360,14 @@ Game.prototype.discard = function (personal, param) {
   }
 
   let rlt = this.cardMove(personal, param.card_pick)
-  personal.emit('effectTrigger', {card: {discard: { personal: rlt.personal, opponent: {} }}})
-  personal._foe.emit('effectTrigger', {card: {discard: { personal: {}, opponent: rlt.opponent }}})
-  return {}
+  //personal.emit('effectTrigger', {card: {discard: { personal: rlt.personal, opponent: {} }}})
+  //personal._foe.emit('effectTrigger', {card: {discard: { personal: {}, opponent: rlt.opponent }}})
+  return {
+	eff: {
+	  personal: {card: {discard: { personal: rlt.personal, opponent: {} }}},
+	  opponent: {card: {discard: { personal: {}, opponent: rlt.opponent }}}
+	}  	  
+  }
 }
 
 Game.prototype.discardOrDrain = function (personal, param) {
@@ -1369,13 +1426,18 @@ Game.prototype.repair = function (personal, param) {
 	rlt[card_owner][id] = {turn: 'up'}
   }	
   
-  personal.emit('effectTrigger', {card: {repair: { personal: rlt.personal, opponent: rlt.opponent }}})
-  personal._foe.emit('effectTrigger', {card: {repair: { personal: rlt.opponent, opponent: rlt.personal }}})
+  //personal.emit('effectTrigger', {card: {repair: { personal: rlt.personal, opponent: rlt.opponent }}})
+  //personal._foe.emit('effectTrigger', {card: {repair: { personal: rlt.opponent, opponent: rlt.personal }}})
   
   if (Object.keys(aura_modify.personal)) this.aura(personal, aura_modify.personal)
   if (Object.keys(aura_modify.opponent)) this.aura(personal._foe, aura_modify.opponent)
   
-  return {}
+  return {
+	eff: {
+	  personal: {card: {repair: { personal: rlt.personal, opponent: rlt.opponent }}},
+	  opponent: {card: {repair: { personal: rlt.opponent, opponent: rlt.personal }}}
+	}  	  
+  }
 }
 
 Game.prototype.repairAll = function (personal, effect, info = {}) {
@@ -1398,13 +1460,18 @@ Game.prototype.repairAll = function (personal, effect, info = {}) {
 	rlt[card_owner][id] = {turn: 'up'}
   }
 
-  personal.emit('effectTrigger', {card: {repair: { personal: rlt.personal, opponent: rlt.opponent }}})
-  personal._foe.emit('effectTrigger', {card: {repair: { personal: rlt.opponent, opponent: rlt.personal }}})
+  //personal.emit('effectTrigger', {card: {repair: { personal: rlt.personal, opponent: rlt.opponent }}})
+  //personal._foe.emit('effectTrigger', {card: {repair: { personal: rlt.opponent, opponent: rlt.personal }}})
   
   if (Object.keys(aura_modify.personal)) this.aura(personal, aura_modify.personal)
   if (Object.keys(aura_modify.opponent)) this.aura(personal._foe, aura_modify.opponent)
   
-  return {}
+  return {
+	eff: {
+	  personal: {card: {repair: { personal: rlt.personal, opponent: rlt.opponent }}},
+	  opponent:  {card: {repair: { personal: rlt.opponent, opponent: rlt.personal }}}
+	}  	  
+  }
 }
 
 Game.prototype.drain = function (personal, param, use_vanish = false) {
@@ -1455,13 +1522,18 @@ Game.prototype.drain = function (personal, param, use_vanish = false) {
 	rlt[card_owner][id] = {turn: 'down'}
   }	
   
-  personal.emit('effectTrigger', {card: {drain: { personal: rlt.personal, opponent: rlt.opponent }}})
-  personal._foe.emit('effectTrigger', {card: {drain: { personal: rlt.opponent, opponent: rlt.personal }}})
+  //personal.emit('effectTrigger', {card: {drain: { personal: rlt.personal, opponent: rlt.opponent }}})
+  //personal._foe.emit('effectTrigger', {card: {drain: { personal: rlt.opponent, opponent: rlt.personal }}})
   
   if (Object.keys(aura_modify.personal)) this.aura(personal, aura_modify.personal)
   if (Object.keys(aura_modify.opponent)) this.aura(personal._foe, aura_modify.opponent)
   
-  return {}
+  return {
+	eff: {
+	  personal: {card: {drain: { personal: rlt.personal, opponent: rlt.opponent }}},
+	  opponent: {card: {drain: { personal: rlt.opponent, opponent: rlt.personal }}}
+	}  	  
+  }
 }
 
 Game.prototype.drainAll = function (personal, effect, info = {}) {
@@ -1486,13 +1558,18 @@ Game.prototype.drainAll = function (personal, effect, info = {}) {
 	rlt[card_owner][id] = {turn: 'down'}
   }
 
-  personal.emit('effectTrigger', {card: {drain: { personal: rlt.personal, opponent: rlt.opponent }}})
-  personal._foe.emit('effectTrigger', {card: {drain: { personal: rlt.opponent, opponent: rlt.personal }}})
+  //personal.emit('effectTrigger', {card: {drain: { personal: rlt.personal, opponent: rlt.opponent }}})
+  //personal._foe.emit('effectTrigger', {card: {drain: { personal: rlt.opponent, opponent: rlt.personal }}})
   
   if (Object.keys(aura_modify.personal)) this.aura(personal, aura_modify.personal)
   if (Object.keys(aura_modify.opponent)) this.aura(personal._foe, aura_modify.opponent)
   
-  return {}
+  return {
+    eff: {
+	  personal: {card: {drain: { personal: rlt.personal, opponent: rlt.opponent }}},
+	  opponent: {card: {drain: { personal: rlt.opponent, opponent: rlt.personal }}}
+	}   
+  }
 }
 
 Game.prototype.draw = function (personal, effect, info = {}) {
@@ -1520,10 +1597,15 @@ Game.prototype.draw = function (personal, effect, info = {}) {
     }
   }
 
-  personal.emit('effectTrigger', {card: {draw: {personal: rlt.personal, opponent: {} } } })
-  personal._foe.emit('effectTrigger', {card: {draw: {opponent: rlt.opponent, personal: {} } } })
+  //personal.emit('effectTrigger', {card: {draw: {personal: rlt.personal, opponent: {} } } })
+  //personal._foe.emit('effectTrigger', {card: {draw: {opponent: rlt.opponent, personal: {} } } })
 
-  return {}
+  return {
+	eff: {
+	  personal: {card: {draw: {personal: rlt.personal, opponent: {} }}},
+	  opponent: {card: {draw: {opponent: rlt.opponent, personal: {} }}}
+	}  
+  }
 }
 
 Game.prototype.equip = function(personal, param) {
@@ -1537,9 +1619,14 @@ Game.prototype.equip = function(personal, param) {
       }
     }
   }
-  personal.emit('effectTrigger', rlt)
-  personal._foe.emit('effectTrigger', rlt)
-  return {}
+  //personal.emit('effectTrigger', rlt)
+  //personal._foe.emit('effectTrigger', rlt)
+  return {
+	eff: {
+	  personal: rlt,
+	  opponent: rlt
+	}  
+  }
 }
 
 Game.prototype.heal = function (personal, param) {
@@ -1566,10 +1653,15 @@ Game.prototype.heal = function (personal, param) {
   }
 
   personal.hp += heal
-  personal.emit('effectTrigger', Object.assign(rlt, {attr: {personal: {hp: personal.hp}, opponent: {hp: personal._foe.hp}}}))
-  personal._foe.emit('effectTrigger', {card: genFoeRlt(rlt.card), attr: {opponent: {hp: personal.hp}, personal: {hp: personal._foe.hp}}})
+  //personal.emit('effectTrigger', Object.assign(rlt, {attr: {personal: {hp: personal.hp}, opponent: {hp: personal._foe.hp}}}))
+  //personal._foe.emit('effectTrigger', {card: genFoeRlt(rlt.card), attr: {opponent: {hp: personal.hp}, personal: {hp: personal._foe.hp}}})
  
-  return {}
+  return {
+	eff: {
+	  personal: Object.assign(rlt, {attr: {personal: {hp: personal.hp}, opponent: {hp: personal._foe.hp}}}),
+      opponent:	{card: genFoeRlt(rlt.card), attr: {opponent: {hp: personal.hp}, personal: {hp: personal._foe.hp}}}
+	}  
+  }
 }
 
 Game.prototype.modify = function(personal, effect) {
@@ -1597,11 +1689,16 @@ Game.prototype.modify = function(personal, effect) {
     }
   }
   personal_rlt = (Object.keys(card_move).length)? Object.assign({}, rlt, {card: {modify: {personal: card_move.personal, opponent: {}}}}) : rlt  
-  personal.emit('effectTrigger', personal_rlt)
+  //personal.emit('effectTrigger', personal_rlt)
   
   opponent_rlt = (Object.keys(card_move).length)? Object.assign({}, genFoeRlt(rlt), {card: {modify: {opponent: card_move.opponent, personal: {}}}}) : genFoeRlt(rlt)
-  personal._foe.emit('effectTrigger', opponent_rlt)
-  return {}
+  //personal._foe.emit('effectTrigger', opponent_rlt)
+  return {
+	eff: {
+	  personal: personal_rlt,
+      opponent: opponent_rlt	  
+	}  
+  }
 }
 
 Game.prototype.shuffle = function (personal, effect, info = {}) {
@@ -1684,9 +1781,14 @@ Game.prototype.reuse = function (personal, param) {
 	
   let rlt = this.cardMove(personal, param.card_pick)
 
-  personal.emit('effectTrigger', {card: {reuse: { personal: rlt.personal, opponent: {} }}})
-  personal._foe.emit('effectTrigger', {card: {reuse: { personal: {}, opponent: rlt.opponent }}})
-  return {}
+  //personal.emit('effectTrigger', {card: {reuse: { personal: rlt.personal, opponent: {} }}})
+  //personal._foe.emit('effectTrigger', {card: {reuse: { personal: {}, opponent: rlt.opponent }}})
+  return {
+	eff: {
+	  personal: {card: {reuse: { personal: rlt.personal, opponent: {} }}},
+	  opponent: {card: {reuse: { personal: {}, opponent: rlt.opponent }}}
+	}  	  
+  }
 }
 
 Game.prototype.receive = function (personal, param) {
@@ -1716,10 +1818,15 @@ Game.prototype.receive = function (personal, param) {
 
   personal.dmg_blk.shift()
   personal.hp -= dmg_taken
-  personal.emit('effectTrigger', Object.assign(rlt, {attr: {personal: {hp: personal.hp}, opponent: {hp: personal._foe.hp}}}))
-  personal._foe.emit('effectTrigger', {card: genFoeRlt(rlt.card), attr: {opponent: {hp: personal.hp}, personal: {hp: personal._foe.hp}}})
+  //personal.emit('effectTrigger', Object.assign(rlt, {attr: {personal: {hp: personal.hp}, opponent: {hp: personal._foe.hp}}}))
+  //personal._foe.emit('effectTrigger', {card: genFoeRlt(rlt.card), attr: {opponent: {hp: personal.hp}, personal: {hp: personal._foe.hp}}})
 
-  return {}
+  return {
+	eff: {
+	  personal: Object.assign(rlt, {attr: {personal: {hp: personal.hp}, opponent: {hp: personal._foe.hp}}}),
+      opponent: {card: genFoeRlt(rlt.card), attr: {opponent: {hp: personal.hp}, personal: {hp: personal._foe.hp}}}	  
+	}  
+  }
 }
 
 Game.prototype.retrieve = function (personal, param) {
@@ -1749,9 +1856,14 @@ Game.prototype.retrieve = function (personal, param) {
 
   let rlt = this.cardMove(personal, param.card_pick)
 
-  personal.emit('effectTrigger', {card: {retrieve: { personal: rlt.personal, opponent: {} }}})
-  personal._foe.emit('effectTrigger', {card: {retrieve: { personal: {}, opponent: rlt.opponent }}})
-  return {}
+  //personal.emit('effectTrigger', {card: {retrieve: { personal: rlt.personal, opponent: {} }}})
+  //personal._foe.emit('effectTrigger', {card: {retrieve: { personal: {}, opponent: rlt.opponent }}})
+  return {
+	eff: {
+	  personal: {card: {retrieve: { personal: rlt.personal, opponent: {} }}},
+      opponent:	{card: {retrieve: { personal: {}, opponent: rlt.opponent }}}
+	}  
+  }
 }
 
 Game.prototype.recall = function (personal, param) {
@@ -1780,9 +1892,14 @@ Game.prototype.recall = function (personal, param) {
 
   let rlt = this.cardMove(personal, param.card_pick)
 
-  personal.emit('effectTrigger', {card: {recall: { personal: rlt.personal, opponent: {} }}})
-  personal._foe.emit('effectTrigger', {card: {recall: { personal: {}, opponent: rlt.opponent }}})
-  return {}
+  //personal.emit('effectTrigger', {card: {recall: { personal: rlt.personal, opponent: {} }}})
+  //personal._foe.emit('effectTrigger', {card: {recall: { personal: {}, opponent: rlt.opponent }}})
+  return {
+	eff: {
+	  personal: {card: {retrieve: { personal: {}, opponent: rlt.opponent }}},
+      opponent:	{card: {recall: { personal: {}, opponent: rlt.opponent }}} 
+	}	
+  }
 }
 
 Game.prototype.set = function (personal, effect, info = {}) {
@@ -1799,9 +1916,14 @@ Game.prototype.set = function (personal, effect, info = {}) {
       }
     }
   }
-  personal.emit('effectTrigger', rlt)
-  personal._foe.emit('effectTrigger', genFoeRlt(rlt))
-  return {}
+  //personal.emit('effectTrigger', rlt)
+  //personal._foe.emit('effectTrigger', genFoeRlt(rlt))
+  return {
+	eff: {
+	  personal: rlt,
+	  opponent: genFoeRlt(rlt)
+	}  
+  }
 }
 
 Game.prototype.steal = function (personal, param) {
@@ -1827,15 +1949,17 @@ Game.prototype.steal = function (personal, param) {
 	param.card_pick[id] = {new_own: 'personal', to: 'hand'}
   }
 
-  //let rlt = this.cardMove(personal._foe, param.card_pick)
-  let rlt = this.cardMove(personal, param.card_pick)
+  let rlt = this.cardMove(personal, param.card_pick) 
+ 
+  //personal.emit('effectTrigger', {card: {steal: { personal: rlt.personal, opponent: {} }}})
+  //personal._foe.emit('effectTrigger', {card: {steal: { personal: {}, opponent: rlt.opponent }}})
   
-  //personal.emit('effectTrigger', {card: {steal: { personal: rlt.opponent, opponent: {} }}})
-  //personal._foe.emit('effectTrigger', {card: {steal: { personal: {}, opponent: rlt.personal }}})
-  personal.emit('effectTrigger', {card: {steal: { personal: rlt.personal, opponent: {} }}})
-  personal._foe.emit('effectTrigger', {card: {steal: { personal: {}, opponent: rlt.opponent }}})
-  
-  return {}
+  return {
+	eff: {
+	  personal: {card: {steal: { personal: rlt.personal, opponent: {} }}},
+	  opponent: {card: {steal: { personal: {}, opponent: rlt.opponent }}}
+	}  
+  }
 }
 
 Game.prototype.exchange = function (personal, param) {
@@ -1864,10 +1988,15 @@ Game.prototype.exchange = function (personal, param) {
 
   let rlt = this.cardMove(personal, param.card_pick)
   
-  personal.emit('effectTrigger', {card: {exchange: { personal: rlt.personal, opponent: {} }}})
-  personal._foe.emit('effectTrigger', {card: {exchange: { personal: {}, opponent: rlt.opponent }}})
+  //personal.emit('effectTrigger', {card: {exchange: { personal: rlt.personal, opponent: {} }}})
+  //personal._foe.emit('effectTrigger', {card: {exchange: { personal: {}, opponent: rlt.opponent }}})
   
-  return {}
+  return {
+	eff: {
+	  personal: {card: {exchange: { personal: rlt.personal, opponent: {} }}},
+      opponent: {card: {exchange: { personal: {}, opponent: rlt.opponent }}}	  
+	}  
+  }
 }
 
 Game.prototype.reverse = function (personal, effect, info = {}) {
@@ -1895,10 +2024,15 @@ Game.prototype.reverse = function (personal, effect, info = {}) {
   personal_reverse = this.cardMove(personal, reverse_cards.personal)
   opponent_reverse = this.cardMove(personal._foe, reverse_cards.opponent)
 
-  personal.emit('effectTrigger', {card: {reverse: { personal: personal_reverse.personal, opponent: opponent_reverse.opponent }}})
-  personal._foe.emit('effectTrigger', {card: {reverse: { personal: opponent_reverse.personal, opponent: personal_reverse.opponent }}})
+  //personal.emit('effectTrigger', {card: {reverse: { personal: personal_reverse.personal, opponent: opponent_reverse.opponent }}})
+  //personal._foe.emit('effectTrigger', {card: {reverse: { personal: opponent_reverse.personal, opponent: personal_reverse.opponent }}})
   
-  return {}
+  return {
+	eff: {
+	  personal: {card: {reverse: { personal: personal_reverse.personal, opponent: opponent_reverse.opponent }}},
+	  opponent: {card: {reverse: { personal: opponent_reverse.personal, opponent: personal_reverse.opponent }}}
+	}  
+  }
 }
 
 Game.prototype.teleport = function (personal, param) {
@@ -1934,9 +2068,14 @@ Game.prototype.teleport = function (personal, param) {
 
   let rlt = this.cardMove(personal, param.card_pick)
 
-  personal.emit('effectTrigger', {card: {teleport: { personal: rlt.personal, opponent: {} }}})
-  personal._foe.emit('effectTrigger', {card: {teleport: { personal: {}, opponent: rlt.opponent }}})
-  return {}
+  //personal.emit('effectTrigger', {card: {teleport: { personal: rlt.personal, opponent: {} }}})
+  //personal._foe.emit('effectTrigger', {card: {teleport: { personal: {}, opponent: rlt.opponent }}})
+  return {
+	eff: {
+	  personal: {card: {teleport: { personal: rlt.personal, opponent: {} }}},
+	  opponent: {card: {teleport: { personal: {}, opponent: rlt.opponent }}}
+	}  
+  }
 }
 
 
@@ -1978,15 +2117,6 @@ function checkAura (aura_status, condition) {
 	pass = pass && (curr == condition[type])   
   }  
   return pass
-}
-
-function genFoeRlt (param) {
-  for (let type in param) {
-    let temp = param[type].personal
-    param[type].personal = param[type].opponent
-    param[type].opponent = temp
-  }
-  return param
 }
 
 function idGenerate (length) {
@@ -2870,8 +3000,16 @@ io.on('connection', client => {
     if (!(it.eff in client.eff_todo[it.id][it.tp])) return {err: true}
 
     let rlt = game[effect](client, it)
-    if (rlt.err) return cb(rlt)
-    else {
+    if ('err' in rlt) return cb(rlt)
+    else {	  	
+		
+      // 
+	  if ('eff' in rlt) {
+	    client.emit('effectTrigger', rlt.eff.personal)
+        client._foe.emit('effectTrigger', rlt.eff.opponent)
+	  }
+	  //
+	  
       if (!client.hp) {
         client.emit('gameOver', {msg: {end: 'You LOSE\nclick anywhere else to leave'}})
         client._foe.emit('gameOver', {msg: {end: 'You WIN\nclick anywhere else to leave'}})

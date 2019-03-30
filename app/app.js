@@ -280,7 +280,7 @@ Game.prototype.showGraveCards = function (obj) {
 Game.prototype.statPanel = function (param) {
   for (let target in param) {
     let idx = 0
-    let st = (target === 'personal')? 319 : -319
+    let st = (target === 'personal')? 353 : -353
     let nx = (target === 'personal')? -40 : 40
     let curr = game.player[target].stat
     for (let name in curr) {

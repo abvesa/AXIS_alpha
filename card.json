@@ -2010,17 +2010,19 @@
 	    "destroy_1": {
           "opponent": {
             "altar": true
-          },
+          }
+        },
+		"destroy_2": {
 		  "personal": {
 		    "altar": true
 		  }
-        },
-        "destroy_2": {
+		},
+        "destroy_3": {
           "opponent": {
             "battle": true
           }
 		},
-		"destroy_3": {
+		"destroy_4": {
 		  "personal": {
 		    "battle": true
 		  }
@@ -2033,14 +2035,15 @@
     "judge": {
       "instant": {
 	    "destroy_1": {},
-        "destroy_2": {
+		"destroy_2": {},
+        "destroy_3": {
 		  "opponent": {
 		    "aura": {
 			  "fortify": false
 			}
 		  }
 		},
-		"destroy_3": {
+		"destroy_4": {
 		  "personal": {
 		    "aura": {
 			  "fortify": false
