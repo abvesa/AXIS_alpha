@@ -2847,6 +2847,9 @@
     },
     "effect": {
       "instant": {
+	    "bleed": {
+		  "personal": 1
+		},
         "reuse": {
           "personal": {
             "spell": 1
@@ -2856,6 +2859,7 @@
     },
     "judge": {
       "instant": {
+	    "bleed": {},
         "reuse": {
           "personal": {
 			"grave": {
@@ -2867,7 +2871,7 @@
         }
       }
     },
-    "text": "Phoenix Feather\n<Spell/Instant>\nReuse a spell in grave"
+    "text": "Phoenix Feather\n<Spell/Instant>\nHP-1, Reuse a spell in grave"
   },
   "fantasy": {
     "name": "fantasy",

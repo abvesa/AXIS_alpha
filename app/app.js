@@ -1630,7 +1630,7 @@ socket.emit('preload', res => {
             game.player[ply].stat[name].img.events.onInputOver.add(function(){
 			  game.textPanel({stat: game.player[ply].stat[name].text})
 			  let x = game.player[ply].stat[name].img.x + 10
-			  let y = game.player[ply].stat[name].img.y + 350 + ((game.player[ply].stat[name].img.y + 350 >= game.default.game.height/2)? -1*(game.text.effect.height+20) : 20)
+			  let y = game.player[ply].stat[name].img.y + 384 + ((game.player[ply].stat[name].img.y + 384 >= game.default.game.height/2)? -1*(game.text.effect.height+20) : 20)
 			  game.text.effect.reset(x, y)
 			}, this)
             game.player[ply].stat[name].img.events.onInputOut.add(function(){game.textPanel({effect: 'empty'})}, this)

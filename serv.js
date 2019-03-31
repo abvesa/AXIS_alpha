@@ -780,7 +780,6 @@ Game.prototype.buildEffectQueue = function (personal, card_list) {
 
 // effectEmitter emits one effect at a time, stops at one card's effects
 Game.prototype.effectEmitter = function (room) {
-  //console.log(room.effect_queue)
   let card_eff = this.effectJudge(room.effect_queue.shift())
   //console.log(card_eff)
   let personal = card_eff.initiator
@@ -797,7 +796,12 @@ Game.prototype.effectEmitter = function (room) {
 	let eff_core = Object.assign({}, this.default.all_card[card_eff.name].effect[card_eff.tp][avail_eff])
 
     if (!(eff_name in this.choose_eff)) {
-	  this[eff_name](personal, eff_core, card_eff)	
+	  // !-- ai bot			
+	  let rlt = this[eff_name](personal, eff_core, card_eff)	
+	  if ('eff' in rlt) {
+	    personal.emit('effectTrigger', rlt.eff.personal)
+        personal._foe.emit('effectTrigger', rlt.eff.opponent)
+	  }
 	}
 	else {
 	  for (let target in eff_core) {
@@ -1937,7 +1941,7 @@ io.on('connection', client => {
     if ('err' in rlt) return cb(rlt)
     else {	  	
 		
-      // 
+      // !-- ai bot
 	  if ('eff' in rlt) {
 	    client.emit('effectTrigger', rlt.eff.personal)
         client._foe.emit('effectTrigger', rlt.eff.opponent)
