@@ -7,6 +7,17 @@ function genFoeRlt (param) {
   return rlt
 }
 
+function shuffle (card_list) {
+  let i = 0, j = 0, temp = null
+  for(i = card_list.length-1; i > 0; i -= 1){
+    j = Math.floor(Math.random()*(i + 1))
+    temp = card_list[i]
+    card_list[i] = card_list[j]
+    card_list[j] = temp
+  }
+  return card_list
+}
+
 module.exports = {
   bleed : function (personal, param) {
 	  let room = this.room[personal._rid]
