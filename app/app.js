@@ -1494,8 +1494,9 @@ socket.on('effectTrigger', effect => {
 
       // card move or turn
       default:
-        for (let target in effect.card[type]) {
+        for (let target in effect.card[type]) {	
           for (let id in effect.card[type][target]) {
+			if (effect.card[type][target][id].from !== 'battle') continue  
             let curr = effect.card[type][target][id]
 			let pos = game.findCard({id: id, curr_own: target, from: 'battle'})
 			card = game.player[target].battle[pos]
