@@ -757,7 +757,7 @@ Game.prototype.buildEffectQueue = function (personal, card_list) {
     for (let id in card_list[tp]) {
       let card = room.cards[id]
       let tg_tp = (card.curr_eff)? card.curr_eff : (tp)
-      let judge = this.default.all_card[card.name].judge[tg_tp]
+      let judge = this.default.all_card[card.name].eff_judge[tg_tp]
 
 	  let card_eff = {tp: tg_tp, id: id, name: card.name, eff: [], initiator: personal}
       for (let effect in judge) 
@@ -776,6 +776,51 @@ Game.prototype.buildEffectQueue = function (personal, card_list) {
   else {
 	this.checkEffectDone(personal)
   }
+}
+
+Game.prototype.AIReaction = function () {
+	
+}
+
+Game.prototype.requestDischarger = function (action, param) {
+  /*
+    action = {
+	  type
+	  player 
+	} 
+	
+	different params each type needs
+	param = { 
+	  >> type == effect
+	  1. name
+	  2. effect   
+	  3. info (if needed)
+	  
+	  >> 
+	}
+  */
+  let rtn = {pass: true}
+  
+  switch (action.type) {
+    case 'effect': 
+	  let rlt = ('info' in action)? this[param.name](action.player, param.effect, param.info) : this[param.name](action.player, param.effect)
+	  if ('err' in rlt) rtn = rlt
+	  else {
+		if ('eff' in rlt) {
+		  if (!('__imabot__' in action.player)) action.player.emit('effectTrigger', rlt.eff.personal)		  
+		  if (!('__imabot__' in action.player._foe)) action.player._foe.emit('effectTrigger', rlt.eff.opponent)
+	    }
+	  }
+      break
+    
+	case '':
+	  break
+	
+	default:
+	  break
+  }
+  
+  return rtn
 }
 
 // effectEmitter emits one effect at a time, stops at one card's effects
@@ -797,11 +842,15 @@ Game.prototype.effectEmitter = function (room) {
 
     if (!(eff_name in this.choose_eff)) {
 	  // !-- ai bot			
+	  /*
 	  let rlt = this[eff_name](personal, eff_core, card_eff)	
 	  if ('eff' in rlt) {
 	    personal.emit('effectTrigger', rlt.eff.personal)
         personal._foe.emit('effectTrigger', rlt.eff.opponent)
 	  }
+	  */
+	  
+	  this.requestDischarger({player: personal, type: 'effect'}, {name: eff_name, effect: eff_core, info: card_eff})	  
 	}
 	else {
 	  for (let target in eff_core) {
@@ -814,7 +863,7 @@ Game.prototype.effectEmitter = function (room) {
 			continue
 		  }
           else {
-			player[target].dmg_blk.push(eff_core[target])
+			player[target].dmg_blk.push(eff_core[target].card)
           }
 		}
         else if (eff_name === 'heal') {        
@@ -893,7 +942,7 @@ Game.prototype.effectJudge = function (card_eff) {
   
   let room = this.room[personal._rid]
   let player = {personal: personal, opponent: opponent}
-  let judge = this.default.all_card[card_eff.name].judge[card_eff.tp]
+  let judge = this.default.all_card[card_eff.name].eff_judge[card_eff.tp]
   
   let avail_eff = []
   
@@ -982,6 +1031,7 @@ Game.prototype.effectJudge = function (card_eff) {
   card_eff.eff = avail_eff
   return card_eff
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////
 // !-- special aura
@@ -1936,7 +1986,8 @@ io.on('connection', client => {
     if (!(it.tp in client.eff_todo[it.id])) return {err: true}
     // if it.eff doesn't exist in client.eff_todo.your_id return
     if (!(it.eff in client.eff_todo[it.id][it.tp])) return {err: true}
-
+	
+	/*
     let rlt = game[effect](client, it)
     if ('err' in rlt) return cb(rlt)
     else {	  	
@@ -1956,6 +2007,17 @@ io.on('connection', client => {
       }
       else cb({})
     }
+	*/
+	
+	if ('err' in game.requestDischarger({player: client, type: 'effect'}, {name: effect, effect: it})) return cb(rlt)
+	if (!client.hp) {
+      client.emit('gameOver', {msg: {end: 'You LOSE\nclick anywhere else to leave'}})
+      client._foe.emit('gameOver', {msg: {end: 'You WIN\nclick anywhere else to leave'}})
+      client._foe.hp = 0
+      return
+    }
+    else cb({})
+	
 
     delete client.eff_todo[it.id][it.tp][it.eff]
     if (!Object.keys(client.eff_todo[it.id][it.tp]).length) delete client.eff_todo[it.id][it.tp]

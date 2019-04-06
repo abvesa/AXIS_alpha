@@ -787,7 +787,7 @@ Game.prototype.showTexture = function (btn) {
 const Player = function () {
   // attribute
   this.card_pick = {}
-  this.curr_deck = ''
+  this.curr_deck = null
   this.deck_slot = {} // total decks
   this.eff_queue = []
 
@@ -994,7 +994,7 @@ Player.prototype.login = function () {
 }
 
 Player.prototype.searchMatch = function () {
-  socket.emit('searchMatch', {curr_deck: personal.curr_deck.slot}, it => {
+  socket.emit('searchMatch', {curr_deck: (personal.curr_deck == null)? '' : personal.curr_deck.slot}, it => {
     if (it.err) return game.textPanel({cursor: it.err})
     if (it.msg) {
       game.changePage({next:'loading'})

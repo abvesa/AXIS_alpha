@@ -10,7 +10,9 @@
     "effect": {
       "enchant": {
         "heal": {
-          "personal": 3
+          "personal": {
+		    "card": 3
+		  }
         },
         "modify": {
           "personal": {
@@ -19,7 +21,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "enchant": {
         "heal": {
           "personal": {
@@ -52,7 +54,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "enchant": {
         "recall": {
           "personal": {
@@ -79,7 +81,9 @@
     "effect": {
       "trigger": {
         "heal": {
-          "personal": 1
+          "personal": {
+		    "card": 1
+		  }
         }
       },
 	  "stat": {
@@ -88,7 +92,7 @@
 		}
 	  }
     },
-    "judge": {
+    "eff_judge": {
       "trigger": {
         "heal": {
 		  "personal": {
@@ -119,7 +123,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "enchant": {
         "modify": {
           "personal": {
@@ -147,7 +151,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "enchant": {
         "steal": {
           "personal": {
@@ -177,14 +181,12 @@
       "enchant": {
         "control": {
           "personal": {
-            "battle": {
-              "artifact": 1
-            }
+		    "artifact": 1
           }
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "enchant": {
         "control": {
           "personal": {
@@ -222,7 +224,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "trigger": {
         "modify_1": {
           "personal": {
@@ -261,7 +263,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "enchant": {
         "destroy": {
           "personal": {
@@ -294,7 +296,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "trigger": {
         "modify": {}
       }
@@ -324,7 +326,7 @@
 	    }
       }
     },
-    "judge": {
+    "eff_judge": {
       "trigger": {
         "drain": {
 		  "opponent": {
@@ -362,7 +364,7 @@
 		}
       }
     },
-    "judge": {
+    "eff_judge": {
       "enchant": {
         "retrieve": {
           "personal": {
@@ -397,7 +399,7 @@
         }
       }
     },	
-    "judge": {
+    "eff_judge": {
       "enchant": {
         "recall": {
           "personal": {
@@ -432,7 +434,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "enchant": {
         "set": {
           "personal": {
@@ -454,7 +456,7 @@
     "effect": {
       "counter": {}
     },
-    "judge": {
+    "eff_judge": {
       "counter": {}
     },
 	"counter": {
@@ -484,7 +486,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "trigger": {
         "modify": {
           "personal": {
@@ -528,7 +530,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "enchant": {
         "destroy": {
           "personal": {
@@ -556,7 +558,7 @@
       "mosaic": {},
 	  "counter": {}
     },
-    "judge": {
+    "eff_judge": {
       "mosaic": {},
 	  "counter": {}
     },
@@ -587,7 +589,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "normal": {
         "modify": {},
         "draw": {
@@ -612,7 +614,9 @@
     "effect": {
       "normal": {
         "heal": {
-          "personal": 1
+          "personal": {
+		    "card": 1
+		  }
         },
         "draw": {
           "personal": {
@@ -621,7 +625,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "normal": {
         "heal": {
 		  "personal": {
@@ -653,7 +657,7 @@
       "mosaic": {},
 	  "counter": {}
     },
-    "judge": {
+    "eff_judge": {
       "mosaic": {},
 	  "counter": {}
     },
@@ -674,7 +678,7 @@
       "mosaic": {},
 	  "counter": {}
     },
-    "judge": {
+    "eff_judge": {
       "mosaic": {},
 	  "counter": {}
     },
@@ -694,7 +698,9 @@
     "effect": {
       "normal_1": {
         "bleed": {
-          "personal": 1
+          "personal": {
+		    "card": 1
+		  }
         },
         "stat": {
           "stun": {
@@ -710,7 +716,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "normal_1": {
         "bleed": {},
         "stat": {}
@@ -732,7 +738,9 @@
     "effect": {
       "instant": {
         "bleed": {
-          "personal": 1
+          "personal": {
+		    "card": 1
+		  }
         },
         "draw": {
           "personal": {
@@ -741,7 +749,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
         "bleed": {},
         "draw": {
@@ -766,14 +774,18 @@
     "effect": {
       "instant": {
         "damage_1": {
-          "personal": 2
+          "personal": {
+		    "card": 2
+		  }
         },
         "damage_2": {
-          "opponent": 2
+          "opponent": {
+		    "card": 2
+		  }
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
         "damage_1": {},
         "damage_2": {
@@ -809,7 +821,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
         "steal": {
 		  "opponent": {
@@ -844,7 +856,7 @@
     "effect": {
       "counter": {}
     },
-    "judge": {
+    "eff_judge": {
       "counter": {}
     },
 	"counter": {
@@ -863,7 +875,7 @@
     "effect": {
       "counter": {}
     },
-    "judge": {
+    "eff_judge": {
       "counter": {}
     },
 	"counter": {
@@ -882,11 +894,13 @@
     "effect": {
       "counter": {
         "bleed": {
-          "personal": 1
+          "personal": {
+		    "card": 1
+		  }
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "counter": {
         "bleed": {}
       }
@@ -912,11 +926,13 @@
           }
         },
         "damage": {
-          "opponent": 1
+          "opponent": {
+		    "card": 1
+		  }
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
         "stat": {},
         "damage": {}
@@ -935,11 +951,13 @@
     "effect": {
       "chanting": {
         "heal": {
-          "personal": 3
+          "personal": {
+		    "card": 3
+		  }
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "chanting": {
         "heal": {
 		  "personal": {
@@ -963,7 +981,9 @@
     "effect": {
       "chanting": {
         "damage": {
-          "opponent": 3
+          "opponent": {
+		    "card": 3
+		  }
         },
         "set": {
           "personal": {
@@ -974,7 +994,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "chanting": {
         "damage": {},
         "set": {}
@@ -997,7 +1017,7 @@
       "conceal": "discard_this",
       "tracking": "discard_this"
     },
-    "judge": {},
+    "eff_judge": {},
     "text": "Vanish\n(1) discard 1 vanish to CONCEAL to counter an attack\n(2) discard 2 vanish(s) to counter CONCEAL or TRACKING action"
   },
   "gravity": {
@@ -1012,9 +1032,7 @@
       "trigger": {
         "control": {
           "personal": {
-            "battle": {
-              "artifact": 1
-            }
+            "artifact": 1
           }
         },
         "discard": {
@@ -1024,7 +1042,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "trigger": {
 	    "discard": {
 		  "_valve": true,
@@ -1064,7 +1082,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
         "break": {
           "opponent": {
@@ -1091,7 +1109,7 @@
     "effect": {
 	  "permanent": {}
 	},
-    "judge": {
+    "eff_judge": {
 	  "permanent": {}
 	},
     "aura": {
@@ -1112,7 +1130,7 @@
     "effect": {
       "counter": {}
     },
-    "judge": {
+    "eff_judge": {
       "counter": {}
     },
 	"counter": {
@@ -1131,7 +1149,7 @@
     "effect": {
       "counter": {}
     },
-    "judge": {
+    "eff_judge": {
       "counter": {}
     },
 	"counter": {
@@ -1150,7 +1168,7 @@
     "effect": {
       "counter": {}
     },
-    "judge": {
+    "eff_judge": {
       "counter": {}
     },
 	"counter": {
@@ -1169,7 +1187,7 @@
     "effect": {
       "counter": {}
     },
-    "judge": {
+    "eff_judge": {
       "counter": {}
     },
 	"counter": {
@@ -1188,7 +1206,7 @@
     "effect": {
       "aura": {}
     },
-    "judge": {
+    "eff_judge": {
       "aura": {}
     },
     "aura": {
@@ -1212,7 +1230,7 @@
     "effect": {
       "aura": {}
     },
-    "judge": {
+    "eff_judge": {
       "aura": {}
     },
     "aura": {
@@ -1237,7 +1255,7 @@
       "chanting": {
 	    "retrieve": {
           "personal": {
-            "card": 1,
+		    "card": 1,
 			"_to": "hand"
           }
         },
@@ -1246,7 +1264,7 @@
 		}
 	  }
     },
-    "judge": {
+    "eff_judge": {
       "chanting": {
 	    "retrieve": {
 		  "personal": {
@@ -1274,7 +1292,7 @@
 	  "mosaic": {},
 	  "counter": {}
 	},
-    "judge": {
+    "eff_judge": {
 	  "mosaic": {},
 	  "counter": {}
 	},
@@ -1300,7 +1318,7 @@
 	    }
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "normal": {
 	    "buff": {}
 	  }
@@ -1329,7 +1347,7 @@
         }
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "chanting": {
 	    "buff": {},
 		"modify": {}
@@ -1354,7 +1372,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "instant": {
 	    "exchange": {
 		  "opponent": {
@@ -1387,7 +1405,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
         "recall": {
           "personal": {
@@ -1419,7 +1437,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "enchant": {
         "stat": {
 		  "personal": {
@@ -1441,7 +1459,7 @@
     "effect": {
       "counter": {}
     },
-    "judge": {
+    "eff_judge": {
       "counter": {}
     },
 	"counter": {
@@ -1465,7 +1483,7 @@
     "effect": {
       "counter": {}
     },
-    "judge": {
+    "eff_judge": {
       "counter": {}
     },
 	"counter": {
@@ -1484,7 +1502,7 @@
     "effect": {
       "aura": {}
     },
-    "judge": {
+    "eff_judge": {
       "aura": {}
     },
     "aura": {
@@ -1512,7 +1530,7 @@
 		}
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
         "modify": {
 		  "personal": {
@@ -1539,7 +1557,7 @@
     "effect": {
       "aura": {}
     },
-    "judge": {
+    "eff_judge": {
       "aura": {}
     },
     "aura": {
@@ -1569,7 +1587,7 @@
         }
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "chanting": {
 	    "draw": {
 		  "personal": {
@@ -1599,7 +1617,7 @@
 		}
 	  }
     },
-    "judge": {
+    "eff_judge": {
       "trigger": {
 	    "modify": {}
 	  }
@@ -1632,7 +1650,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
         "recall": {
           "personal": {
@@ -1664,7 +1682,7 @@
         }
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "chanting": {
 	    "modify": {}
 	  }
@@ -1690,7 +1708,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "instant": {
 	    "drainAll": {
 		  "opponent": {
@@ -1731,7 +1749,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "trigger": {
         "retrieve": {
           "personal": {
@@ -1763,7 +1781,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
         "draw": {
 		  "opponent": {
@@ -1794,7 +1812,7 @@
     "effect": {
       "permanent": {}
     },
-    "judge": {
+    "eff_judge": {
       "permanent": {}
     },
     "aura": {
@@ -1821,7 +1839,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
         "destroy": {
 		  "opponent": {
@@ -1854,7 +1872,7 @@
         }
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "chanting": {
 	    "discard": {
 		  "opponent": {
@@ -1880,7 +1898,9 @@
 	"effect": {
 	  "instant": {
 	    "heal": {
-          "personal": 3
+          "personal": {
+		    "card": 3
+		  }
         },
 		"discard": {
 		  "personal": {
@@ -1889,7 +1909,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "instant": {
 	    "discard": {
 		  "_valve": true,
@@ -1935,7 +1955,7 @@
 		}
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
 	    "discard": {
 		  "_valve": true,
@@ -1988,7 +2008,7 @@
 		}
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
         "destroy": {},
 		"stat": {},
@@ -2028,11 +2048,13 @@
 		  }
         },		
 		"bleed": {
-		  "personal": 1
+		  "personal": {
+		    "card": 1
+		  }
 		}
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
 	    "destroy_1": {},
 		"destroy_2": {},
@@ -2066,7 +2088,9 @@
     "effect": {
       "instant": {
         "heal": {
-          "personal": 6
+          "personal": {
+		    "card": 6
+		  }
         },
 		"discard": {
 		  "personal": {
@@ -2075,7 +2099,7 @@
 		}
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
 	    "discard": {
 		  "_valve": true,
@@ -2115,7 +2139,7 @@
 		}
       }
     },
-    "judge": {
+    "eff_judge": {
       "trigger": {
         "reverse": {}
       }
@@ -2133,16 +2157,20 @@
 	"effect": {
       "normal_1": {
         "damage": {
-          "personal": 1
+          "personal": {
+		    "card": 1
+		  }
         }
       },
       "normal_2": {
         "damage": {
-          "opponent": 1
+          "opponent": {
+		    "card": 1
+		  }
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "normal_1": {
         "damage": {}
       },
@@ -2163,7 +2191,9 @@
     "effect": {
       "instant": {
         "heal": {
-          "personal": 3
+          "personal": {
+		    "card": 3
+		  }
         },
 		"draw": {
 		  "personal": 2
@@ -2175,7 +2205,7 @@
 		}
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
 	    "discard": {
 		  "_valve": true,
@@ -2220,7 +2250,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "enchant": {
 	    "repairAll": {}
 	  }
@@ -2247,7 +2277,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "normal": {
 		"teleport": {
 		  "opponent": {
@@ -2285,7 +2315,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "trigger": {
         "modify": {
           "personal": {
@@ -2332,7 +2362,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "enchant": {
 	    "teleport": {
 		  "personal": {
@@ -2368,7 +2398,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "enchant": {
 	    "teleport": {
 		  "personal": {
@@ -2411,7 +2441,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "enchant": {
 	    "draw": {
 		  "_valve": true,
@@ -2441,7 +2471,7 @@
 	    }
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "normal": {
 	    "buff": {}
 	  }
@@ -2464,11 +2494,13 @@
 		  } 
 	    },
 		"bleed": {
-		  "personal": 1
+		  "personal": {
+		    "card": 1
+		  }
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "normal": {
 	    "break": {
 		  "personal": {
@@ -2516,7 +2548,7 @@
 		}
 	  }
     },
-    "judge": {
+    "eff_judge": {
       "normal_1": {
         "drain": {
 		  "_opap": true,
@@ -2561,11 +2593,13 @@
     "effect": {
       "normal": {
         "heal": {
-          "personal": 2
+          "personal": {
+		    "card": 2
+		  }
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "normal": {
         "heal": {
 		  "personal": {
@@ -2597,11 +2631,13 @@
 		  }
 	    },
 	    "bleed": {
-		  "personal": 1
+		  "personal": {
+		    "card": 1
+		  }
 	    }
 	  }
     },
-    "judge": {
+    "eff_judge": {
 	  "normal": {
 	    "bleed": {},
 	    "teleport": {
@@ -2638,7 +2674,7 @@
 		}
       }
     },
-    "judge": {
+    "eff_judge": {
       "normal": {
         "buff": {}
       }
@@ -2663,7 +2699,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "trigger": {
 	    "buff": {}
 	  }
@@ -2681,14 +2717,16 @@
 	"effect": {
 	  "enchant": {
 	    "bleed": {
-		  "personal": 1
+		  "personal": {
+		    "card": 1
+		  }
 		},
 		"draw": {
 		  "personal": 3
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "enchant": {
 	    "bleed": {},
 		"draw": {
@@ -2717,7 +2755,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "trigger": {
 	    "buff": {}
 	  }
@@ -2746,7 +2784,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "trigger": {
 	    "discard": {
 		  "personal": {
@@ -2785,7 +2823,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "enchant": {
 	    "discardOrDrain": {}
 	  }
@@ -2822,7 +2860,7 @@
 		}
 	  }
 	},
-	"judge": {
+	"eff_judge": {
 	  "enchant": {
 	    "discardOrDrain": {}
 	  }
@@ -2848,7 +2886,9 @@
     "effect": {
       "instant": {
 	    "bleed": {
-		  "personal": 1
+		  "personal": {
+		    "card": 1
+		  }
 		},
         "reuse": {
           "personal": {
@@ -2857,7 +2897,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "instant": {
 	    "bleed": {},
         "reuse": {
@@ -2890,7 +2930,7 @@
         }
       }
     },
-    "judge": {
+    "eff_judge": {
       "enchant": {
         "reuse": {
           "personal": {
@@ -2915,13 +2955,13 @@
 	  "effect": {
 	    "trigger": 1
 	  },
-	  "effect": {
-	    "trigger": {}
-	  },
-	  "judge": {
-	    "trigger": {}
-	  },
-	  "text": "Blank\n<Artifact/Trigger>\nIt does nothing"
-	}
+	},
+	"effect": {
+	  "trigger": {}
+	},
+	"eff_judge": {
+	  "trigger": {}
+	},
+	"text": "Blank\n<Artifact/Trigger>\nIt does nothing"
   }
 }

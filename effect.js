@@ -24,7 +24,7 @@ module.exports = {
 	  let effect = this.default.all_card[param.name].effect[param.tp][param.eff]
 	  let card_pick = Object.keys(param.card_pick)
 	  let rlt = { card: {bleed: {personal: {}, opponent: {}}}}
-	  let bleed = ((personal.hp - effect[param.tg]) < 0)? personal.hp : (effect[param.tg])//effect[Object.keys(effect)[0]]
+	  let bleed = ((personal.hp - effect[param.tg]) < 0)? personal.hp : (effect[param.tg].card)//effect[Object.keys(effect)[0]]
 	  if (card_pick.length != bleed) return {err: 'error length of card pick'}
 
 	  // check err
@@ -225,8 +225,11 @@ module.exports = {
 		let card = room.cards[id]
 		if (card == null) return {err: 'no card id'}
 		if (card.curr_own !== personal._foe._pid) return {err: 'please choose opponent card'}
-		if (!effect.personal[card.field]) return {err: 'wrong type of chosen card field'}
-		if (!effect.personal[card.field][card.type.base]) return {err: 'wrong type of chosen card type'}
+		//if (!effect.personal[card.field]) return {err: 'wrong type of chosen card field'}
+		//if (!effect.personal[card.field][card.type.base]) return {err: 'wrong type of chosen card type'}
+		if (card.field !== 'battle' && card.field !== 'altar') return {err: 'wrong type of chosen card field'}
+		if (!(card.type.base in effect.personal)) return {err: 'wrong type of chosen card type'}
+		
 		if (card.field === 'battle') {
 		  if (card.checkCrossProtection()) continue
 		}
@@ -622,7 +625,7 @@ module.exports = {
 	  let effect = this.default.all_card[param.name].effect[param.tp][param.eff]
 	  let card_pick = Object.keys(param.card_pick)
 	  let rlt = { card: {heal: {personal: {}, opponent: {}}} }
-	  let heal = (personal.life_max - effect[Object.keys(effect)[0]] < personal.hp)? (personal.life_max - personal.hp) : effect[Object.keys(effect)[0]]
+	  let heal = (personal.life_max - effect[param.tg].card < personal.hp)? (personal.life_max - personal.hp) : effect[param.tg].card
 	  if (card_pick.length != heal) return {err: 'error length of card pick'}
 	  if (heal == 0) return {}
 
