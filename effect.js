@@ -356,7 +356,7 @@ module.exports = {
 		if (!(card.name in effect.choose) && !('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}	
 		
 		let card_type = (card.name in effect.choose)? card.name : ((card.type.base in effect.choose)? card.type.base : 'card')
-		if (!(card_type in effect.choose)) return {err: 'error type length'}
+		if (!effect.choose[card_type]) return {err: 'error type length'}
 		effect.choose[card_type] --
 	  }
 
@@ -411,7 +411,7 @@ module.exports = {
 		if (card == null) return {err: 'no card id'}
 		if (card.field !== 'battle') return {err: 'please choose card on battle field'}
 		if (!effect._target.includes(card_owner)) return {err: 'error card owner'}
-		if (!effect.artifact) return {err: 'error card length'}
+		if (!effect.choose.artifact) return {err: 'error card length'}
 		effect.choose.artifact --
 	  }
 	  
@@ -494,7 +494,7 @@ module.exports = {
 		  if (card.field !== 'battle') return {err: 'please choose card on battle field'}
 		  if (!effect._target.includes(card_owner)) return {err: 'error card owner'}
 		  if (Object.keys(player[card_owner].aura.fortify).length) delete param.card_pick[id]
-		  if (!effect.artifact) return {err: 'error card length'}
+		  if (!effect.choose.artifact) return {err: 'error card length'}
 		  effect.choose.artifact --
 		}
 	  }
@@ -837,7 +837,7 @@ module.exports = {
 		if (card.field !== 'deck') return {err: 'error card field'}
 		if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
 		let card_type = ('card' in effect.choose)? 'card': card.type.base
-		if (!(card_type in effect.choose)) return {err: 'error type length'}
+		if (!effect.choose[card_type]) return {err: 'error type length'}
 		effect.choose[card_type] --
 		//param.card_pick[id] = {to: 'hand'}
 		param.card_pick[id] = {to: effect._to}
@@ -875,7 +875,7 @@ module.exports = {
 		if (!('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}
 		
 		let card_type = ('card' in effect.choose)? 'card': card.type.base		
-		if (!(card_type in effect)) return {err: 'error type length'}
+		if (!effect.choose[card_type]) return {err: 'error type length'}
 		effect.choose[card_type] --
 		param.card_pick[id] = {to: effect._to}
 	  }
@@ -931,8 +931,10 @@ module.exports = {
 		if (card.curr_own !== personal._foe._pid) return {err: 'please choose opponent card'}
 		if (card.field !== 'hand') return {err: 'please choose hand card'}
 		if (!('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}
-		if (!effect.choose[('card' in effect.choose)? 'card' : card.type.base]) return {err: 'error type length'}
-		effect.choose[('card' in effect.choose)? 'card' : card.type.base] --
+		
+		let card_type = ('card' in effect.choose)? 'card' : card.type.base
+		if (!effect.choose[card_type]) return {err: 'error type length'}
+		effect.choose[card_type] --
 		//param.card_pick[id] = {new_own: 'opponent', to: 'hand'}
 		param.card_pick[id] = {new_own: 'personal', to: 'hand'}
 	  }
@@ -968,8 +970,10 @@ module.exports = {
 		if (card == null) return {err: 'no card id'}
 		if (card.field !== 'hand') return {err: 'please choose hand card'}
 		if (!('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}
-		if (!effect.choose[('card' in effect.choose)? 'card' : card.type.base][card_own]) return {err: 'error type length'}
-		effect.choose[('card' in effect.choose)? 'card' : card.type.base][card_own] --
+		
+		let card_type = ('card' in effect.choose)? 'card' : card.type.base
+		if (!effect.choose[card_type][card_own]) return {err: 'error type length'}
+		effect.choose[card_type][card_own] --
 		param.card_pick[id] = {new_own: new_own, to: 'hand'}
 	  }
 
@@ -1042,8 +1046,10 @@ module.exports = {
 
 		if (card.field !== effect._from) return {err: 'error card field'}
 		if (!('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}
-		if (!effect.choose[('card' in effect.choose)? 'card': card.type.base]) return {err: 'error type length'}
-		effect.choose[('card' in effect.choose)? 'card' : card.type.base] --
+		
+		let card_type = ('card' in effect.choose)? 'card': card.type.base
+		if (!effect.choose[card_type]) return {err: 'error type length'}
+		effect.choose[card_type] --
 		if (card.field === 'battle') {
 		  if (card.checkCrossProtection()) continue
 		}
