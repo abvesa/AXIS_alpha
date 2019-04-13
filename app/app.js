@@ -195,6 +195,25 @@ Game.prototype.backgroundPanel = function (your_turn) {
   }
 }
 
+Game.prototype.flickerPanel = function (on, effect_type = {}, card_type = {}) {
+  let flicker_panel = this.page.game.flicker_panel
+  
+  if (!on) {
+	  
+	  
+    game.tween = game.phaser.add.tween(flicker_panel).to(
+      {alpha: 0}, 500, Phaser.Easing.Sinusoidal.InOut, true
+    ).to(
+      {alpha: 1}, 500, Phaser.Easing.Sinusoidal.InOut, true
+    ).loop()
+  }
+  else {
+	game.tween.stop()  
+	flicker_panel.flicker_list = {}
+	flicker_panel.chosen_list = {}
+  }
+}
+
 Game.prototype.buildFieldPanel = function (card_list, width = 7, height = 3, indent = 20, scaler = 1.3) {
   let field_panel = this.page.game.field_panel
   if (Object.keys(card_list).length == 0) field_panel.removeChildren(begin = 0)
@@ -678,7 +697,20 @@ Game.prototype.pageInit = function () {
   field_panel.req = true
   field_panel.kill()
   this.page.game.field_panel = field_panel
-
+  
+  // add choose panel in game page
+  let flicker_panel = game.phaser.add.sprite(0, 0, null)
+  flicker_panel._flicker_list = {}
+  flicker_panel._chosen_list = {}
+  flicker_panel._fields = {
+	  
+	  
+  }
+  flicker_panel.anchor.setTo(0.5)
+  flicker_panel.inputEnabled = true
+  flicker_panel.kill()
+  this.page.game.flicker_panel = flicker_panel  
+  
   // add cards in game page
   for (let field of ['altar', 'battle', 'hand', 'life']) {
     this.page.game[`personal_${field}`] = personal[field]

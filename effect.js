@@ -24,7 +24,7 @@ module.exports = {
 	  let effect = this.default.all_card[param.name].effect[param.tp][param.eff]
 	  let card_pick = Object.keys(param.card_pick)
 	  let rlt = { card: {bleed: {personal: {}, opponent: {}}}}
-	  let bleed = ((personal.hp - effect[param.tg]) < 0)? personal.hp : (effect[param.tg].card)//effect[Object.keys(effect)[0]]
+	  let bleed = ((personal.hp - effect[param.tg]) < 0)? personal.hp : (effect[param.tg].choose.card)//effect[Object.keys(effect)[0]]
 	  if (card_pick.length != bleed) return {err: 'error length of card pick'}
 
 	  // check err
@@ -228,7 +228,7 @@ module.exports = {
 		//if (!effect.personal[card.field]) return {err: 'wrong type of chosen card field'}
 		//if (!effect.personal[card.field][card.type.base]) return {err: 'wrong type of chosen card type'}
 		if (card.field !== 'battle' && card.field !== 'altar') return {err: 'wrong type of chosen card field'}
-		if (!(card.type.base in effect.personal)) return {err: 'wrong type of chosen card type'}
+		if (!(card.type.base in effect.personal.choose)) return {err: 'wrong type of chosen card type'}
 		
 		if (card.field === 'battle') {
 		  if (card.checkCrossProtection()) continue
@@ -343,8 +343,8 @@ module.exports = {
 				   
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
-	  for (let tp in effect) {
-		total_len += effect[tp]
+	  for (let tp in effect.choose) {
+		total_len += effect.choose[tp]
 	  }
 	  if ((card_pick.length < total_len && card_pick.length != personal.card_amount.hand) || (card_pick.length > total_len)) return {err: 'error discard length'}
 
@@ -353,9 +353,11 @@ module.exports = {
 		if (card == null) return {err: 'no card id'}
 		if (card.curr_own !== personal._pid) return {err: 'please choose your card'}
 		if (card.field !== 'hand') return {err: 'please choose hand card'}
-		if (!(card.name in effect) && !('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}	
-		if (!effect[(card.name in effect)? card.name : ((card.type.base in effect)? card.type.base : 'card')]) return {err: 'error type length'}
-		effect[(card.name in effect)? card.name : ((card.type.base in effect)? card.type.base : 'card')] --
+		if (!(card.name in effect.choose) && !('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}	
+		
+		let card_type = (card.name in effect.choose)? card.name : ((card.type.base in effect.choose)? card.type.base : 'card')
+		if (!(card_type in effect.choose)) return {err: 'error type length'}
+		effect.choose[card_type] --
 	  }
 
 	  let rlt = this.cardMove(personal, param.card_pick)
@@ -397,9 +399,9 @@ module.exports = {
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
 	  
-	  for (let type in effect) {
+	  for (let type in effect.choose) {
 		if (type === '_target') continue
-		total_len += effect[type]
+		total_len += effect.choose[type]
 	  }
 	  if (card_pick.length != total_len) return {err: 'error repair length'}
 	  
@@ -410,7 +412,7 @@ module.exports = {
 		if (card.field !== 'battle') return {err: 'please choose card on battle field'}
 		if (!effect._target.includes(card_owner)) return {err: 'error card owner'}
 		if (!effect.artifact) return {err: 'error card length'}
-		effect.artifact --
+		effect.choose.artifact --
 	  }
 	  
 	  let aura_modify = {personal: {}, opponent: {}}
@@ -479,9 +481,9 @@ module.exports = {
 		let card_pick = Object.keys(param.card_pick)
 		let total_len = 0
 	  
-		for (let type in effect) {
+		for (let type in effect.choose) {
 		  if (type === '_target') continue
-		  total_len += effect[type]
+		  total_len += effect.choose[type]
 		}
 		if (card_pick.length != total_len) return {err: 'error drain length'}
 	  
@@ -493,7 +495,7 @@ module.exports = {
 		  if (!effect._target.includes(card_owner)) return {err: 'error card owner'}
 		  if (Object.keys(player[card_owner].aura.fortify).length) delete param.card_pick[id]
 		  if (!effect.artifact) return {err: 'error card length'}
-		  effect.artifact --
+		  effect.choose.artifact --
 		}
 	  }
 	  else {
@@ -625,7 +627,7 @@ module.exports = {
 	  let effect = this.default.all_card[param.name].effect[param.tp][param.eff]
 	  let card_pick = Object.keys(param.card_pick)
 	  let rlt = { card: {heal: {personal: {}, opponent: {}}} }
-	  let heal = (personal.life_max - effect[param.tg].card < personal.hp)? (personal.life_max - personal.hp) : effect[param.tg].card
+	  let heal = (personal.life_max - effect[param.tg].choose.card < personal.hp)? (personal.life_max - personal.hp) : effect[param.tg].choose.card
 	  if (card_pick.length != heal) return {err: 'error length of card pick'}
 	  if (heal == 0) return {}
 
@@ -719,9 +721,9 @@ module.exports = {
 
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
-	  for (let type in effect) {
+	  for (let type in effect.choose) {
 		if (type[0] == '_') continue
-		total_len += effect[type]
+		total_len += effect.choose[type]
 	  }
 	  if (card_pick.length != total_len) return {err: 'error reuse length'}
 
@@ -732,9 +734,9 @@ module.exports = {
 		if (card.curr_own !== personal._pid) return {err: 'please choose personal card'}
 
 		if (card.field !== 'grave') return {err: 'error card field'}
-		if (!(card.type.base in effect)) return {err: 'error card type'}
-		if (!effect[card.type.base]) return {err: 'error type length'}
-		effect[card.type.base] --
+		if (!(card.type.base in effect.choose)) return {err: 'error card type'}
+		if (!effect.choose[card.type.base]) return {err: 'error type length'}
+		effect.choose[card.type.base] --
 	  }
 	  
 	  // push effect to effect_queue, or move card field
@@ -821,9 +823,9 @@ module.exports = {
 
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
-	  for (let type in effect) {
+	  for (let type in effect.choose) {
 		if (type[0] == '_') continue
-		total_len += effect[type]
+		total_len += effect.choose[type]
 	  }
 	  if (card_pick.length != total_len) return {err: 'error retrieve length'}
 
@@ -834,8 +836,9 @@ module.exports = {
 
 		if (card.field !== 'deck') return {err: 'error card field'}
 		if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
-		if (!effect[('card' in effect)? 'card': card.type.base]) return {err: 'error type length'}
-		effect[('card' in effect)? 'card' : card.type.base] --
+		let card_type = ('card' in effect.choose)? 'card': card.type.base
+		if (!(card_type in effect.choose)) return {err: 'error type length'}
+		effect.choose[card_type] --
 		//param.card_pick[id] = {to: 'hand'}
 		param.card_pick[id] = {to: effect._to}
 	  }
@@ -857,9 +860,9 @@ module.exports = {
 
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
-	  for (let type in effect) {
+	  for (let type in effect.choose) {
 		if (type[0] == '_') continue
-		total_len += effect[type]
+		total_len += effect.choose[type]
 	  }
 	  if (card_pick.length != total_len) return {err: 'error recall length'}
 
@@ -869,9 +872,11 @@ module.exports = {
 		if (card.curr_own !== personal._pid) return {err: 'please choose personal card'}
 
 		if (card.field !== 'grave') return {err: 'error card field'}
-		if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
-		if (!effect[('card' in effect)? 'card': card.type.base]) return {err: 'error type length'}
-		effect[('card' in effect)? 'card' : card.type.base] --
+		if (!('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}
+		
+		let card_type = ('card' in effect.choose)? 'card': card.type.base		
+		if (!(card_type in effect)) return {err: 'error type length'}
+		effect.choose[card_type] --
 		param.card_pick[id] = {to: effect._to}
 	  }
 
@@ -915,8 +920,8 @@ module.exports = {
 
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
-	  for (let tp in effect) {
-		total_len += effect[tp]
+	  for (let tp in effect.choose) {
+		total_len += effect.choose[tp]
 	  }
 	  if (card_pick.length != total_len) return {err: 'error steal length'}
 
@@ -925,9 +930,9 @@ module.exports = {
 		if (card == null) return {err: 'no card id'}
 		if (card.curr_own !== personal._foe._pid) return {err: 'please choose opponent card'}
 		if (card.field !== 'hand') return {err: 'please choose hand card'}
-		if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
-		if (!effect[('card' in effect)? 'card' : card.type.base]) return {err: 'error type length'}
-		effect[('card' in effect)? 'card' : card.type.base] --
+		if (!('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}
+		if (!effect.choose[('card' in effect.choose)? 'card' : card.type.base]) return {err: 'error type length'}
+		effect.choose[('card' in effect.choose)? 'card' : card.type.base] --
 		//param.card_pick[id] = {new_own: 'opponent', to: 'hand'}
 		param.card_pick[id] = {new_own: 'personal', to: 'hand'}
 	  }
@@ -950,9 +955,9 @@ module.exports = {
 
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
-	  for (let tp in effect) {
-		total_len += effect[tp]
-		effect[tp] = {personal: effect[tp], opponent: effect[tp]}
+	  for (let tp in effect.choose) {
+		total_len += effect.choose[tp]
+		effect.choose[tp] = {personal: effect.choose[tp], opponent: effect.choose[tp]}
 	  }
 	  if (card_pick.length > total_len*2 || (card_pick.length%2) != 0) return {err: 'error exchange length'}
 	  
@@ -962,9 +967,9 @@ module.exports = {
 		let new_own = (card_own === 'personal')? 'opponent' : 'personal'
 		if (card == null) return {err: 'no card id'}
 		if (card.field !== 'hand') return {err: 'please choose hand card'}
-		if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
-		if (!effect[('card' in effect)? 'card' : card.type.base][card_own]) return {err: 'error type length'}
-		effect[('card' in effect)? 'card' : card.type.base][card_own] --
+		if (!('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}
+		if (!effect.choose[('card' in effect.choose)? 'card' : card.type.base][card_own]) return {err: 'error type length'}
+		effect.choose[('card' in effect.choose)? 'card' : card.type.base][card_own] --
 		param.card_pick[id] = {new_own: new_own, to: 'hand'}
 	  }
 
@@ -1022,9 +1027,9 @@ module.exports = {
 
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
-	  for (let type in effect) {
+	  for (let type in effect.choose) {
 		if (type[0] == '_') continue
-		total_len += effect[type]
+		total_len += effect.choose[type]
 	  }
 	  if ((card_pick.length < total_len && card_pick.length != personal.card_amount.hand) || (card_pick.length > total_len)) return {err: 'error teleport length'}
 	  
@@ -1036,9 +1041,9 @@ module.exports = {
 		if (!effect._target.includes(card_owner)) return {err: 'please choose opponent card'}
 
 		if (card.field !== effect._from) return {err: 'error card field'}
-		if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
-		if (!effect[('card' in effect)? 'card': card.type.base]) return {err: 'error type length'}
-		effect[('card' in effect)? 'card' : card.type.base] --
+		if (!('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}
+		if (!effect.choose[('card' in effect.choose)? 'card': card.type.base]) return {err: 'error type length'}
+		effect.choose[('card' in effect.choose)? 'card' : card.type.base] --
 		if (card.field === 'battle') {
 		  if (card.checkCrossProtection()) continue
 		}

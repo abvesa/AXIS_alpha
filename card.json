@@ -11,7 +11,7 @@
       "enchant": {
         "heal": {
           "personal": {
-		    "card": 3
+		    "choose": {"card": 3}
 		  }
         },
         "modify": {
@@ -48,7 +48,7 @@
       "enchant": {
         "recall": {
           "personal": {
-            "artifact": 1,
+            "choose": {"artifact": 1},
 			"_to": "battle"
           }
         }
@@ -82,7 +82,7 @@
       "trigger": {
         "heal": {
           "personal": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
         }
       },
@@ -146,7 +146,7 @@
       "enchant": {
         "steal": {
           "personal": {
-            "card": 1
+             "choose": {"card": 1}
           }
         }
       }
@@ -181,7 +181,7 @@
       "enchant": {
         "control": {
           "personal": {
-		    "artifact": 1
+		    "choose": {"artifact": 1}
           }
         }
       }
@@ -315,7 +315,7 @@
       "trigger": {
         "drain": {
           "personal": {
-		    "artifact": 1,
+		    "choose": {"artifact": 1},
             "_target": ["opponent"]
           }
         },
@@ -355,8 +355,10 @@
       "enchant": {
         "retrieve": {
           "personal": {
-            "card": 1,
-			"_to": "hand"
+            "choose": {"card": 1},
+			"_from": "deck",
+			"_to": "hand",
+			"_target": ["personal"]
           }
         },
 		"shuffle": {
@@ -393,7 +395,7 @@
       "enchant": {
         "recall": {
           "personal": {
-            "card": 1,
+            "choose": {"card": 1},
 			"_to": "hand"
           }
         }
@@ -739,7 +741,7 @@
       "instant": {
         "bleed": {
           "personal": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
         },
         "draw": {
@@ -775,12 +777,12 @@
       "instant": {
         "damage_1": {
           "personal": {
-		    "card": 2
+		    "choose": {"card": 2}
 		  }
         },
         "damage_2": {
           "opponent": {
-		    "card": 2
+		    "choose": {"card": 2}
 		  }
         }
       }
@@ -811,12 +813,12 @@
       "instant": {
         "steal": {
           "personal": {
-            "card": 1
+            "choose": {"card": 1}
           }
         },
         "discard": {
           "personal": {
-            "card": 1
+            "choose": {"card": 1}
           }
         }
       }
@@ -927,7 +929,7 @@
         },
         "damage": {
           "opponent": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
         }
       }
@@ -952,7 +954,7 @@
       "chanting": {
         "heal": {
           "personal": {
-		    "card": 3
+		    "choose": {"card": 3}
 		  }
         }
       }
@@ -982,7 +984,7 @@
       "chanting": {
         "damage": {
           "opponent": {
-		    "card": 3
+		    "choose": {"card": 3}
 		  }
         },
         "set": {
@@ -1032,12 +1034,12 @@
       "trigger": {
         "control": {
           "personal": {
-            "artifact": 1
+            "choose": {"artifact": 1}
           }
         },
         "discard": {
           "personal": {
-            "card": 1
+            "choose": {"card": 1}
           }
         }
       }
@@ -1077,7 +1079,7 @@
       "instant": {
         "break": {
           "personal": {
-            "artifact": 1
+            "choose": {"artifact": 1}
           }
         }
       }
@@ -1255,8 +1257,10 @@
       "chanting": {
 	    "retrieve": {
           "personal": {
-		    "card": 1,
+		    "choose": {"card": 1},
+			"_from": "deck"
 			"_to": "hand"
+			"_target": ["personal"]
           }
         },
 		"shuffle": {
@@ -1367,7 +1371,7 @@
 	  "instant": {
 	    "exchange": {
 		  "personal": {
-		    "card": 3
+		    "choose": {"card": 3}
 		  }
 		}
 	  }
@@ -1399,7 +1403,7 @@
       "instant": {
         "recall": {
           "personal": {
-            "artifact": 1,
+            "choose": {"artifact": 1},
 			"_to": "battle"
           }
         }
@@ -1644,7 +1648,7 @@
       "instant": {
         "recall": {
           "personal": {
-            "card": 1,
+            "choose": {"card": 1},
 			"_to": "hand"
           }
         }
@@ -1743,8 +1747,10 @@
       "trigger": {
         "retrieve": {
           "personal": {
-            "vanish": 2,
-			"_to": "hand"
+            "choose": {"vanish": 2},
+			"_from": "deck",
+			"_to": "hand",
+			"_target": ["personal"]
           }
         }
       }
@@ -1867,7 +1873,7 @@
 	  "chanting": {
 	    "discard": {
           "opponent": {
-            "card": 2
+            "choose": {"card": 2}
           }
         }
 	  }
@@ -1899,7 +1905,7 @@
 	  "instant": {
 	    "heal": {
           "personal": {
-		    "card": 3
+		    "choose": {"card": 3}
 		  }
         },
 		"discard": {
@@ -2049,7 +2055,7 @@
         },		
 		"bleed": {
 		  "personal": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
 		}
       }
@@ -2089,12 +2095,12 @@
       "instant": {
         "heal": {
           "personal": {
-		    "card": 6
+		    "choose": {"card": 6}
 		  }
         },
 		"discard": {
 		  "personal": {
-            "potion": 1
+            "choose": {"potion": 1}
 		  }
 		}
       }
@@ -2158,14 +2164,14 @@
       "normal_1": {
         "damage": {
           "personal": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
         }
       },
       "normal_2": {
         "damage": {
           "opponent": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
         }
       }
@@ -2192,7 +2198,7 @@
       "instant": {
         "heal": {
           "personal": {
-		    "card": 3
+		    "choose": {"card": 3}
 		  }
         },
 		"draw": {
@@ -2200,7 +2206,7 @@
 		},
 		"discard": {
 		  "personal": {
-            "chocolate": 1
+            "choose": {"chocolate": 1}
 		  }
 		}
       }
@@ -2269,7 +2275,7 @@
 	  "normal": {
 		"teleport": {
 		  "personal": {
-			"card": 1,
+			"choose": {"card": 1},
 			"_from": "hand",
 			"_to": "grave",
 			"_target": ["opponent"]
@@ -2354,7 +2360,7 @@
 	  "enchant": {
 	    "teleport": {
 		  "personal": {
-		    "artifact": 1,
+		    "choose": {"artifact": 1},
 			"_from": "battle",
 			"_to": "deck",
 			"_target": ["opponent"]
@@ -2390,7 +2396,7 @@
 	  "enchant": {
 	    "teleport": {
 		  "personal": {
-		    "card": 2,
+		    "choose": {"card": 2},
 			"_from": "hand",
 			"_to": "deck",
 			"_target": ["opponent"]
@@ -2433,7 +2439,7 @@
 		},
 		"teleport": {
 		  "personal": {
-		    "card": 2,
+		    "choose": {"card": 2},
 			"_from": "hand",
 			"_to": "deck",
 			"_target": ["personal"]
@@ -2490,12 +2496,12 @@
 	  "normal": {
 	    "break": {
 	      "personal": {
-		    "artifact": 1
+		    "choose": {"artifact": 1}
 		  } 
 	    },
 		"bleed": {
 		  "personal": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
 		}
 	  }
@@ -2534,7 +2540,7 @@
       "normal_1": {
         "drain": {
           "personal": {
-            "artifact": 1,
+            "choose": {"artifact": 1},
 			"_target": ["opponent", "personal"]
           }
 		}
@@ -2542,7 +2548,7 @@
 	  "normal_2": {
 	    "repair": {
 		  "personal": {
-		    "artifact": 1,
+		    "choose": {"artifact": 1},
             "_target": ["opponent", "personal"]
 		  }
 		}
@@ -2594,7 +2600,7 @@
       "normal": {
         "heal": {
           "personal": {
-		    "card": 2
+		    "choose": {"card": 2}
 		  }
         }
       }
@@ -2624,7 +2630,7 @@
 	  "normal": {
 	    "teleport": {
 		  "personal": {
-		    "artifact": 1,
+		    "choose": {"artifact": 1},
 		    "_from": "battle",
 		    "_to": "hand",
 		    "_target": ["personal", "opponent"]
@@ -2718,7 +2724,7 @@
 	  "enchant": {
 	    "bleed": {
 		  "personal": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
 		},
 		"draw": {
@@ -2774,7 +2780,7 @@
 	  "trigger": {
 	    "discard": {
 		  "opponent": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
 		},
 		"stat": {
@@ -2813,7 +2819,7 @@
 	  "aura": {
 	    "discard": {
 		  "personal": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
 		}		
 	  },
@@ -2850,7 +2856,7 @@
 	  "aura": {
 	    "discard": {
 		  "personal": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
 		}		
 	  },
@@ -2887,12 +2893,12 @@
       "instant": {
 	    "bleed": {
 		  "personal": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
 		},
         "reuse": {
           "personal": {
-            "spell": 1
+            "choose": {"spell": 1}
           }
         }
       }
@@ -2925,7 +2931,7 @@
       "enchant": {
         "reuse": {
           "personal": {
-            "spell": 1
+            "choose": {"spell": 1}
           }
         }
       }

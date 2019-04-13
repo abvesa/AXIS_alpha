@@ -854,7 +854,7 @@ Game.prototype.effectEmitter = function (room) {
 	}
 	else {
 	  for (let target in eff_core) {
-        let tmp = {id: card_eff.id, name: card_eff.name, eff: avail_eff, tp: card_eff.tp, tg: target, ext: {}}
+        let tmp = {id: card_eff.id, name: card_eff.name, eff: avail_eff, tp: card_eff.tp, tg: target, ext: {}, amount: eff_core[target]}
 
         if (eff_name === 'damage') {
 		  if (this.checkCounter(player[target], 'damage')) {
