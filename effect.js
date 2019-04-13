@@ -886,7 +886,7 @@ module.exports = {
 	  //personal._foe.emit('effectTrigger', {card: {recall: { personal: {}, opponent: rlt.opponent }}})
 	  return {
 		eff: {
-		  personal: {card: {retrieve: { personal: {}, opponent: rlt.opponent }}},
+		  personal: {card: {recall: { personal: rlt.personal, opponent: {} }}},
 		  opponent:	{card: {recall: { personal: {}, opponent: rlt.opponent }}} 
 		}	
 	  }

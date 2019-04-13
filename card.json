@@ -1258,8 +1258,8 @@
 	    "retrieve": {
           "personal": {
 		    "choose": {"card": 1},
-			"_from": "deck"
-			"_to": "hand"
+			"_from": "deck",
+			"_to": "hand",
 			"_target": ["personal"]
           }
         },
@@ -2960,7 +2960,7 @@
 	  "base": "artifact",
 	  "effect": {
 	    "trigger": 1
-	  },
+	  }
 	},
 	"effect": {
 	  "trigger": {}
