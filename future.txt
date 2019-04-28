@@ -1,0 +1,113 @@
+
+
+card.json >>
+
+actually card effects can basically be split into 2 parts:
+
+1. variable adjust
+2. card moving
+
+the part of choosable effects can be simplify into format below, e.g:
+
+
+== heal == 
+
+effect: {
+  choose_1: {
+    query : 'personal',
+    choose: {card: 3},
+    action: 'flip',
+    from  : {field: {life: true}, target: {personal: true}},
+    to    : {field: {}, target: {}}
+  },
+  ...
+}
+
+== control ==
+
+effect: {
+  choose_1: {
+    query : 'personal',
+    choose: {spell: 1},
+    action: 'move',
+    from  : {field: {altar: true}, target: {opponent: true}},
+    to    : {field: {altar: true}, target: {personal: true}} 
+  },
+  ...
+}
+
+== drain / repair == 
+
+effect: {
+  choose_1: {
+    query : 'personal',
+    choose: {artifact: 1},
+    action: 'turn_up',
+    from  : {field: {battle: true}, target: {opponent: true, personal: true}},
+    to    : {field: {}, target: {}} 
+  },
+  choose_2: {
+    query : 'opponent',
+    choose: {artifact: 1},
+    action: 'turn_dn',
+    from  : {field: {battle: true}, target: {opponent: true}},  <== opponent's opponent is equal to personal
+    to    : {field: {}, target: {}} 
+  },
+  ...
+}
+
+....
+
+no need to list all effects out
+
+for those effect about card moving but automatically complete:
+
+== random moving, draw / retrieve / recall / teleport .... ==
+
+effect: {
+  eff_1: {
+    action: 'move',
+    from  : 'personal_deck',
+    to    : 'personal_hand',
+    card  : 'artifact_1=spell_1=item_1=vanish_1'  
+  }
+}
+
+top_5 / bottom_3 / random_2 ==> for normal draw
+artifact_all / spell_all ==> for destroy 
+
+== random turn up / turn dn / flip ==
+
+effect: {
+  eff_1: {
+    action: 'flip',
+    from  : 'personal_battle',
+    to    : '',
+    card  : 'artifact_1'  
+  }
+}
+...
+
+for those effect about attribute value adjusting, hp value is removing cause this exists:
+
+== modify / set / stat / buff / aura ==
+
+effect: {
+  attr_1: {
+    value : 'ap',
+    set_to: null,
+    modify: -2
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
