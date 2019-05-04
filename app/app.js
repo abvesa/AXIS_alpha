@@ -198,7 +198,7 @@ Game.prototype.backgroundPanel = function (your_turn) {
 Game.prototype.flickerPanel = function (on, effect_type = {}, card_type = {}) {
   let flicker_panel = this.page.game.flicker_panel
   
-  if (!on) {
+  if (on) {
 	  
 	  
     game.tween = game.phaser.add.tween(flicker_panel).to(

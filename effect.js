@@ -410,7 +410,7 @@ module.exports = {
 		let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
 		if (card == null) return {err: 'no card id'}
 		if (card.field !== 'battle') return {err: 'please choose card on battle field'}
-		if (!effect._target.includes(card_owner)) return {err: 'error card owner'}
+		if (!(card_owner in effect._target)) return {err: 'error card owner'}
 		if (!effect.choose.artifact) return {err: 'error card length'}
 		effect.choose.artifact --
 	  }
@@ -492,7 +492,7 @@ module.exports = {
 		  let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
 		  if (card == null) return {err: 'no card id'}
 		  if (card.field !== 'battle') return {err: 'please choose card on battle field'}
-		  if (!effect._target.includes(card_owner)) return {err: 'error card owner'}
+		  if (!(card_owner in effect._target)) return {err: 'error card owner'}
 		  if (Object.keys(player[card_owner].aura.fortify).length) delete param.card_pick[id]
 		  if (!effect.choose.artifact) return {err: 'error card length'}
 		  effect.choose.artifact --
@@ -1042,9 +1042,9 @@ module.exports = {
 		let card = room.cards[id]
 		if (card == null) return {err: 'no card id'}
 		let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
-		if (!effect._target.includes(card_owner)) return {err: 'please choose opponent card'}
+		if (!(card_owner in effect._target)) return {err: 'please choose opponent card'}
 
-		if (card.field !== effect._from) return {err: 'error card field'}
+		if (!(card.field in effect._from)) return {err: 'error card field'}
 		if (!('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}
 		
 		let card_type = ('card' in effect.choose)? 'card': card.type.base
