@@ -195,22 +195,33 @@ Game.prototype.backgroundPanel = function (your_turn) {
   }
 }
 
-Game.prototype.flickerPanel = function (on, effect_type = {}, card_type = {}) {
+Game.prototype.flickerPanel = function (on, info = {}) {
   let flicker_panel = this.page.game.flicker_panel
   
   if (on) {
+	// add cards into flicker panel  
+	for (let player in info._target) {
+	  for (let field in info._from) {
+		for (let card of this.player[player][field]) {
+		  flicker_panel.addChild(card.body)
+		  flicker_panel._flicker_list[card.id] = true
+	    }
+	  }
+	}  	  
 	  
-	  
-    game.tween = game.phaser.add.tween(flicker_panel).to(
-      {alpha: 0}, 500, Phaser.Easing.Sinusoidal.InOut, true
-    ).to(
-      {alpha: 1}, 500, Phaser.Easing.Sinusoidal.InOut, true
-    ).loop()
+	// start animation
+	flicker_panel.alpha = 0.3
+    flicker_panel._self_tween = game.phaser.add.tween(flicker_panel).to( 
+	  {alpha: 0.9}, 1000, Phaser.Easing.Linear.None, true, 0, 500, true
+	)
   }
   else {
-	game.tween.stop()  
-	flicker_panel.flicker_list = {}
-	flicker_panel.chosen_list = {}
+	flicker_panel._self_tween.stop()  	
+	flicker_panel._flicker_list = {}
+	while (flicker_panel.children.length) {
+	  let sprite = flicker_panel.children[0]
+	  game.phaser.world.addChild(sprite)	
+	}
   }
 }
 
@@ -701,11 +712,8 @@ Game.prototype.pageInit = function () {
   // add choose panel in game page
   let flicker_panel = game.phaser.add.sprite(0, 0, null)
   flicker_panel._flicker_list = {}
-  flicker_panel._chosen_list = {}
-  flicker_panel._fields = {
-	  
-	  
-  }
+  flicker_panel._self_tween = null
+
   flicker_panel.anchor.setTo(0.5)
   flicker_panel.inputEnabled = true
   flicker_panel.kill()
@@ -887,8 +895,11 @@ Player.prototype.effectChoose = function () {
 
   socket.emit('effectChoose', param, it => {
     if (it.err) return game.textPanel({cursor: it.err})
-
-    // if needed remove retrieve choose panel here
+    
+    // close flicker panel
+	game.flickerPanel(false)
+	
+	// if needed remove retrieve choose panel here
 
     if (param.eff.split('_')[0] === 'damage') game.blockPanel({done: true})
     personal.eff_queue.shift()
@@ -897,7 +908,10 @@ Player.prototype.effectChoose = function () {
       game.page.game.choose.kill()
       game.textPanel({action: 'effect done'})
     }
-    else game.textPanel({action: `${personal.eff_queue[0].name} ${personal.eff_queue[0].eff}`})
+    else {
+	  personal.effectLoop()
+	  //game.textPanel({action: `${personal.eff_queue[0].name} ${personal.eff_queue[0].eff}`})
+    }
   })
 }
 
@@ -910,13 +924,6 @@ Player.prototype.effectLoop = function () {
 	  game.blockPanel({damage: true})
 	}
 	else {
-      if (curr_eff === 'steal' || curr_eff === 'exchange' || (curr_eff === 'teleport' && ('hand' in personal.eff_queue[0].ext))) {
-        // flip opponent hand card
-        for (let card of opponent.hand)
-          card.flip()
-          //card.flip(card.name)
-          //card.img.loadTexture(card.name)
-      }
       if (curr_eff === 'retrieve' || curr_eff === 'recall' || curr_eff === 'reuse') {
         // buildFieldPanel >> record deck or grave
         for (let field in personal.eff_queue[0].ext) {
@@ -924,21 +931,50 @@ Player.prototype.effectLoop = function () {
           game.buildFieldPanel(card_list)
         }
       }
+	  else {		  
+		if (curr_eff === 'steal' || curr_eff === 'exchange' || (curr_eff === 'teleport' && ('hand' in personal.eff_queue[0].ext))) {
+          // flip opponent hand card
+          for (let card of opponent.hand)
+            card.flip()
+            //card.flip(card.name)
+            //card.img.loadTexture(card.name)
+        }  
+		
+		// open flickerPanel here
+		game.flickerPanel(true, personal.eff_queue[0].info)
+		
+	  }	  
       let choose_btn = game.page.game.choose
       choose_btn.reset(choose_btn.x, choose_btn.y)
     }
-    game.textPanel({action: `${personal.eff_queue[0].name} ${personal.eff_queue[0].eff}`})
+	
+	let choose_txt = ', choose '
+	for (let type in personal.eff_queue[0].info.choose) {
+	  let amount = personal.eff_queue[0].info.choose[type]
+	  choose_txt += `${amount} ${type}${(amount > 1)? 's' : ''} ` 
+    }
+	
+    game.textPanel({action: `${personal.eff_queue[0].name} ${personal.eff_queue[0].eff} ${choose_txt}`})
   }
 }
 
 Player.prototype.chooseCard = function (card) {
+  let flicker_panel = game.page.game.flicker_panel
+  if (!(card.id in flicker_panel._flicker_list)) return alert('unable to choose')
+  
   if (!personal.card_pick[card.id]) {
     personal.card_pick[card.id] = card
-    card.img.alpha = 0.5
+    //card.img.alpha = 0.5
+
+	// remove card from flicker panel
+	game.phaser.world.addChild(card.body)
   }
   else {
     delete personal.card_pick[card.id]
-    card.img.alpha = 1
+    //card.img.alpha = 1
+	
+	// add card back to flicker panel
+    flicker_panel.addChild(card.body)
   }
 }
 

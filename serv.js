@@ -854,7 +854,7 @@ Game.prototype.effectEmitter = function (room) {
 	}
 	else {
 	  for (let target in eff_core) {
-        let tmp = {id: card_eff.id, name: card_eff.name, eff: avail_eff, tp: card_eff.tp, tg: target, ext: {}, amount: eff_core[target]}
+        let tmp = {id: card_eff.id, name: card_eff.name, eff: avail_eff, tp: card_eff.tp, tg: target, ext: {}, info: eff_core[target]}
 
         if (eff_name === 'damage') {
 		  if (this.checkCounter(player[target], 'damage')) {
@@ -2008,8 +2008,8 @@ io.on('connection', client => {
       else cb({})
     }
 	*/
-	
-	if ('err' in game.requestDischarger({player: client, type: 'effect'}, {name: effect, effect: it})) return cb(rlt)
+	let rlt = game.requestDischarger({player: client, type: 'effect'}, {name: effect, effect: it})
+	if ('err' in rlt) return cb(rlt)
 	if (!client.hp) {
       client.emit('gameOver', {msg: {end: 'You LOSE\nclick anywhere else to leave'}})
       client._foe.emit('gameOver', {msg: {end: 'You WIN\nclick anywhere else to leave'}})

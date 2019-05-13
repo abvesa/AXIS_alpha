@@ -2703,7 +2703,9 @@
 	    },
 	    "bleed": {
 		  "personal": {
-		    "card": 1
+		    "choose": {"card": 1},
+			"_from": {"life": true},
+			"_target": {"personal": true}
 		  }
 	    }
 	  }
@@ -2847,7 +2849,7 @@
 	  "trigger": {
 	    "discard": {
 		  "opponent": {
-		    "choose": {"card": 1}
+		    "choose": {"card": 1},
 			"_target": {"personal": true},
 			"_from": {"hand": true}
 		  }
