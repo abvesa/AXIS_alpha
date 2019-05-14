@@ -902,7 +902,7 @@ Player.prototype.effectChoose = function () {
     if (it.err) return game.textPanel({cursor: it.err})
     
     // close flicker panel
-	game.flickerPanel(false)
+	if (game.page.game.flicker_panel._avail) game.flickerPanel(false)
 	
 	// if needed remove retrieve choose panel here
 
