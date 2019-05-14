@@ -255,8 +255,8 @@ module.exports = {
 	  
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
-	  for (let tp in effect) {
-		total_len += effect[tp]
+	  for (let tp in effect.choose) {
+		total_len += effect.choose[tp]
 	  }
 	  if (card_pick.length != total_len) return {err: 'error break length'}
 
@@ -267,9 +267,13 @@ module.exports = {
 		if (card == null) return {err: 'no card id'}
 		if (curr_own !== 'opponent') return {err: 'please choose opponent card'}
 		if (card.field !== 'battle' && card.field !== 'altar') return {err: 'error chosen card field'}
-		if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
-		if (!effect[('card' in effect)? 'card' : card.type.base]) return {err: 'error type length'}
-		effect[('card' in effect)? 'card' : card.type.base] --
+		
+		if (!('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}
+		
+		let card_type = ('card' in effect.choose)? 'card': card.type.base
+		if (!effect.choose[card_type]) return {err: 'error type length'}
+		effect.choose[card_type] --
+		
 		//param.card_pick[id] = {new_own: 'personal', to: 'grave'}
 		if (card.field === 'battle') {
 		  if (card.checkCrossProtection()) {

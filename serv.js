@@ -466,7 +466,7 @@ Game.prototype.effectEnd = function (room) {
 			  info: {
 				choose: {card: room.atk_status.attacker.atk_damage + Object.keys(room.atk_status.attacker.aura.strength).length},
 				_target: {personal: true}, 
-				_field: {life: true}
+				_from: {life: true}
 			  }		
 			}
 			this.requestDischarger({player: room.atk_status.defender, type: 'choose'}, rtn_obj)			
@@ -1100,7 +1100,7 @@ Game.prototype.frontEnd = function (client) {
 	  info: {
 		choose: {card: client.card_amount.hand - (((Object.keys(client.aura.stamina).length)? 1 : 0)*2) - client.hand_max},
 		_target: {personal: true}, 
-		_field: {hand: true}
+		_from: {hand: true}
 	  }		
 	}
     this.requestDischarger({player: player[target], type: 'choose'}, rtn_obj)

@@ -1604,6 +1604,8 @@ socket.on('effectTrigger', effect => {
 })
 
 socket.on('effectLoop', effect => {
+  console.log(effect)	
+	
   // update covered card name
   if (effect.rlt.ext) {
     for (let field in effect.rlt.ext) {
