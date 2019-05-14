@@ -456,7 +456,20 @@ Game.prototype.effectEnd = function (room) {
 	    else {
 		  if (room.atk_status.attacker.atk_damage > 0) { 		  
 		    room.atk_status.defender.eff_todo.attack = {attack: {damage: true}}
-		    room.atk_status.defender.emit('effectLoop', {rlt: {name: 'attack', id: 'attack', eff: 'damage', tp: 'attack'}})
+		    //room.atk_status.defender.emit('effectLoop', {rlt: {name: 'attack', id: 'attack', eff: 'damage', tp: 'attack'}})
+			
+			let rtn_obj = {
+			  name: 'attack', 
+			  id: 'attack', 
+			  eff: 'damage', 
+			  tp: 'attack',
+			  info: {
+				choose: {card: room.atk_status.attacker.atk_damage + Object.keys(room.atk_status.attacker.aura.strength).length},
+				_target: {personal: true}, 
+				_field: {life: true}
+			  }		
+			}
+			this.requestDischarger({player: room.atk_status.defender, type: 'choose'}, rtn_obj)			
 		  }
 		  else this.attackEnd(room)
 	    }
@@ -796,7 +809,14 @@ Game.prototype.requestDischarger = function (action, param) {
 	  2. effect   
 	  3. info (if needed)
 	  
-	  >> 
+	  >> type == choose
+	  1. id   > card id 
+	  2. name > card name
+	  3. eff  > effect name
+	  4. tp   > effect type
+	  5. tg   > effect target
+	  6. ext  > for field cards name update or flip
+	  7. info > card choosing rule / target / field
 	}
   */
   let rtn = {pass: true}
@@ -813,6 +833,13 @@ Game.prototype.requestDischarger = function (action, param) {
 	  }
       break
     
+	case 'choose':
+	  if (!('__imabot__' in action.player)) action.player.emit('effectLoop', {rlt: param})
+	  else {
+		// ai choose card logic  
+	  }
+	  break
+	
 	case '':
 	  break
 	
@@ -901,7 +928,8 @@ Game.prototype.effectEmitter = function (room) {
         player[target].eff_todo[card_eff.id][card_eff.tp][avail_eff] = true
         
 		// effect emit
-	    player[target].emit('effectLoop', {rlt: tmp})
+	    //player[target].emit('effectLoop', {rlt: tmp})
+		this.requestDischarger({player: player[target], type: 'choose'}, tmp)
 		
 		console.log(player[target].eff_todo[card_eff.id])
 	  }	
@@ -1030,6 +1058,119 @@ Game.prototype.effectJudge = function (card_eff) {
   }
   card_eff.eff = avail_eff
   return card_eff
+}
+
+Game.prototype.frontEnd = function (client) {
+  let room = game.room[client._rid]
+
+  // !-- end last player turn
+  // default attr
+  room.atk_status.first_atk = true
+  client.action_point = game.default.action_point
+  client.atk_damage = game.default.atk_damage
+  client.atk_phase = game.default.atk_phase
+  client.atk_enchant = {}
+  client.interrupt = false
+
+  // clear stat and buff
+  for (let tp of ['stat', 'buff']) {
+    let param = {}
+    for (let name in client[tp]) {
+      if (client[tp][name]) {
+        client.stat[name] = false
+        param[name] = {personal: false}
+      }
+    }
+    if (Object.keys(param).length) game[tp](client, param)
+  }
+
+  room.phase = 'end'
+
+  // discard card request when turn ends
+  if (client.card_amount.hand > client.hand_max + (((Object.keys(client.aura.stamina).length)? 1 : 0)*2)) {
+    client.eff_todo.end = {end: {discard: true}}
+    //client.emit('effectLoop', {rlt: {name: 'end', id: 'end', eff: 'discard', tp: 'end', tg: 'personal'}})
+	  
+    let rtn_obj = {
+	  name: 'end', 
+	  id: 'end', 
+	  eff: 'discard', 
+	  tp: 'end', 
+	  tg: 'personal',
+	  info: {
+		choose: {card: client.card_amount.hand - (((Object.keys(client.aura.stamina).length)? 1 : 0)*2) - client.hand_max},
+		_target: {personal: true}, 
+		_field: {hand: true}
+	  }		
+	}
+    this.requestDischarger({player: player[target], type: 'choose'}, rtn_obj)
+  }
+  else this.backEnd(client)
+}
+
+Game.prototype.backEnd = function (client) {
+  let room = game.room[client._rid]
+  let param = {}
+
+  // change player
+  room.curr_ply = (client.stat.charge)? client._pid : (client._foe._pid)
+  room.phase = 'normal'
+
+  // put outdated card on field to grave and unseal trigger spell
+  for (let id in room.cards) {
+    let card = room.cards[id]
+    switch (card.field) {
+      case 'battle':
+        if (card.energy == 0) param[id] = {from: card.field}
+        if (card.overheat) card.overheat = false
+        break
+
+      case 'altar':
+        if (card.type.effect.trigger && card.lock) card.lock = false
+	    if (card.id in client.chanting && !client.chanting[card.id].status) {
+		  param[id] = {from: card.field}
+		  delete client.chanting[card.id]
+		}
+		break
+
+      default: break
+    }
+  }
+  let rlt = {personal: {}, opponent: {}}
+  if (Object.keys(param).length) rlt = game.cardMove(client, param)
+
+  let act_msg = (room.curr_ply === client._pid)? ['your', 'opponent'] : (['opponent', 'your'])
+  client.emit('turnShift', { 
+	msg: {phase: 'normal phase', action: `${act_msg[0]} turn`, cursor: ' '}, 
+	card: rlt.personal, 
+	attr: {personal: {atk_damage: client.atk_damage, atk_phase: client.atk_phase, action_point: client.action_point}}, 
+	start: (act_msg[0] == 'your')? true : false 
+  })	
+  client._foe.emit('turnShift', {
+	msg: {phase: 'normal phase', action: `${act_msg[1]} turn`, cursor: ' '}, 
+	card: rlt.opponent, 
+	attr: {opponent: {atk_damage: client.atk_damage, atk_phase: client.atk_phase, action_point: client.action_point}}, 
+	start: (act_msg[1] == 'your')? true : false 
+  })
+
+  // !-- start next player turn
+  let nxt_ply = (room.curr_ply === client._pid)? client : (client._foe)
+
+  if (Object.keys(nxt_ply.chanting).length) {
+    let avail_chanting = Object.keys(nxt_ply.chanting).reduce( (last, curr) => {
+      if (nxt_ply.chanting[curr].status == true) {
+	    last[curr] = nxt_ply.chanting[curr]
+        delete nxt_ply.chanting[curr]
+	  }
+  	  return last
+    }, {})
+	if (Object.keys(avail_chanting).length) {
+	  rlt = game.cardMove(nxt_ply, avail_chanting)
+      nxt_ply.emit('chantingTrigger', {card: rlt.personal})
+      nxt_ply._foe.emit('chantingTrigger', {card: rlt.opponent})
+      game.buildEffectQueue(nxt_ply, {chanting: avail_chanting})
+    }
+  }
 }
 
 
@@ -1858,104 +1999,7 @@ io.on('connection', client => {
     else game.triggerCard(client, it, cb)
   })
 
-  Game.prototype.frontEnd = function (client) {
-    let room = game.room[client._rid]
-
-    // !-- end last player turn
-    // default attr
-    room.atk_status.first_atk = true
-    client.action_point = game.default.action_point
-    client.atk_damage = game.default.atk_damage
-    client.atk_phase = game.default.atk_phase
-    client.atk_enchant = {}
-    client.interrupt = false
-
-    // clear stat and buff
-    for (let tp of ['stat', 'buff']) {
-      let param = {}
-      for (let name in client[tp]) {
-        if (client[tp][name]) {
-          client.stat[name] = false
-          param[name] = {personal: false}
-        }
-      }
-      if (Object.keys(param).length) game[tp](client, param)
-    }
-
-    room.phase = 'end'
-
-    // discard card request when turn ends
-    if (client.card_amount.hand > client.hand_max + (((Object.keys(client.aura.stamina).length)? 1 : 0)*2)) {
-      client.eff_todo.end = {end: {discard: true}}
-      client.emit('effectLoop', {rlt: {name: 'end', id: 'end', eff: 'discard', tp: 'end', tg: 'personal'}})
-    }
-    else this.backEnd(client)
-  }
-
-  Game.prototype.backEnd = function (client) {
-    let room = game.room[client._rid]
-    let param = {}
-
-    // change player
-    room.curr_ply = (client.stat.charge)? client._pid : (client._foe._pid)
-    room.phase = 'normal'
-
-    // put outdated card on field to grave and unseal trigger spell
-    for (let id in room.cards) {
-      let card = room.cards[id]
-      switch (card.field) {
-        case 'battle':
-          if (card.energy == 0) param[id] = {from: card.field}
-          if (card.overheat) card.overheat = false
-          break
-
-        case 'altar':
-          if (card.type.effect.trigger && card.lock) card.lock = false
-		  if (card.id in client.chanting && !client.chanting[card.id].status) {
-			param[id] = {from: card.field}
-		    delete client.chanting[card.id]
-		  }
-		  break
-
-        default: break
-      }
-    }
-    let rlt = {personal: {}, opponent: {}}
-    if (Object.keys(param).length) rlt = game.cardMove(client, param)
-
-    let act_msg = (room.curr_ply === client._pid)? ['your', 'opponent'] : (['opponent', 'your'])
-    client.emit('turnShift', { 
-	  msg: {phase: 'normal phase', action: `${act_msg[0]} turn`, cursor: ' '}, 
-	  card: rlt.personal, 
-	  attr: {personal: {atk_damage: client.atk_damage, atk_phase: client.atk_phase, action_point: client.action_point}}, 
-	  start: (act_msg[0] == 'your')? true : false 
-	})	
-    client._foe.emit('turnShift', {
-	  msg: {phase: 'normal phase', action: `${act_msg[1]} turn`, cursor: ' '}, 
-	  card: rlt.opponent, 
-	  attr: {opponent: {atk_damage: client.atk_damage, atk_phase: client.atk_phase, action_point: client.action_point}}, 
-	  start: (act_msg[1] == 'your')? true : false 
-	})
-
-    // !-- start next player turn
-    let nxt_ply = (room.curr_ply === client._pid)? client : (client._foe)
-
-	if (Object.keys(nxt_ply.chanting).length) {
-      let avail_chanting = Object.keys(nxt_ply.chanting).reduce( (last, curr) => {
-        if (nxt_ply.chanting[curr].status == true) {
-		  last[curr] = nxt_ply.chanting[curr]
-          delete nxt_ply.chanting[curr]
-		}
-		return last
-      }, {})
-	  if (Object.keys(avail_chanting).length) {
-		rlt = game.cardMove(nxt_ply, avail_chanting)
-        nxt_ply.emit('chantingTrigger', {card: rlt.personal})
-        nxt_ply._foe.emit('chantingTrigger', {card: rlt.opponent})
-		game.buildEffectQueue(nxt_ply, {chanting: avail_chanting})
-      }
-    }
-  }
+  
 
   client.on('endTurn', cb => {
     if (typeof cb !== 'function') return
