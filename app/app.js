@@ -199,6 +199,8 @@ Game.prototype.flickerPanel = function (on, info = {}) {
   let flicker_panel = this.page.game.flicker_panel
   
   if (on) {
+	flicker_panel._avail = true  
+	  
 	// add cards into flicker panel  
 	for (let player in info._target) {
 	  for (let field in info._from) {
@@ -216,6 +218,8 @@ Game.prototype.flickerPanel = function (on, info = {}) {
 	)
   }
   else {
+	flicker_panel._avail = false  
+	  
 	flicker_panel._self_tween.stop()  	
 	flicker_panel._flicker_list = {}
 	while (flicker_panel.children.length) {
@@ -712,6 +716,7 @@ Game.prototype.pageInit = function () {
   // add choose panel in game page
   let flicker_panel = game.phaser.add.sprite(0, 0, null)
   flicker_panel._flicker_list = {}
+  flicker_panel._avail = false
   flicker_panel._self_tween = null
 
   flicker_panel.anchor.setTo(0.5)
@@ -960,21 +965,21 @@ Player.prototype.effectLoop = function () {
 
 Player.prototype.chooseCard = function (card) {
   let flicker_panel = game.page.game.flicker_panel
-  if (!(card.id in flicker_panel._flicker_list)) return alert('unable to choose')
+  if (flicker_panel._avail && !(card.id in flicker_panel._flicker_list)) return alert('unable to choose')
   
   if (!personal.card_pick[card.id]) {
     personal.card_pick[card.id] = card
     //card.img.alpha = 0.5
 
 	// remove card from flicker panel
-	game.phaser.world.addChild(card.body)
+	if (flicker_panel._avail) game.phaser.world.addChild(card.body)
   }
   else {
     delete personal.card_pick[card.id]
     //card.img.alpha = 1
 	
 	// add card back to flicker panel
-    flicker_panel.addChild(card.body)
+    if (flicker_panel._avail) flicker_panel.addChild(card.body)
   }
 }
 
