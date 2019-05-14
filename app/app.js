@@ -927,6 +927,7 @@ Player.prototype.effectLoop = function () {
     if (curr_eff === 'damage') {
 	  game.actionReminder('damage_hit')
 	  game.blockPanel({damage: true})
+	  game.flickerPanel(true, personal.eff_queue[0].info)
 	}
 	else {
       if (curr_eff === 'retrieve' || curr_eff === 'recall' || curr_eff === 'reuse') {
