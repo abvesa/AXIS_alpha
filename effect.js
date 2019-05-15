@@ -426,7 +426,7 @@ module.exports = {
 		let card_owner = (card.curr_own === personal._pid)? 'personal' : 'opponent'
 		if (card.energy == 0 && this.default.all_card[card.name].aura) aura_modify[card_owner][card.id] = true
 		card.energy += 1
-		rlt[card_owner][id] = {turn: 'up'}
+		rlt[card_owner][id] = {turn: 'up', from: 'battle'}
 	  }	
 	  
 	  //personal.emit('effectTrigger', {card: {repair: { personal: rlt.personal, opponent: rlt.opponent }}})
@@ -459,7 +459,7 @@ module.exports = {
 		
 		if (card.energy == 0 && this.default.all_card[card.name].aura) aura_modify[card_owner][card.id] = true
 		card.energy += 1
-		rlt[card_owner][id] = {turn: 'up'}
+		rlt[card_owner][id] = {turn: 'up', from: 'battle'}
 	  }
 
 	  //personal.emit('effectTrigger', {card: {repair: { personal: rlt.personal, opponent: rlt.opponent }}})
@@ -520,7 +520,7 @@ module.exports = {
 		if (use_vanish) card.overheat = true
 		
 		if (card.energy == 0 && this.default.all_card[card.name].aura) aura_modify[card_owner][card.id] = false
-		rlt[card_owner][id] = {turn: 'down'}
+		rlt[card_owner][id] = {turn: 'down', from: 'battle'}
 	  }	
 	  
 	  //personal.emit('effectTrigger', {card: {drain: { personal: rlt.personal, opponent: rlt.opponent }}})
@@ -555,7 +555,7 @@ module.exports = {
 		
 		card.energy -= 1
 		if (card.energy == 0 && this.default.all_card[card.name].aura) aura_modify[card_owner][card.id] = false
-		rlt[card_owner][id] = {turn: 'down'}
+		rlt[card_owner][id] = {turn: 'down', from: 'battle'}
 	  }
 
 	  //personal.emit('effectTrigger', {card: {drain: { personal: rlt.personal, opponent: rlt.opponent }}})

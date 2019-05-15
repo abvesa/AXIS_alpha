@@ -1569,28 +1569,30 @@ socket.on('effectTrigger', effect => {
       // card move or turn
       default:
         for (let target in effect.card[type]) {	
+		
+		  // !-- only cards on battle can do turn or flip(magnet teleport artifact back tp hand)
           for (let id in effect.card[type][target]) {
 			if (effect.card[type][target][id].from !== 'battle') continue  
+			
+			// find card
             let curr = effect.card[type][target][id]
 			let pos = game.findCard({id: id, curr_own: target, from: 'battle'})
 			card = game.player[target].battle[pos]
             
+			// do flip
 			if (curr.new_own === 'opponent') {
 			  if (!opponent.stat.unveil.status && curr.to === 'hand') card.flip()	
 			}
 			
-			if ('turn' in curr) {
-              
-              //game.player[target].battle[pos].body.angle += 90              
-              card.turn(curr.turn)
-			  //game.tween = game.phaser.add.tween(card.body).to(
-              //  {angle: card.body.angle + 90}, 500, Phaser.Easing.Sinusoidal.InOut, true
-              //)
-
-              if (Object.keys(curr).length == 1) 
-				delete effect.card[type][target][id]
+			// do turn
+			if ('turn' in curr) {   
+              card.turn(curr.turn)			  
+			  // if card only needs to turn, then delete it
+			  if (!('to' in curr)) delete effect.card[type][target][id]
             }
           }
+		  
+		  // card moving
           if (Object.keys(effect.card[type][target]).length)
             game.cardMove(effect.card[type][target])
         }
