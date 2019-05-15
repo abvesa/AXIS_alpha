@@ -251,7 +251,7 @@ module.exports = {
   // break = choose card to send to grave
   break :  function (personal, param) {
 	  let room = this.room[personal._rid]
-	  let effect = Object.assign({}, this.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+	  let effect = JSON.parse(JSON.stringify(this.default.all_card[param.name].effect[param.tp][param.eff][param.tg]))
 	  
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
@@ -301,7 +301,7 @@ module.exports = {
   destroy : function (personal, effect, info = {}) {
 	  let room = this.room[personal._rid]
 	  let player = {personal: personal, opponent: personal._foe}
-	  let mod_eff = Object.assign({}, effect)
+	  let mod_eff = JSON.parse(JSON.stringify(effect))
 	  let rlt = {}
 
 	  let tmp = {personal: {}, opponent: {}}
@@ -346,7 +346,7 @@ module.exports = {
 	  let room = this.room[personal._rid]
 	  let effect = (room.phase === 'end')
 				   ? {card: personal.card_amount.hand - (((Object.keys(personal.aura.stamina).length)? 1 : 0)*2) - personal.hand_max}
-				   : Object.assign({}, this.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+				   : JSON.parse(JSON.stringify(this.default.all_card[param.name].effect[param.tp][param.eff][param.tg]))
 	  
 				   
 	  let card_pick = Object.keys(param.card_pick)
@@ -380,9 +380,8 @@ module.exports = {
   },
   discardOrDrain : function (personal, param) {
 	let room = this.room[personal._rid]
-	//let effect = Object.assign({}, this.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
 	let card_pick = Object.keys(param.card_pick)
-	let new_param = Object.assign({}, param)
+	let new_param = JSON.parse(JSON.stringify(param))
     
 	if (card_pick.length > 1) return {err: 'only need to discard 1 card'}
 	else if (card_pick.length == 1) {	  
@@ -403,7 +402,7 @@ module.exports = {
 	  let player = {personal: personal, opponent: personal._foe}
 	  let rlt = {personal: {}, opponent: {}}
 
-	  let effect = Object.assign({}, this.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+	  let effect = JSON.parse(JSON.stringify(this.default.all_card[param.name].effect[param.tp][param.eff][param.tg]))
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
 	  
@@ -449,7 +448,7 @@ module.exports = {
   repairAll : function (personal, effect, info = {}) {
 	  let room = this.room[personal._rid]
 	  let player = {personal: personal, opponent: personal._foe}
-	  let mod_eff = Object.assign({}, effect)
+	  let mod_eff = JSON.parse(JSON.stringify(effect))
 	  let rlt = {personal: {}, opponent: {}}
 	  
 	  let aura_modify = {personal: {}, opponent: {}}
@@ -485,7 +484,7 @@ module.exports = {
 	  let rlt = {personal: {}, opponent: {}}
 	  
 	  if (!use_vanish) {
-		let effect = Object.assign({}, this.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+		let effect = JSON.parse(JSON.stringify(this.default.all_card[param.name].effect[param.tp][param.eff][param.tg]))
 		let card_pick = Object.keys(param.card_pick)
 		let total_len = 0
 	  
@@ -543,7 +542,7 @@ module.exports = {
   drainAll : function (personal, effect, info = {}) {
 	  let room = this.room[personal._rid]
 	  let player = {personal: personal, opponent: personal._foe}
-	  let mod_eff = Object.assign({}, effect)
+	  let mod_eff = JSON.parse(JSON.stringify(effect))
 	  let rlt = {personal: {}, opponent: {}}
 	  
 	  let aura_modify = {personal: {}, opponent: {}}
@@ -725,8 +724,8 @@ module.exports = {
   // reuse is now only for spell type cards in grave
   reuse : function (personal, param) {
 	  let room = this.room[personal._rid]
-	  let effect = Object.assign({}, this.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
-
+	  let effect = JSON.parse(JSON.stringify(this.default.all_card[param.name].effect[param.tp][param.eff][param.tg]))//Object.assign({}, this.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+	  
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
 	  for (let type in effect.choose) {
@@ -827,7 +826,7 @@ module.exports = {
   },
   retrieve : function (personal, param) {
 	  let room = this.room[personal._rid]
-	  let effect = Object.assign({}, this.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+	  let effect = JSON.parse(JSON.stringify(this.default.all_card[param.name].effect[param.tp][param.eff][param.tg]))
 
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
@@ -864,7 +863,7 @@ module.exports = {
   },
   recall : function (personal, param) {
 	  let room = this.room[personal._rid]
-	  let effect = Object.assign({}, this.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+	  let effect = JSON.parse(JSON.stringify(this.default.all_card[param.name].effect[param.tp][param.eff][param.tg]))
 
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
@@ -924,7 +923,7 @@ module.exports = {
   },
   steal : function (personal, param) {
 	  let room = this.room[personal._rid]
-	  let effect = Object.assign({}, this.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+	  let effect = JSON.parse(JSON.stringify(this.default.all_card[param.name].effect[param.tp][param.eff][param.tg]))
 
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
@@ -961,7 +960,7 @@ module.exports = {
   },
   exchange : function (personal, param) {
 	  let room = this.room[personal._rid]
-	  let effect = Object.assign({}, this.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+	  let effect = JSON.parse(JSON.stringify(this.default.all_card[param.name].effect[param.tp][param.eff][param.tg]))
 
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
@@ -1000,7 +999,7 @@ module.exports = {
   reverse : function (personal, effect, info = {}) {
 	  let room = this.room[personal._rid]
 	  let player = {personal: personal, opponent: personal._foe}
-	  let mod_eff = Object.assign({}, effect)
+	  let mod_eff = JSON.parse(JSON.stringify(effect))
 	  
 	  // init reverse field
 	  let reverse_cards = {personal: {}, opponent: {}}
@@ -1035,7 +1034,7 @@ module.exports = {
   teleport : function (personal, param) {
 	  // to deck bottom is not available now
 	  let room = this.room[personal._rid]
-	  let effect = Object.assign({}, this.default.all_card[param.name].effect[param.tp][param.eff][param.tg])
+	  let effect = JSON.parse(JSON.stringify(this.default.all_card[param.name].effect[param.tp][param.eff][param.tg]))
 
 	  let card_pick = Object.keys(param.card_pick)
 	  let total_len = 0
