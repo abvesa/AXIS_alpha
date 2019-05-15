@@ -327,14 +327,18 @@ module.exports = {
 	  }
 	  */
 	  
-	  rlt = this.cardMove(personal, tmp.personal)
-	  //personal.emit('effectTrigger', {card: {destroy: { personal: rlt.personal, opponent: {} }}})
-	  //personal._foe.emit('effectTrigger', {card: {destroy: { personal: {}, opponent: rlt.opponent }}})
 	  
+	  let tg = Object.keys(mod_eff)[0]
+	  rlt = this.cardMove(player[tg], tmp[tg])
+	  
+	  //rlt = this.cardMove(personal, tmp.personal)
+	  //personal.emit('effectTrigger', {card: {destroy: { personal: rlt.personal, opponent: {} }}})
+	  //personal._foe.emit('effectTrigger', {card: {destroy: { personal: {}, opponent: rlt.opponent }}})  
+	   
 	  return {
 		eff: {
-		  personal: {card: {destroy: { personal: rlt.personal, opponent: {} }}},
-		  opponent: {card: {destroy: { personal: {}, opponent: rlt.opponent }}}
+		  [(tg === 'personal')? 'personal' : 'opponent']: {card: {destroy: { personal: rlt.personal, opponent: {} }}},
+		  [(tg === 'personal')? 'opponent' : 'personal']: {card: {destroy: { personal: {}, opponent: rlt.opponent }}}
 		}  
 	  }
   },

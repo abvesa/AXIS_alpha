@@ -970,17 +970,17 @@ Player.prototype.chooseCard = function (card) {
   
   if (!personal.card_pick[card.id]) {
     personal.card_pick[card.id] = card
-    //card.img.alpha = 0.5
 
 	// remove card from flicker panel
 	if (flicker_panel._avail) game.phaser.world.addChild(card.body)
+	else card.img.alpha = 0.5
   }
   else {
     delete personal.card_pick[card.id]
-    //card.img.alpha = 1
-	
+ 
 	// add card back to flicker panel
     if (flicker_panel._avail) flicker_panel.addChild(card.body)
+	else card.img.alpha = 1
   }
 }
 

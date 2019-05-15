@@ -876,7 +876,6 @@ Game.prototype.effectEmitter = function (room) {
         personal._foe.emit('effectTrigger', rlt.eff.opponent)
 	  }
 	  */
-	  
 	  this.requestDischarger({player: personal, type: 'effect'}, {name: eff_name, effect: eff_core, info: card_eff})	  
 	}
 	else {
@@ -1081,7 +1080,10 @@ Game.prototype.frontEnd = function (client) {
         param[name] = {personal: false}
       }
     }
-    if (Object.keys(param).length) game[tp](client, param)
+    if (Object.keys(param).length) {
+	  //game[tp](client, param)
+      this.requestDischarger({player: client, type: 'effect'}, {name: tp, effect: param, info: {}})
+	}
   }
 
   room.phase = 'end'

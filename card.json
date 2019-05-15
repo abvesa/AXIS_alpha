@@ -2076,6 +2076,13 @@
     },
     "effect": {
       "instant": {
+	    "bleed": {
+		  "personal": {
+		    "choose": {"card": 1},
+			"_target": {"personal": true},
+			"_from": {"life": true}
+		  }
+		},
 	    "destroy_1": {
           "opponent": {
             "altar": true
@@ -2095,18 +2102,12 @@
 		  "personal": {
 		    "battle": true
 		  }
-        },		
-		"bleed": {
-		  "personal": {
-		    "choose": {"card": 1},
-			"_target": {"personal": true},
-			"_from": {"life": true}
-		  }
-		}
+        }		
       }
     },
     "eff_judge": {
       "instant": {
+	    "bleed": {},
 	    "destroy_1": {},
 		"destroy_2": {},
         "destroy_3": {
@@ -2122,8 +2123,7 @@
 			  "fortify": false
 			}
 		  }
-		},
-		"bleed": {}
+		}		
       }
     },
     "text": "Supernova Explosion\n<Spell/Instant>\nHP -1 and Destroy all artifact and spell on field"
