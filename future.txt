@@ -102,6 +102,41 @@ effect: {
 
 
 
+===================================================================================================================================================
+
+single player game bot >>
+
+
+origin player action is passed by client.on, and we define the logic of specific action in client.on block. 
+if bot is built, we need to go through the same path that a normal player does, so will define all these action functions as global.
+
+
+
+ entry 1 >> client.on('attack') >--------> Attack >----------------------> requestDischarger >---- (else) --$$$$--> socket.on('plyAttack') (client side) --> do something  
+                                     |                      |                      |
+                                     |                      |                      | 
+                                     |                      |    (if player or player._foe == imabot)
+                                     |                      |                      | 
+                                     |                      |                      |
+ entry 2 >> bot --- actions ----- attack                    |                      |
+	               |      |                             |                      |
+	               |      |-- vanish --> Vanish ... --->|                      |
+	               |      |                             |                      |
+                       |      |-- use card --> UseCard ... >|                      |
+                       |      |                                                    |
+                       |      |-- .....                                            |
+                       |					                   |
+                       |					                   |
+                       <-----------------------------------------------------------<
+
+
+
+
+   
+
+
+
+
 
 
 

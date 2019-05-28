@@ -138,19 +138,17 @@ module.exports = {
 	  }
 	  
 	  let personal_rlt = (Object.keys(card_flip.opponent).length)? Object.assign({}, rlt, {card: {unveil: card_flip.opponent}}) : rlt
-	  personal.emit('effectTrigger', personal_rlt)
+	  //personal.emit('effectTrigger', personal_rlt)
 	  
 	  let opponent_rlt = (Object.keys(card_flip.personal).length)? Object.assign({}, genFoeRlt(rlt), {card: {unveil: card_flip.personal}}) : genFoeRlt(rlt)
-	  personal._foe.emit('effectTrigger', opponent_rlt)
-
-	  return {}
-	  /*
+	  //personal._foe.emit('effectTrigger', opponent_rlt)
+	  
+	  return {
 		eff: {
 		  personal: personal_rlt,
 		  opponent: opponent_rlt
 		}    
 	  }
-	  */
   },
   buff : function (personal, effect, info = {}) {
 	  let player = {personal: personal, opponent: personal._foe}
@@ -382,20 +380,21 @@ module.exports = {
 	let room = this.room[personal._rid]
 	let card_pick = Object.keys(param.card_pick)
 	let new_param = JSON.parse(JSON.stringify(param))
-    
+    let rlt = null
+	
 	if (card_pick.length > 1) return {err: 'only need to discard 1 card'}
 	else if (card_pick.length == 1) {	  
 	  new_param.tp = 'aura'
 	  new_param.eff = 'discard'
 	  new_param.tg = 'personal'
-	  this.discard(personal, new_param)		
+	  rlt = this.discard(personal, new_param)		
 	}
 	else if (card_pick.length == 0) {
       new_param.card_pick = {[new_param.id]: true}
-      this.drain(personal, new_param, use_vanish=true)	  
+      rlt = this.drain(personal, new_param, use_vanish=true)	  
 	}
 	
-	return {}
+	return rlt
   },
   repair : function (personal, param) {
 	  let room = this.room[personal._rid]
@@ -842,7 +841,7 @@ module.exports = {
 		if (card.curr_own !== personal._pid) return {err: 'please choose personal card'}
 
 		if (card.field !== 'deck') return {err: 'error card field'}
-		if (!('card' in effect) && !(card.type.base in effect)) return {err: 'error card type'}
+		if (!('card' in effect.choose) && !(card.type.base in effect.choose)) return {err: 'error card type'}
 		let card_type = ('card' in effect.choose)? 'card': card.type.base
 		if (!effect.choose[card_type]) return {err: 'error type length'}
 		effect.choose[card_type] --

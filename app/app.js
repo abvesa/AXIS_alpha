@@ -1559,8 +1559,8 @@ socket.on('effectTrigger', effect => {
 		  let _tmp = effect.card[type].personal
 		  if (Object.keys(_tmp).length) {
 			let first_card = _tmp[Object.keys(_tmp)[0]]
-			if (first_card.to !== 'hand' && first_card.from === 'hand') {
-              for (let card of opponent.hand)
+			if (first_card.to !== 'hand' && first_card.from === 'hand' && !opponent.stat.unveil.status) {
+			  for (let card of opponent.hand)
                 if (!(card.id in effect.card[type].personal)) card.flip()
 		    }
 		  }		
@@ -1576,13 +1576,15 @@ socket.on('effectTrigger', effect => {
 			
 			// find card
             let curr = effect.card[type][target][id]
-			let pos = game.findCard({id: id, curr_own: target, from: 'battle'})
-			card = game.player[target].battle[pos]
+			let pos = game.findCard({id: id, curr_own: curr.curr_own/*target*/, from: 'battle'})
+			card = game.player[curr.curr_own/*target*/].battle[pos]
             
 			// do flip
+			/*
 			if (curr.new_own === 'opponent') {
-			  if (!opponent.stat.unveil.status && curr.to === 'hand') card.flip()	
+			  if (!opponent.stat.unveil.status && curr.to === 'hand') card.flip()		  
 			}
+		    */
 			
 			// do turn
 			if ('turn' in curr) {   

@@ -1951,7 +1951,7 @@
         },
 		"discard": {
 		  "personal": {
-		    "card": 1
+		    "choose": {"card": 1}
 		  }
 		}
 	  }

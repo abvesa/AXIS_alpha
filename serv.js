@@ -36,6 +36,23 @@ const effect = require('./effect.js')
 
 // classes
 
+// a single player bot
+const Bot = function () {
+  this.__imabot__ = true
+  
+  // all other attributes will be built through buildPlayer function,
+  // send self as parameters
+}
+
+Bot.prototype.reactLogic = function () {}
+Bot.prototype.__attack__ = function () {}
+Bot.prototype.__vanish__ = function () {}
+Bot.prototype.__giveUp__ = function () {}
+Bot.prototype.__useCard__ = function () {}
+Bot.prototype.__chooseCard__ = function () {}
+Bot.prototype.__triggerCard__ = function () {}
+Bot.prototype.__endTurn__ = function () {}
+
 const Card = function (init) {
   //-! this = JSON.parse(JSON.stringify(init))
   this.id = null
@@ -422,8 +439,11 @@ Game.prototype.cardMove = function (personal, rlt) {
     Object.assign(param.opponent[id], rlt[id])
   }
 
-  if (Object.keys(aura_modify.personal).length) game.aura(personal, aura_modify.personal)
-  if (Object.keys(aura_modify.opponent).length) game.aura(personal._foe, aura_modify.opponent)
+  if (Object.keys(aura_modify.personal).length) 
+	game.requestDischarger({player: personal, type: 'effect'}, {name: 'aura', effect: aura_modify.personal})//game.aura(personal, aura_modify.personal)
+  
+  if (Object.keys(aura_modify.opponent).length)
+	game.requestDischarger({player: personal._foe, type: 'effect'}, {name: 'aura', effect: aura_modify.opponent})//game.aura(personal._foe, aura_modify.opponent)
   
   return param
 }
@@ -707,7 +727,8 @@ Game.prototype.triggerCard = function (client, it, cb) {
     if (card.energy == 0 && game.default.all_card[card.name].aura) {
       param = {}
       param[it.id] = false
-      game.aura(client, param)
+	  game.requestDischarger({player: client, type: 'effect'}, {name: 'aura', effect: param})
+      //game.aura(client, param)
     }
     
     room.phase = 'counter'
@@ -791,10 +812,6 @@ Game.prototype.buildEffectQueue = function (personal, card_list) {
   }
 }
 
-Game.prototype.AIReaction = function () {
-	
-}
-
 Game.prototype.requestDischarger = function (action, param) {
   /*
     action = {
@@ -817,6 +834,11 @@ Game.prototype.requestDischarger = function (action, param) {
 	  5. tg   > effect target
 	  6. ext  > for field cards name update or flip
 	  7. info > card choosing rule / target / field
+	  
+	  >> type == use_vanish
+	  1. msg
+	  2. rlt
+	  3. card (optional)
 	}
   */
   let rtn = {pass: true}
@@ -837,9 +859,32 @@ Game.prototype.requestDischarger = function (action, param) {
 	  if (!('__imabot__' in action.player)) action.player.emit('effectLoop', {rlt: param})
 	  else {
 		// ai choose card logic  
+		action.player.reactLogic()
 	  }
 	  break
 	
+	case 'use_vanish':
+	  // action.player = player who use vanish
+	  if (!('__imabot__' in action.player)) action.player.emit('plyUseVanish', { 
+	    msg : param.msg.personal, 
+		rlt : param.rlt.personal,
+		card: ('personal' in param.card)? param.card.personal : {}
+	  })		  
+	  
+	  if (!('__imabot__' in action.player._foe)) action.player._foe.emit('plyUseVanish', { 
+	    msg : param.msg.opponent, 
+		rlt : param.rlt.opponent,
+		card: ('opponent' in param.card)? param.card.opponent : {}
+	  })		  
+	  else {
+		action.player._foe.reactLogic()  
+	  }
+	  
+	  break
+	
+	case 'counter':
+	  break
+	  
 	case '':
 	  break
 	
@@ -868,14 +913,6 @@ Game.prototype.effectEmitter = function (room) {
 	let eff_core = Object.assign({}, this.default.all_card[card_eff.name].effect[card_eff.tp][avail_eff])
 
     if (!(eff_name in this.choose_eff)) {
-	  // !-- ai bot			
-	  /*
-	  let rlt = this[eff_name](personal, eff_core, card_eff)	
-	  if ('eff' in rlt) {
-	    personal.emit('effectTrigger', rlt.eff.personal)
-        personal._foe.emit('effectTrigger', rlt.eff.opponent)
-	  }
-	  */
 	  this.requestDischarger({player: personal, type: 'effect'}, {name: eff_name, effect: eff_core, info: card_eff})	  
 	}
 	else {
@@ -1105,7 +1142,7 @@ Game.prototype.frontEnd = function (client) {
 		_from: {hand: true}
 	  }		
 	}
-    this.requestDischarger({player: player[target], type: 'choose'}, rtn_obj)
+    this.requestDischarger({player: client, type: 'choose'}, rtn_obj)
   }
   else this.backEnd(client)
 }
@@ -1311,36 +1348,28 @@ function randomDeck () {
 // socket server
 
 io.on('connection', client => {
-
-  ///////////////////////////////////////////////////////////////////////////////
-  // !-- init settings
-
-  MongoClient.connect(opt.url, {useNewUrlParser: true}, (err, _db) => {
-	
-    if (err) throw err
-    app.db = _db.db('axis')
-	/*
-    app.db.collection('card').find({}).toArray((err, cards) => {
-      for (let name in cards)
-        game.default.all_card[cards[name].name] = cards[name]
-    })
-	*/
-	/*
-    app.db.collection('stat').find({}).toArray((err, stat) => {
-      for (let type in stat)
-        game.default.all_stat[stat[type].name] = stat[type].text
-    })
-	*/
-  })
   
-  // local version of cardlist and statlist
-  for (let name in app.file.backup_cardlist) {
-	game.default.all_card[app.file.backup_cardlist[name].name] = app.file.backup_cardlist[name]	  
-  }
-  for (let name in app.file.backup_statlist) {
-	game.default.all_stat[app.file.backup_statlist[name].name] = app.file.backup_statlist[name].text  
-  }
-  //
+  // db connection 
+	MongoClient.connect(opt.url, {useNewUrlParser: true}, (err, _db) => {
+	  if (err) throw err
+	  app.db = _db.db('axis')
+	  /*
+	  app.db.collection('card').find({}).toArray((err, cards) => {
+		for (let name in cards)
+		  game.default.all_card[cards[name].name] = cards[name]
+	  })
+	  */
+	  /*
+	  app.db.collection('stat').find({}).toArray((err, stat) => {
+		for (let type in stat)
+		  game.default.all_stat[stat[type].name] = stat[type].text
+	  })
+	  */
+	})
+  
+  
+  ///////////////////////////////////////////////////////////////////////////////
+
   
   client.on('chatMode', it => {
 	if ('_foe' in client && '_rid' in client) client._foe.emit('chatMode', it)  
@@ -1705,8 +1734,17 @@ io.on('connection', client => {
 		game.emitCounter(client._foe, type='attack')  
 		client._foe.first_conceal = false
 		room.atk_status.curr = room.atk_status.attacker
-		client._foe.emit('plyUseVanish', { msg: {action: 'conceal... waiting opponent'}, rlt: {personal: true, conceal: true} })
-		client.emit('plyUseVanish', { msg: {action: 'foe conceal'}, rlt: {opponent: true, conceal: true} })
+		//client._foe.emit('plyUseVanish', { msg: {action: 'conceal... waiting opponent'}, rlt: {personal: true, conceal: true} })
+		//client.emit('plyUseVanish', { msg: {action: 'foe conceal'}, rlt: {opponent: true, conceal: true} })
+	  
+	    game.requestDischarger({
+			type: 'use_vanish', 
+			player: client._foe
+		}, {
+			msg: {personal: {action: 'conceal... waiting opponent'}, opponent: {action: 'foe conceal'}}, 
+			rlt: {personal: {personal: true, conceal: true}, opponent: {opponent: true, conceal: true}}, 
+			card: {}
+		})	  
 	  }
 	  else { 
 	    client.emit('playerAttack', { msg: {phase: 'attack phase', action: 'attack... waiting opponent'}, rlt: {personal: true, attack: true}, attr: {personal: {atk_phase: client.atk_phase, action_point: client.action_point}} })
@@ -1800,9 +1838,19 @@ io.on('connection', client => {
 	  game.emitCounter(client._foe, type='vanish')		  
 	}
 	else {
-      client.emit('plyUseVanish', { msg: {action: `${action}... waiting opponent`}, card: rlt.personal, rlt: Object.assign({personal: true}, panel) })
-      client._foe.emit('plyUseVanish', { msg: {action: `foe ${action}`}, card: rlt.opponent, rlt: Object.assign({opponent: true}, panel) })
-      room.atk_status.curr = (client == room.atk_status.attacker)? (room.atk_status.defender) : (room.atk_status.attacker)
+      //client.emit('plyUseVanish', { msg: {action: `${action}... waiting opponent`}, card: rlt.personal, rlt: Object.assign({personal: true}, panel) })
+      //client._foe.emit('plyUseVanish', { msg: {action: `foe ${action}`}, card: rlt.opponent, rlt: Object.assign({opponent: true}, panel) })
+      
+	  game.requestDischarger({
+		type: 'use_vanish', 
+		player: client
+	  }, {
+		msg: {personal: {action: `${action}... waiting opponent`}, opponent: {action: `foe ${action}`}}, 
+		rlt: {personal: Object.assign({personal: true}, panel), opponent: Object.assign({opponent: true}, panel)}, 
+		card: {personal: rlt.personal, opponent: rlt.opponent}
+	  })	 
+	  
+	  room.atk_status.curr = (client == room.atk_status.attacker)? (room.atk_status.defender) : (room.atk_status.attacker)
     }
   })
 
@@ -1934,7 +1982,8 @@ io.on('connection', client => {
 			console.log(`counter in ${card.name}`)
           }
 		  if (game.default.all_card[card.name].aura) {
-            game.aura(client._foe, room.counter_status.use_id)
+            //game.aura(client._foe, room.counter_status.use_id)
+			game.requestDischarger({player: client._foe, type: 'effect'}, {name: 'aura', effect: room.counter_status.use_id})
             console.log(`aura in ${card.name}`)
           }
         }
@@ -2033,27 +2082,7 @@ io.on('connection', client => {
     // if it.eff doesn't exist in client.eff_todo.your_id return
     if (!(it.eff in client.eff_todo[it.id][it.tp])) return {err: true}
 	
-	/*
-    let rlt = game[effect](client, it)
-    if ('err' in rlt) return cb(rlt)
-    else {	  	
-		
-      // !-- ai bot
-	  if ('eff' in rlt) {
-	    client.emit('effectTrigger', rlt.eff.personal)
-        client._foe.emit('effectTrigger', rlt.eff.opponent)
-	  }
-	  //
-	  
-      if (!client.hp) {
-        client.emit('gameOver', {msg: {end: 'You LOSE\nclick anywhere else to leave'}})
-        client._foe.emit('gameOver', {msg: {end: 'You WIN\nclick anywhere else to leave'}})
-        client._foe.hp = 0
-        return
-      }
-      else cb({})
-    }
-	*/
+
 	let rlt = game.requestDischarger({player: client, type: 'effect'}, {name: effect, effect: it})
 	if ('err' in rlt) return cb(rlt)
 	if (!client.hp) {
@@ -2085,9 +2114,17 @@ io.on('connection', client => {
 })
 
 /////////////////////////////////////////////////////////////////////////////////
-// server init
 
+// server init
 const game = new Game()
+
+// local version of cardlist and statlist
+for (let name in app.file.backup_cardlist) {
+game.default.all_card[app.file.backup_cardlist[name].name] = app.file.backup_cardlist[name]	  
+}
+for (let name in app.file.backup_statlist) {
+game.default.all_stat[app.file.backup_statlist[name].name] = app.file.backup_statlist[name].text  
+}
 
 server.listen(process.env.PORT || opt.serv_port, '0.0.0.0', function() {  
   console.log(`listen on port ${opt.serv_port}`)
